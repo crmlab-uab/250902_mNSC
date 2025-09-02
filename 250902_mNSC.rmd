@@ -30,7 +30,7 @@ source("./scripts/00_setup.R")
 # load from the project root directory
 samples <- read.csv("./input/samples.csv", row.names = 1, header = TRUE)
 message("Displaying sample metadata:")
-print(reactable(samples))
+reactable(samples)
 
 # Generate paths to salmon quantification files
 files_sf <- paste0("./sf/", rownames(samples), ".sf")
@@ -49,6 +49,9 @@ dir_output <- "./output/"
 dir_graph <- "./graphs/"
 dir.create(dir_output, showWarnings = FALSE, recursive = TRUE)
 dir.create(dir_graph, showWarnings = FALSE, recursive = TRUE)
+
+# Path to genome annotation file
+file_gtf <- "./input/gencode.vM37.primary_assembly.annotation.gtf.gz"
 
 # DESeq2 parameters
 pval <- 0.05
@@ -126,8 +129,8 @@ anno_colors <- list(
     "PDGFRA" = "red"
   ),
   Type = c(
-    "NS1" = "lightgray",
-    "NS2" = "darkgray",
+    "NS1" = "green",
+    "NS2" = "blue",
     "GBO" = "black",
     "Tumor" = "purple"
   )
@@ -140,21 +143,21 @@ anno_colors <- list(
 This section sources the external R scripts that perform the analysis. Each script is run in the global environment to ensure it can access and modify shared data objects. local = knitr::knit_global() is critical for ensuring they all run in the same environment and can share variables.
 
 #### 1. Mouse Genes
-```{r echo=TRUE, message=FALSE, include = TRUE}
-source("./scripts/01_genes_mouse.R", local = knitr::knit_global())
+```{r echo=TRUE, message=TRUE, include = TRUE}
+source("./scripts/01_genes_mouse.R", local = knitr::knit_global(), echo = TRUE)
 ```
 
 #### 2. Prepare Data
-```{r echo=TRUE, message=FALSE, include = TRUE}
-source("./scripts/02_data_prep.R", local = knitr::knit_global())
+```{r echo=TRUE, message=TRUE, include = TRUE}
+source("./scripts/02_data_prep.R", local = knitr::knit_global(), echo = TRUE)
 ```
 
 #### 3. Quality Control
-```{r echo=TRUE, message=FALSE, include = TRUE}
-source("./scripts/03_QC.R", local = knitr::knit_global())
+```{r echo=TRUE, message=TRUE, include = TRUE}
+source("./scripts/03_QC.R", local = knitr::knit_global(), echo = TRUE)
 ```
 
 #### 4. Differential Expression Analysis
-```{r echo=TRUE, message=FALSE, include = TRUE}
-source("./scripts/04_DESeq.R", local = knitr::knit_global())
+```{r echo=TRUE, message=TRUE, include = TRUE}
+source("./scripts/04_DESeq.R", local = knitr::knit_global(), echo = TRUE)
 ```
