@@ -1,14 +1,10 @@
 # 04_DESeq.R
-# This script includes robust checks to ensure all coefficients
-# required for a contrast exist within the model results before attempting to
-# extract them. This prevents "subscript contains invalid names" errors
-# that occur when DESeq2 drops terms after filtering.
-
 message("--- Running 04_DESeq.R: Differential Expression Analysis ---")
 library(DESeq2)
 library(BiocParallel)
 library(tidyverse)
 library(EnhancedVolcano)
+library(tibble)
 
 # --- Main DESeq2 Analysis Loop ---
 for (model_name in names(dds_models)) {
@@ -24,21 +20,13 @@ for (model_name in names(dds_models)) {
     )
     
     dds_to_analyze <- dds_models[[model_name]][[subset_name]]
-    
-    # Run DESeq2
     des_results <- DESeq(dds_to_analyze,
                          parallel = TRUE,
                          BPPARAM = MulticoreParam(nc))
-    
-    message("DESeq2 analysis complete for ", model_name, " - ", subset_name)
     current_results_names <- resultsNames(des_results)
-    
-    # --- CONTRAST ANALYSIS ---
     
     # --- Analysis for model_1 (main effects only) ---
     if (model_name == "model_1") {
-      message("\n--- Extracting main effects for model_1 ---\n")
-      # Check if the coefficient exists before trying to extract it
       if ("Model_Tumor_vs_GBO" %in% current_results_names) {
         res <- results(
           des_results,
@@ -47,13 +35,17 @@ for (model_name in names(dds_models)) {
           lfcThreshold = lfc
         )
         res_name <- paste0("model_1_", subset_name, "_Model_Tumor_vs_GBO")
-        message(paste("Summary for", res_name))
         print(summary(res))
         
-        # Volcano Plot
+        # Create labels with gene names
+        res_df <- as.data.frame(res) %>% rownames_to_column("gene_id") %>% left_join(gene_map, by = "gene_id")
+        labels <- ifelse(!is.na(res_df$gene_name),
+                         res_df$gene_name,
+                         res_df$gene_id)
+        
         volcano_plot <- EnhancedVolcano(
           res,
-          lab = rownames(res),
+          lab = labels,
           x = 'log2FoldChange',
           y = 'padj',
           pCutoff = qval,
@@ -61,31 +53,12 @@ for (model_name in names(dds_models)) {
           title = res_name
         )
         print(volcano_plot)
-        ggsave(
-          file.path(dir_graph, paste0(
-            date, "_Volcano_", res_name, ".pdf"
-          )),
-          plot = volcano_plot,
-          width = 10,
-          height = 10
-        )
-      } else {
-        warning(
-          paste(
-            "SKIPPING: Coefficient 'Model_Tumor_vs_GBO' not found in",
-            model_name,
-            "-",
-            subset_name
-          )
-        )
       }
     }
     
     # --- Analysis for model_2 (interaction effects) ---
     if (model_name == "model_2") {
-      message("\n--- Extracting interaction effects for model_2 ---\n")
-      
-      # Analysis: Host effect within each Driver type
+      # Host effect within each Driver type
       for (drv in unique(samples$Driver)) {
         required_terms <- c("Host_NSG_vs_BL6")
         if (drv != "EGFRvIII") {
@@ -108,18 +81,20 @@ for (model_name in names(dds_models)) {
               lfcThreshold = lfc
             )
           }
-          
           res_name <- paste0("model_2_",
                              subset_name,
                              "_Host_NSG_vs_BL6_in_",
                              drv)
-          message(paste("Summary for", res_name))
           print(summary(res))
           
-          # Volcano Plot
+          res_df <- as.data.frame(res) %>% rownames_to_column("gene_id") %>% left_join(gene_map, by = "gene_id")
+          labels <- ifelse(!is.na(res_df$gene_name),
+                           res_df$gene_name,
+                           res_df$gene_id)
+          
           volcano_plot <- EnhancedVolcano(
             res,
-            lab = rownames(res),
+            lab = labels,
             x = 'log2FoldChange',
             y = 'padj',
             pCutoff = qval,
@@ -127,47 +102,22 @@ for (model_name in names(dds_models)) {
             title = res_name
           )
           print(volcano_plot)
-          ggsave(
-            file.path(
-              dir_graph,
-              paste0(date, "_Volcano_", res_name, ".pdf")
-            ),
-            plot = volcano_plot,
-            width = 10,
-            height = 10
-          )
-        } else {
-          missing_terms <- required_terms[!required_terms %in% current_results_names]
-          warning(
-            paste0(
-              "SKIPPING contrast for Driver '",
-              drv,
-              "' in subset '",
-              subset_name,
-              "' because coefficients were dropped: ",
-              paste(missing_terms, collapse = ", ")
-            )
-          )
         }
       }
       
-      # Analysis: Driver comparisons within BL6 host
-      message("\n--- Driver comparisons in BL6 host ---\n")
+      # Driver comparisons within BL6 host
       dds_bl6 <- dds_to_analyze[, dds_to_analyze$Host == "BL6"]
       dds_bl6$Driver <- droplevels(dds_bl6$Driver)
       design(dds_bl6) <- formula( ~ SeqBatch + Model + Driver)
       dds_bl6 <- DESeq(dds_bl6, parallel = TRUE, BPPARAM = MulticoreParam(nc))
       
       driver_combos <- combn(levels(dds_bl6$Driver), 2)
-      
       for (i in 1:ncol(driver_combos)) {
         drv1 <- driver_combos[1, i]
         drv2 <- driver_combos[2, i]
-        contrast_vec <- c("Driver", drv1, drv2)
-        
         res <- results(
           dds_bl6,
-          contrast = contrast_vec,
+          contrast = c("Driver", drv1, drv2),
           alpha = qval,
           lfcThreshold = lfc
         )
@@ -178,13 +128,16 @@ for (model_name in names(dds_models)) {
                            "_vs_",
                            drv2,
                            "_in_BL6")
-        message(paste("Summary for", res_name))
         print(summary(res))
         
-        # Volcano Plot
+        res_df <- as.data.frame(res) %>% rownames_to_column("gene_id") %>% left_join(gene_map, by = "gene_id")
+        labels <- ifelse(!is.na(res_df$gene_name),
+                         res_df$gene_name,
+                         res_df$gene_id)
+        
         volcano_plot <- EnhancedVolcano(
           res,
-          lab = rownames(res),
+          lab = labels,
           x = 'log2FoldChange',
           y = 'padj',
           pCutoff = qval,
@@ -192,14 +145,6 @@ for (model_name in names(dds_models)) {
           title = res_name
         )
         print(volcano_plot)
-        ggsave(
-          file.path(dir_graph, paste0(
-            date, "_Volcano_", res_name, ".pdf"
-          )),
-          plot = volcano_plot,
-          width = 10,
-          height = 10
-        )
       }
     }
   }

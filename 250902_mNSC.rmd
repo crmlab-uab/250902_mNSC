@@ -6,25 +6,24 @@ date: '`r format(Sys.time(), "Last modified: %d %b %Y")`'
 output:
   html_document:
     toc: yes
-    toc_float: yes
     code_folding: show
     theme: journal
 ---
 
-### Project Setup
+# Project Setup
 This document runs a full differential expression analysis pipeline within a containerized environment.  It assumes all packages are pre-installed, as in a Docker container. All paths are relative to the /data project root.
 
 <hr>
 
-### R Setup and Global Variables
+# R Setup and Global Variables
 
-#### 1. Library Loading
+### 1. Library Loading
 ```{r, echo=TRUE, message=TRUE, include=TRUE}
 # Source the setup script to load all packages
 source("./scripts/00_setup.R", local = knitr::knit_global(), echo = TRUE)
 ```
 
-#### 2. Sample metadata 
+### 2. Sample metadata 
 ```{r}
 # Load from the project root directory
 samples <- read.csv("./input/samples.csv", row.names = 1, header = TRUE)
@@ -48,7 +47,7 @@ if (!all(file.exists(files_sf))) {
 }
 ```
 
-#### 3. Define Directories and Parameters
+### 3. Define Directories and Parameters
 Global parameters for the analysis are defined here. Child scripts will inherit these.
 ```{r}
 # Output directories
@@ -79,7 +78,7 @@ blp <- colorRampPalette(rev(brewer.pal(9, "Blues")))(255)
 ryb <- colorRampPalette(rev(brewer.pal(n = 7, name = "RdYlBu")))(100)
 ```
 
-#### 4. DESeq2 Model Design
+### 4. DESeq2 Model Design
 Define the statistical models that will be used for the analysis.
 ```{r}
 # Variables for the DESeq2 model designs
@@ -92,11 +91,11 @@ designs <- list(model_1 = as.formula(paste("~", paste(vars_model, collapse = " +
                 model_2 = as.formula(paste("~", sb, "+", 
                                            paste(vars_int, collapse = " + ")
 )))
-print("Models to be used in the main analysis:")
+print("Models to be used in the main analysis")
 print(designs)
 ```
 
-#### 5. Genesets
+### 5. Genesets
 ```{r}
 #### Kinases
 file_kinases <- "./genesets/201006_composite_kinases.csv"
@@ -108,7 +107,7 @@ if (file.exists(file_kinases)) {
 kinase_genes <- kinases$Mouse_symbol
 ```
 
-#### 6. Graph Annotations and Colors
+### 6. Graph Annotations and Colors
 ```{r echo=TRUE, message=FALSE}
 anno_vars <- c("Host", "Model", "Driver")
 anno <- as.data.frame(samples[, anno_vars])
@@ -143,53 +142,73 @@ anno_colors <- list(
 )
 ```
 
-#### 7. Sample subsets
+### 7. Sample subsets
 ```{r}
-message("--- Creating subset for Model == 'NS1' ---")
+# --- Subset 1: Model == 'NS1' ---
+message("--- Defining subset for Model == 'NS1' ---")
 samples_ns1 <- samples[samples$Model == "NS1", ]
-
-# Drop unused factor levels to avoid errors in the model
 samples_ns1$Model <- droplevels(samples_ns1$Model)
 samples_ns1$Driver <- factor(samples_ns1$Driver)
 samples_ns1$Host <- factor(samples_ns1$Host)
-
-# Subset the quantification file paths
 files_sf_ns1 <- files_sf[rownames(samples_ns1)]
+message(paste("Subset 'samples_ns1' contains", nrow(samples_ns1), "samples."))
 
-message(paste("Subset contains", nrow(samples_ns1), "samples."))
-reactable::reactable(samples_ns1)
+# --- Subset 2: Host == 'BL6' ---
+message("\n--- Defining subset for Host == 'BL6' ---")
+samples_bl6 <- samples[samples$Host == "BL6", ]
+samples_bl6$Host <- droplevels(samples_bl6$Host)
+samples_bl6$Model <- factor(samples_bl6$Model)
+samples_bl6$Driver <- factor(samples_bl6$Driver)
+files_sf_bl6 <- files_sf[rownames(samples_bl6)]
+message(paste("Subset 'samples_bl6' contains", nrow(samples_bl6), "samples."))
 ```
+
 <hr>
 
-### Analysis Pipeline
+# Analysis Pipeline
 This section sources the external R scripts that perform the analysis. Each script is run in the global environment to ensure it can access and modify shared data objects. local = knitr::knit_global() is critical for ensuring they all run in the same environment and can share variables.
 
-#### 1. Mouse Genes
+### 1. Mouse Genes
 ```{r echo=TRUE, message=TRUE, include = TRUE}
 source("./scripts/01_genes_mouse.R", local = knitr::knit_global(), echo = TRUE)
 ```
 
-#### 2. Prepare Data
+### 2. Prepare Data
 ```{r echo=TRUE, message=TRUE, include = TRUE}
 source("./scripts/02_data_prep.R", local = knitr::knit_global(), echo = TRUE)
 ```
 
-#### 3. Quality Control
+### 3. Quality Control
 ```{r echo=TRUE, message=TRUE, include = TRUE}
 source("./scripts/03_QC.R", local = knitr::knit_global(), echo = TRUE)
 ```
 
-#### 4. Differential Expression Analysis
+### 4. Differential Expression Analysis
 ```{r echo=TRUE, message=TRUE, include = TRUE}
 source("./scripts/04_DESeq.R", local = knitr::knit_global(), echo = TRUE)
 ```
 
-#### 5. Differential Expression Analysis (Model == 'NS1' Subset)
+### 5. Differential Expression Analysis (Model == 'NS1' Subset)
 ```{r}
+# Assign the specific subset to generic variables
+samples_subset <- samples_ns1
+files_sf_subset <- files_sf_ns1
+
+# Source the child script, which will use the generic variables
 source("./scripts/05_DESeq_NS1_subset.R", local = knitr::knit_global(), echo = TRUE)
 ```
 
-#### 6. Differential Expression Analysis (Host == 'BL6' Subset)
+### 6. Differential Expression Analysis (Host == 'BL6' Subset)
 ```{r}
+# Re-assign the other specific subset to the same generic variables
+samples_subset <- samples_bl6
+files_sf_subset <- files_sf_bl6
+
+# Source the child script
 source("./scripts/06_DESeq_BL6_subset.R", local = knitr::knit_global(), echo = TRUE)
+```
+
+# Session Info
+```{r}
+sessionInfo()
 ```

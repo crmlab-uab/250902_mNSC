@@ -80,4 +80,19 @@ tx2gene_pcg <- dplyr::distinct(tx2gene_pcg)
 message(paste("...Refined tx2gene_pcg map created with", nrow(tx2gene_pcg), "entries."))
 print(head(tx2gene_pcg))
 
+
+# --- [NEWLY ADDED] Create Gene ID to Gene Name Map for Plotting ---
+# This map will be used to label plots with gene names instead of IDs.
+message("\n...Creating gene_id to gene_name map...")
+gene_map <- as.data.frame(mcols(gtf_data)) %>%
+  dplyr::filter(type == "gene") %>%
+  dplyr::select(gene_id, gene_name) %>%
+  dplyr::distinct()
+
+# Remove version numbers from gene_id to match DESeq2 results
+gene_map$gene_id <- gsub("\\..*","", gene_map$gene_id)
+message(paste("...Gene map for plotting created with", nrow(gene_map), "unique entries."))
+# --- [END OF ADDED CODE] ---
+
+
 message("\n--- Completed 01_genes_mouse.R ---")
