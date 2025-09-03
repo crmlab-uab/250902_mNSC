@@ -39,13 +39,13 @@ for (model_name in names(dds_models)) {
     if (model_name == "model_1") {
       message("\\n--- Extracting main effects for model_1 ---\\n")
       # Check if the coefficient exists before trying to extract it
-      if ("Type_Tumor_vs_GBO" %in% current_results_names) {
-        res <- results(des_results, name = "Type_Tumor_vs_GBO", alpha = qval, lfcThreshold = lfc)
-        res_name <- paste0("model_1_", subset_name, "_Type_Tumor_vs_GBO")
+      if ("Model_Tumor_vs_GBO" %in% current_results_names) {
+        res <- results(des_results, name = "Model_Tumor_vs_GBO", alpha = qval, lfcThreshold = lfc)
+        res_name <- paste0("model_1_", subset_name, "_Model_Tumor_vs_GBO")
         message(paste("Summary for", res_name))
         print(summary(res))
       } else {
-        warning(paste("SKIPPING: Coefficient 'Type_Tumor_vs_GBO' not found in", model_name, "-", subset_name))
+        warning(paste("SKIPPING: Coefficient 'Model_Tumor_vs_GBO' not found in", model_name, "-", subset_name))
       }
     }
     
@@ -101,7 +101,7 @@ for (model_name in names(dds_models)) {
       
       dds_bl6 <- dds_to_analyze[, dds_to_analyze$Host == "BL6"]
       dds_bl6$Driver <- droplevels(dds_bl6$Driver)
-      design(dds_bl6) <- formula(~ SeqBatch + Type + Driver)
+      design(dds_bl6) <- formula(~ SeqBatch + Model + Driver)
       dds_bl6 <- DESeq(dds_bl6, parallel = TRUE, BPPARAM = MulticoreParam(nc))
       
       res_driver_in_bl6 <- list()

@@ -20,15 +20,23 @@ This document runs a full differential expression analysis pipeline within a con
 
 #### 1. Library Loading
 This chunk sources the setup script to install any missing packages. Then it loads the core libraries for the main document.
-```{r, message=TRUE, warning=FALSE}
+```{r echo=TRUE, message=TRUE, include = TRUE}
 # Source the setup script to ensure a reproducible environment and load all packages
-source("./scripts/00_setup.R")
+source("./scripts/00_setup.R", local = knitr::knit_global(), echo = TRUE)
 ```
 
 #### 2. Sample metadata 
 ```{r}
 # load from the project root directory
 samples <- read.csv("./input/samples.csv", row.names = 1, header = TRUE)
+# --- Convert all model variables to factors ---
+vars <- c("SeqBatch", "Host", "Model", "Driver")
+# This ensures DESeq2 treats SeqGatch as discrete categories, not continuous numbers.
+message("...Converting model variables to factors...")
+for (v in vars) {
+  samples[[v]] <- factor(samples[[v]])
+}
+
 message("Displaying sample metadata:")
 reactable(samples)
 
@@ -76,8 +84,8 @@ ryb <- colorRampPalette(rev(brewer.pal(n = 7, name = "RdYlBu")))(100)
 Define the statistical models that will be used for the analysis.
 ```{r model_design}
 # Variables for the DESeq2 model designs
-vars <- c("SeqBatch", "Type", "Host", "Driver")
-vars_int <- c("Type*Driver")
+vars
+vars_int <- c("Model*Driver")
 sb <- "SeqBatch"
 
 # Create a named list of design formulas
@@ -97,14 +105,12 @@ if (file.exists(file_kinases)) {
 } else {
   stop(paste("File not found:", file_kinases))
 }
-str(kinases)
-head(kinases)
 kinase_genes <- kinases$Mouse_symbol
 ```
 
 #### 6. Graph Annotations and Colors
 ```{r echo=TRUE, message=FALSE}
-anno_vars <- c("Type", "Host", "Driver")
+anno_vars <- c("Model", "Host", "Driver")
 anno <- as.data.frame(samples[, anno_vars])
 summarized_anno <- anno %>%
   group_by(across(all_of(anno_vars))) %>%
@@ -128,7 +134,7 @@ anno_colors <- list(
     "EGFRvV" = "dodgerblue",
     "PDGFRA" = "red"
   ),
-  Type = c(
+  Model = c(
     "NS1" = "green",
     "NS2" = "blue",
     "GBO" = "black",
