@@ -1,0 +1,559 @@
+﻿Mouse_symbol,xName,ManningName,HGNC,CoralName,gene_name,Group,Family,SubFamily,UniProtID_Human,MGI_ID,Entrez_ID_mouse,KinHub,Coral,UniProt,Source,added
+Aak1,AAK1,AAK1,AAK1,AAK1,AP2-associated protein kinase 1,Other,NAK,,Q2M2I8,MGI:1098687,269774,X,X,X,KinHub,10/6/2020
+Aatk,LMR1,LMR1,AATK,LMR1,Serine/threonine-protein kinase LMTK1,TK,Lmr,,Q6ZMQ8,MGI:1197518,11302,X,X,X,KinHub,10/6/2020
+Abl1,ABL1,ABL,ABL1,ABL1,Tyrosine-protein kinase ABL1,TK,Abl,,P00519,MGI:87859,11350,X,X,X,KinHub,10/6/2020
+Abl2,ABL2,ARG,ABL2,ABL2,Abelson tyrosine-protein kinase 2,TK,Abl,,P42684,MGI:87860,11352,X,X,X,KinHub,10/6/2020
+Abr,ABR,ABR,ABR,,Active breakpoint cluster region-related protein,Atypical,BCR,,Q12979,MGI:107771,109934,X,,,KinHub,10/6/2020
+Acvr1,ALK2,ALK2,ACVR1,ALK2,Activin receptor type-1,TKL,STKR,STKR1,Q04771,MGI:87911,11477,X,X,X,KinHub,10/6/2020
+Acvr1b,ALK4,ALK4,ACVR1B,ALK4,Activin receptor type-1B,TKL,STKR,STKR1,P36896,MGI:1338944,11479,X,X,X,KinHub,10/6/2020
+Acvr1c,ALK7,ALK7,ACVR1C,ALK7,Activin receptor type-1C,TKL,STKR,STKR1,Q8NER5,MGI:2661081,269275,X,X,X,KinHub,10/6/2020
+Acvr2a,ACTR2,ACTR2,ACVR2A,ACTR2,Activin receptor type-2A,TKL,STKR,STKR2,P27037,MGI:102806,11480,X,X,X,KinHub,10/6/2020
+Acvr2b,ACTR2B,ACTR2B,ACVR2B,ACTR2B,Activin receptor type-2B,TKL,STKR,STKR2,Q13705,MGI:87912,11481,X,X,X,KinHub,10/6/2020
+Acvrl1,ALK1,ALK1,ACVRL1,ALK1,Serine/threonine-protein kinase receptor R3,TKL,STKR,STKR1,P37023,MGI:1338946,11482,X,X,X,KinHub,10/6/2020
+Adck1,ADCK1,ADCK1,ADCK1,ADCK1,Uncharacterized aarF domain-containing protein kinase 1,Atypical,ABC1,ABC1-B,Q86TW2,MGI:1919363,72113,X,X,X,KinHub,10/6/2020
+Adck2,ADCK2,ADCK2,ADCK2,ADCK2,Uncharacterized aarF domain-containing protein kinase 2,Atypical,ABC1,ABC1-C,Q7Z695,MGI:1889336,57869,X,X,X,KinHub,10/6/2020
+Adck5,ADCK5,ADCK5,ADCK5,ADCK5,Uncharacterized aarF domain-containing protein kinase 5,Atypical,ABC1,ABC1-D,Q3MIX3,MGI:2679274,268822,X,X,X,KinHub,10/6/2020
+Adk,,,ADK,,adenosine kinase,Metabolic,,,,MGI:87930,11534,,,,MGI,10/6/2020
+Agk,,,AGK,,acylglycerol kinase,Metabolic,,,,MGI:1917173,69923,,,,MGI,10/6/2020
+Akt1,AKT1,AKT1,AKT1,AKT1,RAC-alpha serine/threonine-protein kinase,AGC,Akt,,P31749,MGI:87986,11651,X,X,X,KinHub,10/6/2020
+Akt2,AKT2,AKT2,AKT2,AKT2,RAC-beta serine/threonine-protein kinase,AGC,Akt,,P31751,MGI:104874,11652,X,X,X,KinHub,10/6/2020
+Akt3,AKT3,AKT3,AKT3,AKT3,RAC-gamma serine/threonine-protein kinase,AGC,Akt,,Q9Y243,MGI:1345147,23797,X,X,X,KinHub,10/6/2020
+Alk,ALK,ALK,ALK,ALK,ALK tyrosine kinase receptor,TK,ALK,,Q9UM73,MGI:103305,11682,X,X,X,KinHub,10/6/2020
+Alpk1,AlphaK3,AlphaK3,ALPK1,AlphaK3,Alpha-protein kinase 1,Atypical,Alpha,,Q96QP1,MGI:1918731,71481,X,X,X,KinHub,10/6/2020
+Alpk2,AlphaK2,AlphaK2,ALPK2,AlphaK2,Alpha-protein kinase 2,Atypical,Alpha,,Q86TB3,MGI:2449492,225638,X,X,X,KinHub,10/6/2020
+Alpk3,AlphaK1,AlphaK1,ALPK3,AlphaK1,Alpha-protein kinase 3,Atypical,Alpha,,Q96L96,MGI:2151224,116904,X,X,X,KinHub,10/6/2020
+Amhr2,MISR2,MISR2,AMHR2,MISR2,Anti-Muellerian hormone type-2 receptor,TKL,STKR,STKR2,Q16671,MGI:105062,110542,X,X,X,KinHub,10/6/2020
+Ankk1,SgK288,SgK288,ANKK1,SgK288,Ankyrin repeat and protein kinase domain-containing protein 1,TKL,RIPK,,Q8NFD2,MGI:3045301,244859,X,X,X,KinHub,10/6/2020
+Araf,ARAF,ARAF,ARAF,ARAF,Serine/threonine-protein kinase A-Raf,TKL,RAF,,P10398,MGI:88065,11836,X,X,X,KinHub,10/6/2020
+Atm,ATM,ATM,ATM,ATM,Serine-protein kinase ATM,Atypical,PIKK,ATM,Q13315,MGI:107202,11920,X,X,X,KinHub,10/6/2020
+Atr,ATR,ATR,ATR,ATR,Serine/threonine-protein kinase ATR,Atypical,PIKK,ATR,Q13535,MGI:108028,245000,X,X,X,KinHub,10/6/2020
+Aurka,AurA,AurA,AURKA,AurA,Aurora kinase A,Other,Aur,,O14965,MGI:894678,20878,X,X,X,KinHub,10/6/2020
+Aurkb,AurB,AurB,AURKB,AurB,Aurora kinase B,Other,Aur,,Q96GD4,MGI:107168,20877,X,X,X,KinHub,10/6/2020
+Aurkc,AurC,AurC,AURKC,AurC,Aurora kinase C,Other,Aur,,Q9UQB9,MGI:1321119,20871,X,X,X,KinHub,10/6/2020
+Axl,AXL,AXL,AXL,AXL,Tyrosine-protein kinase receptor UFO,TK,Axl,,P30530,MGI:1347244,26362,X,X,X,KinHub,10/6/2020
+Baz1a,BAZ1A,BAZ1A,BAZ1A,,Bromodomain adjacent to zinc finger domain protein 1A,Atypical,BAZ,,Q9NRL2,MGI:1309478,217578,X,,,KinHub,10/6/2020
+Baz1b,BAZ1B,BAZ1B,BAZ1B,,Tyrosine-protein kinase BAZ1B,Atypical,BAZ,,Q9UIG0,MGI:1353499,22385,X,,,KinHub,10/6/2020
+Bckdk,BCKDK,BCKDK,BCKDK,BCKDK,[3-methyl-2-oxobutanoate dehydrogenase [lipoamide]] kinase,Atypical,PDHK,,O14874,MGI:1276121,12041,X,X,X,KinHub,10/6/2020
+Bcr,BCR,BCR,BCR,,Breakpoint cluster region protein,Atypical,BCR,,P11274,MGI:88141,110279,X,,,KinHub,10/6/2020
+Blk,BLK,BLK,BLK,BLK,Tyrosine-protein kinase Blk,TK,Src,,P51451,MGI:88169,12143,X,X,X,KinHub,10/6/2020
+Blvra,BLVRA,BLVRA,BLVRA,,Biliverdin reductase A,Atypical,BLVRA,,P53004,MGI:88170,109778,X,,,KinHub,10/6/2020
+Bmp2k,BIKE,BIKE,BMP2K,BIKE,BMP-2-inducible protein kinase,Other,NAK,,Q9NSY1,MGI:2155456,140780,X,X,X,KinHub,10/6/2020
+Bmpr1a,BMPR1A,BMPR1A,BMPR1A,BMPR1A,Bone morphogenetic protein receptor type-1A,TKL,STKR,STKR1,P36894,MGI:1338938,12166,X,X,X,KinHub,10/6/2020
+Bmpr1b,BMPR1B,BMPR1B,BMPR1B,BMPR1B,Bone morphogenetic protein receptor type-1B,TKL,STKR,STKR1,O00238,MGI:107191,12167,X,X,X,KinHub,10/6/2020
+Bmpr2,BMPR2,BMPR2,BMPR2,BMPR2,Bone morphogenetic protein receptor type-2,TKL,STKR,STKR2,Q13873,MGI:1095407,12168,X,X,X,KinHub,10/6/2020
+Bmx,BMX,BMX,BMX,BMX,Cytoplasmic tyrosine-protein kinase BMX,TK,Tec,,P51813,MGI:1101778,12169,X,X,X,KinHub,10/6/2020
+Braf,BRAF,BRAF,BRAF,BRAF,Serine/threonine-protein kinase B-raf,TKL,RAF,,P15056,MGI:88190,109880,X,X,X,KinHub,10/6/2020
+Brd2,BRD2,BRD2,BRD2,BRD2,Bromodomain-containing protein 2,Atypical,BRD,,P25440,MGI:99495,14312,X,X,,KinHub,10/6/2020
+Brd3,BRD3,BRD3,BRD3,BRD3,Bromodomain-containing protein 3,Atypical,BRD,,Q15059,MGI:1914632,67382,X,X,,KinHub,10/6/2020
+Brd4,BRD4,BRD4,BRD4,BRD4,BRD4 protein,Atypical,BRD,,O60885,MGI:1888520,57261,X,X,,KinHub,10/6/2020
+Brdt,BRDT,BRDT,BRDT,BRDT,Bromodomain testis-specific protein,Atypical,BRD,,Q58F21,MGI:1891374,114642,X,X,,KinHub,10/6/2020
+Brsk1,BRSK1,BRSK1,BRSK1,BRSK1,Serine/threonine-protein kinase BRSK1,CAMK,CAMKL,BRSK,Q8TDC3,MGI:2685946,381979,X,X,X,KinHub,10/6/2020
+Brsk2,BRSK2,BRSK2,BRSK2,BRSK2,Serine/threonine-protein kinase BRSK2,CAMK,CAMKL,BRSK,Q8IWQ3,MGI:1923020,75770,X,X,X,KinHub,10/6/2020
+Btk,BTK,BTK,BTK,BTK,Tyrosine-protein kinase BTK,TK,Tec,,Q06187,MGI:88216,12229,X,X,X,KinHub,10/6/2020
+Bub1,BUB1,BUB1,BUB1,BUB1,Mitotic checkpoint serine/threonine-protein kinase BUB1,Other,BUB,,O43683,MGI:1100510,12235,X,X,X,KinHub,10/6/2020
+Bub1b,BUBR1,BUBR1,BUB1B,BUBR1,Mitotic checkpoint serine/threonine-protein kinase BUB1 beta,Other,BUB,,O60566,MGI:1333889,12236,X,X,X,KinHub,10/6/2020
+Camk1,CaMK1a,CaMK1a,CAMK1,CaMK1a,Calcium/calmodulin-dependent protein kinase type 1,CAMK,CAMK1,,Q14012,MGI:1098535,52163,X,X,X,KinHub,10/6/2020
+Camk1d,CaMK1d,CaMK1d,CAMK1D,CaMK1d,Calcium/calmodulin-dependent protein kinase type 1D,CAMK,CAMK1,,Q8IU85,MGI:2442190,227541,X,X,X,KinHub,10/6/2020
+Camk1g,CaMK1g,CaMK1g,CAMK1G,CaMK1g,Calcium/calmodulin-dependent protein kinase type 1G,CAMK,CAMK1,,Q96NX5,MGI:2388073,215303,X,X,X,KinHub,10/6/2020
+Camk2a,CaMK2a,CaMK2a,CAMK2A,CaMK2a,Calcium/calmodulin-dependent protein kinase type II subunit alpha,CAMK,CAMK2,,Q9UQM7,MGI:88256,12322,X,X,X,KinHub,10/6/2020
+Camk2b,CaMK2b,CaMK2b,CAMK2B,CaMK2b,Calcium/calmodulin-dependent protein kinase type II subunit beta,CAMK,CAMK2,,Q13554,MGI:88257,12323,X,X,X,KinHub,10/6/2020
+Camk2d,CaMK2d,CaMK2d,CAMK2D,CaMK2d,Calcium/calmodulin-dependent protein kinase type II subunit delta,CAMK,CAMK2,,Q13557,MGI:1341265,108058,X,X,X,KinHub,10/6/2020
+Camk2g,CaMK2g,CaMK2g,CAMK2G,CaMK2g,Calcium/calmodulin-dependent protein kinase (CaM kinase) II gamma,CAMK,CAMK2,,Q13555,MGI:88259,12325,X,X,X,KinHub,10/6/2020
+Camk4,CaMK4,CaMK4,CAMK4,CaMK4,Calcium/calmodulin-dependent protein kinase type IV,CAMK,CAMK1,,Q16566,MGI:88258,12326,X,X,X,KinHub,10/6/2020
+Camkk1,CaMKK1,CaMKK1,CAMKK1,CaMKK1,Calcium/calmodulin-dependent protein kinase kinase 1,Other,CAMKK,CAMKK-Meta,Q8N5S9,MGI:1891766,55984,X,X,X,KinHub,10/6/2020
+Camkk2,CaMKK2,CaMKK2,CAMKK2,CaMKK2,Calcium/calmodulin-dependent protein kinase kinase 2,Other,CAMKK,CAMKK-Meta,Q96RR4,MGI:2444812,207565,X,X,X,KinHub,10/6/2020
+Camkv,VACAMKL,VACAMKL,CAMKV,VACAMKL,CaM kinase-like vesicle-associated protein,CAMK,CAMK-Unique,,Q8NCB2,MGI:2384296,235604,X,X,X,KinHub,10/6/2020
+Cask,CASK,CASK,CASK,CASK,Peripheral plasma membrane protein CASK,CAMK,CASK,,O14936,MGI:1309489,12361,X,X,X,KinHub,10/6/2020
+Cdc42bpa,MRCKa,MRCKa,CDC42BPA,MRCKa,Serine/threonine-protein kinase MRCK alpha,AGC,DMPK,GEK,Q5VT25,MGI:2441841,226751,X,X,X,KinHub,10/6/2020
+Cdc42bpb,MRCKb,MRCKb,CDC42BPB,MRCKb,Serine/threonine-protein kinase MRCK beta,AGC,DMPK,GEK,Q9Y5S2,MGI:2136459,217866,X,X,X,KinHub,10/6/2020
+Cdc42bpg,DMPK2,DMPK2,CDC42BPG,DMPK2,Serine/threonine-protein kinase MRCK gamma,AGC,DMPK,GEK,Q6DT37,MGI:2652845,240505,X,X,X,KinHub,10/6/2020
+Cdc7,CDC7,CDC7,CDC7,CDC7,Cell division cycle 7-related protein kinase,Other,CDC7,,O00311,MGI:1309511,12545,X,X,X,KinHub,10/6/2020
+Cdk1,CDC2,CDC2,CDK1,CDC2,Cyclin-dependent kinase 1,CMGC,CDK,CDC2,P06493,MGI:88351,12534,X,X,X,KinHub,10/6/2020
+Cdk10,CDK10,CDK10,CDK10,CDK10,Cyclin-dependent kinase 10,CMGC,CDK,CDK10,Q15131,MGI:2448549,234854,X,X,X,KinHub,10/6/2020
+Cdk11b,PITSLRE,PITSLRE,CDK11B,PITSLRE,Cyclin-dependent kinase 11B,CMGC,CDK,CDK11,P21127,MGI:88353,12537,X,X,X,KinHub,10/6/2020
+Cdk12,CRK7,CRK7,CDK12,CRK7,Cyclin-dependent kinase 12,CMGC,CDK,CRK7,Q9NYV4,MGI:1098802,69131,X,X,X,KinHub,10/6/2020
+Cdk13,CHED,CHED,CDK13,CHED,Cyclin-dependent kinase 13,CMGC,CDK,CRK7,Q14004,MGI:1916812,69562,X,X,X,KinHub,10/6/2020
+Cdk14,PFTAIRE1,PFTAIRE1,CDK14,PFTAIRE1,Cyclin-dependent kinase 14,CMGC,CDK,PFTAIRE,O94921,MGI:894318,18647,X,X,X,KinHub,10/6/2020
+Cdk15,PFTAIRE2,PFTAIRE2,CDK15,PFTAIRE2,Cyclin-dependent kinase 15,CMGC,CDK,PFTAIRE,Q96Q40,MGI:3583944,271697,X,X,X,KinHub,10/6/2020
+Cdk16,PCTAIRE1,PCTAIRE1,CDK16,PCTAIRE1,Cyclin-dependent kinase 16,CMGC,CDK,PCTAIRE,Q00536,MGI:97516,18555,X,X,X,KinHub,10/6/2020
+Cdk17,PCTAIRE2,PCTAIRE2,CDK17,PCTAIRE2,Cyclin-dependent kinase 17,CMGC,CDK,PCTAIRE,Q00537,MGI:97517,237459,X,X,X,KinHub,10/6/2020
+Cdk18,PCTAIRE3,PCTAIRE3,CDK18,PCTAIRE3,Cyclin-dependent kinase 18,CMGC,CDK,PCTAIRE,Q07002,MGI:97518,18557,X,X,X,KinHub,10/6/2020
+Cdk19,CDK11,CDK11,CDK19,CDK11,Cyclin-dependent kinase 19,CMGC,CDK,CDK8,Q9BWU1,MGI:1925584,78334,X,X,X,KinHub,10/6/2020
+Cdk2,CDK2,CDK2,CDK2,CDK2,Cyclin-dependent kinase 2,CMGC,CDK,CDK2,P24941,MGI:104772,12566,X,X,X,KinHub,10/6/2020
+Cdk20,CCRK,CCRK,CDK20,CCRK,Cyclin-dependent kinase 20,CMGC,CDK,,Q8IZL9,MGI:2145349,105278,X,X,X,KinHub,10/6/2020
+Cdk3,CDK3,CDK3,CDK3,CDK3,Cyclin-dependent kinase 3,CMGC,CDK,CDK2,Q00526,MGI:1916931,69681,X,X,X,KinHub,10/6/2020
+Cdk4,CDK4,CDK4,CDK4,CDK4,Cyclin-dependent kinase 4,CMGC,CDK,CDK4,P11802,MGI:88357,12567,X,X,X,KinHub,10/6/2020
+Cdk5,CDK5,CDK5,CDK5,CDK5,Cyclin-dependent kinase 5,CMGC,CDK,CDK5,Q00535,MGI:101765,12568,X,X,X,KinHub,10/6/2020
+Cdk6,CDK6,CDK6,CDK6,CDK6,Cyclin-dependent kinase 6,CMGC,CDK,CDK4,Q00534,MGI:1277162,12571,X,X,X,KinHub,10/6/2020
+Cdk7,CDK7,CDK7,CDK7,CDK7,Cyclin-dependent kinase 7,CMGC,CDK,CDK7,P50613,MGI:102956,12572,X,X,X,KinHub,10/6/2020
+Cdk8,CDK8,CDK8,CDK8,CDK8,Cyclin-dependent kinase 8,CMGC,CDK,CDK8,P49336,MGI:1196224,264064,X,X,X,KinHub,10/6/2020
+Cdk9,CDK9,CDK9,CDK9,CDK9,Cyclin-dependent kinase 9,CMGC,CDK,CDK9,P50750,MGI:1328368,107951,X,X,X,KinHub,10/6/2020
+Cdkl1,CDKL1,CDKL1,CDKL1,CDKL1,Cyclin-dependent kinase-like 1,CMGC,CDKL,,Q00532,MGI:1918341,71091,X,X,X,KinHub,10/6/2020
+Cdkl2,CDKL2,CDKL2,CDKL2,CDKL2,Cyclin-dependent kinase-like 2,CMGC,CDKL,,Q92772,MGI:1858227,53886,X,X,X,KinHub,10/6/2020
+Cdkl3,CDKL3,CDKL3,CDKL3,CDKL3,Cyclin-dependent kinase-like 3,CMGC,CDKL,,Q8IVW4,MGI:2388268,213084,X,X,X,KinHub,10/6/2020
+Cdkl4,CDKL4,CDKL4,CDKL4,CDKL4,Cyclin-dependent kinase-like 4,CMGC,CDKL,,Q5MAI5,MGI:3587025,381113,X,X,X,KinHub,10/6/2020
+Cdkl5,CDKL5,CDKL5,CDKL5,CDKL5,Cyclin-dependent kinase-like 5,CMGC,CDKL,,O76039,MGI:1278336,382253,X,X,X,KinHub,10/6/2020
+Cert1,Col4A3BP,Col4A3BP,COL4A3BP,,Collagen type IV alpha-3-binding protein,Atypical,Col4A3BP,,Q9Y5P4,MGI:1915268,68018,X,,,KinHub,10/6/2020
+Chek1,CHK1,CHK1,CHEK1,CHK1,Serine/threonine-protein kinase Chk1,CAMK,CAMKL,CHK1,O14757,MGI:1202065,12649,X,X,X,KinHub,10/6/2020
+Chek2,CHK2,CHK2,CHEK2,CHK2,Serine/threonine-protein kinase Chk2,CAMK,RAD53,,O96017,MGI:1355321,50883,X,X,X,KinHub,10/6/2020
+Chka,,,CHKA,,choline kinase alpha,Metabolic,,,,MGI:107760,12660,,,,MGI,10/6/2020
+Chkb,,,CHKB,,choline kinase beta,Metabolic,,,,MGI:1328313,12651,,,,MGI,10/6/2020
+Chuk,IKKa,IKKa,CHUK,IKKa,Inhibitor of nuclear factor kappa-B kinase subunit alpha,Other,IKK,,O15111,MGI:99484,12675,X,X,X,KinHub,10/6/2020
+Cit,CRIK,CRIK,CIT,CRIK,Citron Rho-interacting kinase,AGC,DMPK,,O14578,MGI:105313,12704,X,X,X,KinHub,10/6/2020
+Clk1,CLK1,CLK1,CLK1,CLK1,Dual specificity protein kinase CLK1,CMGC,CLK,,P49759,MGI:107403,12747,X,X,X,KinHub,10/6/2020
+Clk2,CLK2,CLK2,CLK2,CLK2,Dual specificity protein kinase CLK2,CMGC,CLK,,P49760,MGI:1098669,12748,X,X,X,KinHub,10/6/2020
+Clk3,CLK3,CLK3,CLK3,CLK3,Dual specificity protein kinase CLK3,CMGC,CLK,,P49761,MGI:1098670,102414,X,X,X,KinHub,10/6/2020
+Clk4,CLK4,CLK4,CLK4,CLK4,Dual specificity protein kinase CLK4,CMGC,CLK,,Q9HAZ1,MGI:1098551,12750,X,X,X,KinHub,10/6/2020
+Coq8a,ADCK3,ADCK3,ADCK3,ADCK3,Chaperone activity of bc1 complex-like,Atypical,ABC1,ABC1-A,Q8NI60,MGI:1914676,67426,X,X,X,KinHub,10/6/2020
+Coq8b,ADCK4,ADCK4,ADCK4,ADCK4,Uncharacterized aarF domain-containing protein kinase 4,Atypical,ABC1,ABC1-A,Q96D53,MGI:1924139,76889,X,X,X,KinHub,10/6/2020
+Csf1r,FMS,FMS,CSF1R,FMS,Macrophage colony-stimulating factor 1 receptor,TK,PDGFR,,P07333,MGI:1339758,12978,X,X,X,KinHub,10/6/2020
+Csk,CSK,CSK,CSK,CSK,Tyrosine-protein kinase CSK,TK,Csk,,P41240,MGI:88537,12988,X,X,X,KinHub,10/6/2020
+Csnk1a1,CK1a,CK1a,CSNK1A1,CK1a,Casein kinase I isoform alpha,CK1,CK1,,P48729,MGI:1934950,93687,X,X,X,KinHub,10/6/2020
+Csnk1d,CK1d,CK1d,CSNK1D,CK1d,Casein kinase I isoform delta,CK1,CK1,,P48730,MGI:1355272,104318,X,X,X,KinHub,10/6/2020
+Csnk1e,CK1e,CK1e,CSNK1E,CK1e,Casein kinase I isoform epsilon,CK1,CK1,,P49674,MGI:1351660,27373,X,X,X,KinHub,10/6/2020
+Csnk1g1,CK1g1,CK1g1,CSNK1G1,CK1g1,Casein kinase I isoform gamma-1,CK1,CK1,,Q9HCP0,MGI:2660884,214897,X,X,X,KinHub,10/6/2020
+Csnk1g2,CK1g2,CK1g2,CSNK1G2,CK1g2,Casein kinase I isoform gamma-2,CK1,CK1,,P78368,MGI:1920014,103236,X,X,X,KinHub,10/6/2020
+Csnk1g3,CK1g3,CK1g3,CSNK1G3,CK1g3,Casein kinase I isoform gamma-3,CK1,CK1,,Q9Y6M4,MGI:1917675,70425,X,X,X,KinHub,10/6/2020
+Csnk2a1,CK2a1,CK2a1,CSNK2A1,CK2a1,Casein kinase II subunit alpha,CMGC,CK2,,P68400,MGI:88543,12995,X,X,X,KinHub,10/6/2020
+Csnk2a2,CK2a2,CK2a2,CSNK2A2,CK2a2,Casein kinase II subunit alpha',CMGC,CK2,,P19784,MGI:88547,13000,X,X,X,KinHub,10/6/2020
+Dapk1,DAPK1,DAPK1,DAPK1,DAPK1,Death-associated protein kinase 1,CAMK,DAPK,,P53355,MGI:1916885,69635,X,X,X,KinHub,10/6/2020
+Dapk2,DAPK2,DAPK2,DAPK2,DAPK2,Death-associated protein kinase 2,CAMK,DAPK,,Q9UIK4,MGI:1341297,13143,X,X,X,KinHub,10/6/2020
+Dapk3,DAPK3,DAPK3,DAPK3,DAPK3,Death-associated protein kinase 3,CAMK,DAPK,,O43293,MGI:1203520,13144,X,X,X,KinHub,10/6/2020
+Dck,,,DCK,,deoxycytidine kinase,Metabolic,,,,MGI:102726,13178,,,,MGI,10/6/2020
+Dclk1,DCAMKL1,DCAMKL1,DCLK1,DCAMKL1,Serine/threonine-protein kinase DCLK1,CAMK,DCAMKL,,O15075,MGI:1330861,13175,X,X,X,KinHub,10/6/2020
+Dclk2,DCAMKL2,DCAMKL2,DCLK2,DCAMKL2,Serine/threonine-protein kinase DCLK2,CAMK,DCAMKL,,Q8N568,MGI:1918012,70762,X,X,X,KinHub,10/6/2020
+Dclk3,DCAMKL3,DCAMKL3,DCLK3,DCAMKL3,Serine/threonine-protein kinase DCLK3,CAMK,DCAMKL,,Q9C098,MGI:3039580,245038,X,X,X,KinHub,10/6/2020
+Ddr1,DDR1,DDR1,DDR1,DDR1,Epithelial discoidin domain-containing receptor 1,TK,DDR,,Q08345,MGI:99216,12305,X,X,X,KinHub,10/6/2020
+Ddr2,DDR2,DDR2,DDR2,DDR2,Discoidin domain-containing receptor 2,TK,DDR,,Q16832,MGI:1345277,18214,X,X,X,KinHub,10/6/2020
+Dmpk,DMPK1,DMPK1,DMPK,DMPK1,Myotonin-protein kinase,AGC,DMPK,GEK,Q09013,MGI:94906,13400,X,X,X,KinHub,10/6/2020
+Dstyk,SgK496,SgK496,DSTYK,SgK496,Dual serine/threonine and tyrosine protein kinase,Other,Dusty,,Q6XUX3,MGI:1925064,213452,X,X,X,KinHub,10/6/2020
+Dyrk1a,DYRK1A,DYRK1A,DYRK1A,DYRK1A,Dual specificity tyrosine-phosphorylation-regulated kinase 1A,CMGC,DYRK,DYRK1,Q13627,MGI:1330299,13548,X,X,X,KinHub,10/6/2020
+Dyrk1b,DYRK1B,DYRK1B,DYRK1B,DYRK1B,Dual specificity tyrosine-phosphorylation-regulated kinase 1B,CMGC,DYRK,DYRK1,Q9Y463,MGI:1330302,13549,X,X,X,KinHub,10/6/2020
+Dyrk2,DYRK2,DYRK2,DYRK2,DYRK2,Dual specificity tyrosine-phosphorylation-regulated kinase 2,CMGC,DYRK,DYRK2,Q92630,MGI:1330301,69181,X,X,X,KinHub,10/6/2020
+Dyrk3,DYRK3,DYRK3,DYRK3,DYRK3,Dual specificity tyrosine-phosphorylation-regulated kinase 3,CMGC,DYRK,DYRK2,O43781,MGI:1330300,226419,X,X,X,KinHub,10/6/2020
+Dyrk4,DYRK4,DYRK4,DYRK4,DYRK4,Dual specificity tyrosine-phosphorylation-regulated kinase 4,CMGC,DYRK,DYRK2,Q9NR20,MGI:1330292,101320,X,X,X,KinHub,10/6/2020
+Eef2k,eEF2K,eEF2K,EEF2K,eEF2K,Eukaryotic elongation factor 2 kinase,Atypical,Alpha,eEF2K,O00418,MGI:1195261,13631,X,X,X,KinHub,10/6/2020
+Egfr,EGFR,EGFR,EGFR,EGFR,Epidermal growth factor receptor,TK,EGFR,,P00533,MGI:95294,13649,X,X,X,KinHub,10/6/2020
+Eif2ak1,HRI,HRI,EIF2AK1,HRI,Eukaryotic translation initiation factor 2-alpha kinase 1,Other,PEK,,Q9BQI3,MGI:1353448,15467,X,X,X,KinHub,10/6/2020
+Eif2ak2,PKR,PKR,EIF2AK2,PKR,Interferon-induced,Other,PEK,,P19525,MGI:1353449,19106,X,X,X,KinHub,10/6/2020
+Eif2ak3,PEK,PEK,EIF2AK3,PEK,Eukaryotic translation initiation factor 2-alpha kinase 3,Other,PEK,PEK,Q9NZJ5,MGI:1341830,13666,X,X,X,KinHub,10/6/2020
+Eif2ak4,GCN2,GCN2,EIF2AK4,GCN2,Eukaryotic translation initiation factor 2-alpha kinase 4,Other,PEK,GCN2,Q9P2K8,MGI:1353427,27103,X,X,X,KinHub,10/6/2020
+Epha1,EphA1,EphA1,EPHA1,EphA1,Ephrin type-A receptor 1,TK,Eph,,P21709,MGI:107381,13835,X,X,X,KinHub,10/6/2020
+Epha10,EphA10,EphA10,EPHA10,EphA10,Ephrin type-A receptor 10,TK,Eph,,Q5JZY3,MGI:3586824,230735,X,X,X,KinHub,10/6/2020
+Epha2,EphA2,EphA2,EPHA2,EphA2,Ephrin type-A receptor 2,TK,Eph,,P29317,MGI:95278,13836,X,X,X,KinHub,10/6/2020
+Epha3,EphA3,EphA3,EPHA3,EphA3,Ephrin type-A receptor 3,TK,Eph,,P29320,MGI:99612,13837,X,X,X,KinHub,10/6/2020
+Epha4,EphA4,EphA4,EPHA4,EphA4,Ephrin type-A receptor 4,TK,Eph,,P54764,MGI:98277,13838,X,X,X,KinHub,10/6/2020
+Epha5,EphA5,EphA5,EPHA5,EphA5,Ephrin type-A receptor 5,TK,Eph,,P54756,MGI:99654,13839,X,X,X,KinHub,10/6/2020
+Epha6,EphA6,EphA6,EPHA6,EphA6,Ephrin type-A receptor 6,TK,Eph,,Q9UF33,MGI:108034,13840,X,X,X,KinHub,10/6/2020
+Epha7,EphA7,EphA7,EPHA7,EphA7,Ephrin type-A receptor 7,TK,Eph,,Q15375,MGI:95276,13841,X,X,X,KinHub,10/6/2020
+Epha8,EphA8,EphA8,EPHA8,EphA8,Ephrin type-A receptor 8,TK,Eph,,P29322,MGI:109378,13842,X,X,X,KinHub,10/6/2020
+Ephb1,EphB1,EphB1,EPHB1,EphB1,Ephrin type-B receptor 1,TK,Eph,,P54762,MGI:1096337,270190,X,X,X,KinHub,10/6/2020
+Ephb2,EphB2,EphB2,EPHB2,EphB2,Ephrin type-B receptor 2,TK,Eph,,P29323,MGI:99611,13844,X,X,X,KinHub,10/6/2020
+Ephb3,EphB3,EphB3,EPHB3,EphB3,Ephrin type-B receptor 3,TK,Eph,,P54753,MGI:104770,13845,X,X,X,KinHub,10/6/2020
+Ephb4,EphB4,EphB4,EPHB4,EphB4,Ephrin type-B receptor 4,TK,Eph,,P54760,MGI:104757,13846,X,X,X,KinHub,10/6/2020
+Ephb6,EphB6,EphB6,EPHB6,EphB6,Ephrin type-B receptor 6,TK,Eph,,O15197,MGI:1096338,13848,X,X,X,KinHub,10/6/2020
+Erbb2,ErbB2,HER2/ErbB2,ERBB2,ErbB2,Receptor tyrosine-protein kinase erbB-2,TK,EGFR,,P04626,MGI:95410,13866,X,X,X,KinHub,10/6/2020
+Erbb3,ErbB3,HER3/ErbB3,ERBB3,ErbB3,Receptor tyrosine-protein kinase erbB-3,TK,EGFR,,P21860,MGI:95411,13867,X,X,X,KinHub,10/6/2020
+Erbb4,ErbB4,HER4/ErbB4,ERBB4,ErbB4,Receptor tyrosine-protein kinase erbB-4,TK,EGFR,,Q15303,MGI:104771,13869,X,X,X,KinHub,10/6/2020
+Ern1,IRE1,IRE1,ERN1,IRE1,Serine/threonine-protein kinase/endoribonuclease IRE1,Other,IRE,,O75460,MGI:1930134,78943,X,X,X,KinHub,10/6/2020
+Ern2,IRE2,IRE2,ERN2,IRE2,Serine/threonine-protein kinase/endoribonuclease IRE2,Other,IRE,,Q76MJ5,MGI:1349436,26918,X,X,X,KinHub,10/6/2020
+Fastk,FASTK,FASTK,FASTK,,Fas-activated serine/threonine kinase,Atypical,FAST,,Q14296,MGI:1913837,66587,X,,X,KinHub,10/6/2020
+Fastkd5,,,FASTKD5,,FAST kinase domains 5,Other,,,,MGI:2139469,380601,,,,MGI,10/6/2020
+Fer,FER,FER,FER,FER,Tyrosine-protein kinase Fer,TK,Fer,,P16591,MGI:105917,14158,X,X,X,KinHub,10/6/2020
+Fes,FES,FES,FES,FES,Tyrosine-protein kinase Fes/Fps,TK,Fer,,P07332,MGI:95514,14159,X,X,X,KinHub,10/6/2020
+Fgfr1,FGFR1,FGFR1,FGFR1,FGFR1,Fibroblast growth factor receptor 1,TK,FGFR,,P11362,MGI:95522,14182,X,X,X,KinHub,10/6/2020
+Fgfr2,FGFR2,FGFR2,FGFR2,FGFR2,Fibroblast growth factor receptor 2,TK,FGFR,,P21802,MGI:95523,14183,X,X,X,KinHub,10/6/2020
+Fgfr3,FGFR3,FGFR3,FGFR3,FGFR3,Fibroblast growth factor receptor 3,TK,FGFR,,P22607,MGI:95524,14184,X,X,X,KinHub,10/6/2020
+Fgfr4,FGFR4,FGFR4,FGFR4,FGFR4,Fibroblast growth factor receptor 4,TK,FGFR,,P22455,MGI:95525,14186,X,X,X,KinHub,10/6/2020
+Fgr,FGR,FGR,FGR,FGR,Tyrosine-protein kinase Fgr,TK,Src,,P09769,MGI:95527,14191,X,X,X,KinHub,10/6/2020
+Flt1,FLT1,FLT1,FLT1,FLT1,Vascular endothelial growth factor receptor 1,TK,VEGFR,,P17948,MGI:95558,14254,X,X,X,KinHub,10/6/2020
+Flt3,FLT3,FLT3,FLT3,FLT3,Receptor-type tyrosine-protein kinase FLT3,TK,PDGFR,,P36888,MGI:95559,14255,X,X,X,KinHub,10/6/2020
+Flt4,FLT4,FLT4,FLT4,FLT4,Vascular endothelial growth factor receptor 3,TK,VEGFR,,P35916,MGI:95561,14257,X,X,X,KinHub,10/6/2020
+Fn3k,,,FN3K,,fructosamine 3 kinase,Metabolic,,,,MGI:1926834,63828,,,,MGI,10/6/2020
+Fn3krp,,,FN3KRP,,fructosamine 3 kinase related protein,Metabolic,,,,MGI:2679256,238024,,,,MGI,10/6/2020
+Frk,FRK,FRK,FRK,FRK,Tyrosine-protein kinase FRK,TK,Src,,P42685,MGI:103265,14302,X,X,X,KinHub,10/6/2020
+Fyn,FYN,FYN,FYN,FYN,Tyrosine-protein kinase Fyn,TK,Src,,P06241,MGI:95602,14360,X,X,X,KinHub,10/6/2020
+Gak,GAK,GAK,GAK,GAK,Cyclin-G-associated kinase,Other,NAK,,O14976,MGI:2442153,231580,X,X,X,KinHub,10/6/2020
+Galk1,,,GALK1,,galactokinase 1,Metabolic,,,,MGI:95730,14635,,,,MGI,10/6/2020
+Grk1,RHOK,RHOK,GRK1,RHOK,Rhodopsin kinase,AGC,GRK,GRK,Q15835,MGI:1345146,24013,X,X,X,KinHub,10/6/2020
+Grk2,BARK1,BARK1,ADRBK1,BARK1,Beta-adrenergic receptor kinase 1,AGC,GRK,BARK,P25098,MGI:87940,110355,X,X,X,KinHub,10/6/2020
+Grk3,BARK2,BARK2,ADRBK2,BARK2,G protein-coupled receptor kinase 3,AGC,GRK,BARK,P35626,MGI:87941,320129,X,X,X,KinHub,10/6/2020
+Grk4,GPRK4,GPRK4,GRK4,GPRK4,G protein-coupled receptor kinase 4,AGC,GRK,GRK,P32298,MGI:95801,14772,X,X,X,KinHub,10/6/2020
+Grk5,GPRK5,GPRK5,GRK5,GPRK5,G protein-coupled receptor kinase 5,AGC,GRK,GRK,P34947,MGI:109161,14773,X,X,X,KinHub,10/6/2020
+Grk6,GPRK6,GPRK6,GRK6,GPRK6,G protein-coupled receptor kinase 6,AGC,GRK,GRK,P43250,MGI:1347078,26385,X,X,X,KinHub,10/6/2020
+Gsk3a,GSK3A,GSK3A,GSK3A,GSK3A,Glycogen synthase kinase-3 alpha,CMGC,GSK,,P49840,MGI:2152453,606496,X,X,X,KinHub,10/6/2020
+Gsk3b,GSK3B,GSK3B,GSK3B,GSK3B,Glycogen synthase kinase-3 beta,CMGC,GSK,,P49841,MGI:1861437,56637,X,X,X,KinHub,10/6/2020
+Gtf2f1,GTF2F1,GTF2F1,GTF2F1,,Transcription initiation factor IIF subunit alpha,Atypical,GTF2F1,,Q6IBK5,MGI:1923848,98053,X,,,KinHub,10/6/2020
+Gucy2c,HSER,HSER,GUCY2C,HSER,Heat-stable enterotoxin receptor,RGC,RGC,,P25092,MGI:106903,14917,X,X,X,KinHub,10/6/2020
+Gucy2d,CYGD,CYGD,GUCY2D,CYGD,Retinal guanylyl cyclase 1,RGC,RGC,,Q02846,MGI:106030,14918,X,X,X,KinHub,10/6/2020
+Gucy2e,,,,,guanylate cyclase 2e,RGC,,,,MGI:105123,14919,,,,MGI,10/6/2020
+Gucy2f,CYGF,CYGF,GUCY2F,CYGF,Retinal guanylyl cyclase 2,RGC,RGC,,P51841,MGI:105119,245650,X,X,X,KinHub,10/6/2020
+Haspin,Haspin,Haspin,GSG2,Haspin,Serine/threonine-protein kinase haspin,Other,Haspin,,Q8TF76,MGI:1194498,14841,X,X,X,KinHub,10/6/2020
+Hck,HCK,HCK,HCK,HCK,Tyrosine-protein kinase HCK,TK,Src,,P08631,MGI:96052,15162,X,X,X,KinHub,10/6/2020
+hEGFR,EGFR,EGFR,EGFR,EGFR,human EGFR,TK,EGFR,,P00533,,,X,X,X,KinHub,10/6/2020
+Hipk1,HIPK1,HIPK1,HIPK1,HIPK1,Homeodomain-interacting protein kinase 1,CMGC,DYRK,HIPK,Q86Z02,MGI:1314873,15257,X,X,X,KinHub,10/6/2020
+Hipk2,HIPK2,HIPK2,HIPK2,HIPK2,Homeodomain-interacting protein kinase 2,CMGC,DYRK,HIPK,Q9H2X6,MGI:1314872,15258,X,X,X,KinHub,10/6/2020
+Hipk3,HIPK3,HIPK3,HIPK3,HIPK3,Homeodomain-interacting protein kinase 3,CMGC,DYRK,HIPK,Q9H422,MGI:1314882,15259,X,X,X,KinHub,10/6/2020
+Hipk4,HIPK4,HIPK4,HIPK4,HIPK4,Homeodomain-interacting protein kinase 4,CMGC,DYRK,HIPK,Q8NE63,MGI:2685008,233020,X,X,X,KinHub,10/6/2020
+Hk1,,,HK1,,hexokinase 1,Metabolic,,,,MGI:96103,15275,,,,MGI,10/6/2020
+Hunk,HUNK,HUNK,HUNK,HUNK,Hormonally up-regulated neu tumor-associated kinase,CAMK,CAMKL,HUNK,P57058,MGI:1347352,26559,X,X,X,KinHub,10/6/2020
+Cilk1,ICK,ICK,ICK,ICK,Serine/threonine-protein kinase ICK,CMGC,RCK,,Q9UPZ9,,,X,X,X,KinHub,10/6/2020
+Igf1r,IGF1R,IGF1R,IGF1R,IGF1R,Insulin-like growth factor 1 receptor,TK,InsR,,P08069,MGI:96433,16001,X,X,X,KinHub,10/6/2020
+Ikbkb,IKKb,IKKb,IKBKB,IKKb,Inhibitor of nuclear factor kappa-B kinase subunit beta,Other,IKK,,O14920,MGI:1338071,16150,X,X,X,KinHub,10/6/2020
+Ikbke,IKKe,IKKe,IKBKE,IKKe,Inhibitor of nuclear factor kappa-B kinase subunit epsilon,Other,IKK,,Q14164,MGI:1929612,56489,X,X,X,KinHub,10/6/2020
+Ilk,ILK,ILK,ILK,ILK,Integrin-linked protein kinase,TKL,MLK,ILK,Q13418,MGI:1195267,16202,X,X,X,KinHub,10/6/2020
+Insr,INSR,INSR,INSR,INSR,Insulin receptor,TK,InsR,,P06213,MGI:96575,16337,X,X,X,KinHub,10/6/2020
+Insrr,IRR,IRR,INSRR,IRR,Insulin receptor-related protein,TK,InsR,,P14616,MGI:1346037,23920,X,X,X,KinHub,10/6/2020
+Ip6k1,,,IP6K1,,inositol hexaphosphate kinase 1,Metabolic,,,,MGI:1351633,27399,,,,MGI,10/6/2020
+Ip6k2,,,IP6K2,,inositol hexaphosphate kinase 2,Metabolic,,,,MGI:1923750,76500,,,,MGI,10/6/2020
+Ipmk,,,IPMK,,inositol polyphosphate multikinase,Metabolic,,,,MGI:1916968,69718,,,,MGI,10/6/2020
+Irak1,IRAK1,IRAK1,IRAK1,IRAK1,Interleukin-1 receptor-associated kinase 1,TKL,IRAK,,P51617,MGI:107420,16179,X,X,X,KinHub,10/6/2020
+Irak2,IRAK2,IRAK2,IRAK2,IRAK2,Interleukin-1 receptor-associated kinase-like 2,TKL,IRAK,,O43187,MGI:2429603,108960,X,X,X,KinHub,10/6/2020
+Irak3,IRAK3,IRAK3,IRAK3,IRAK3,Interleukin-1 receptor-associated kinase 3,TKL,IRAK,,Q9Y616,MGI:1921164,73914,X,X,X,KinHub,10/6/2020
+Irak4,IRAK4,IRAK4,IRAK4,IRAK4,Interleukin-1 receptor-associated kinase 4,TKL,IRAK,,Q9NWZ3,MGI:2182474,266632,X,X,X,KinHub,10/6/2020
+Itk,ITK,ITK,ITK,ITK,Tyrosine-protein kinase ITK/TSK,TK,Tec,,Q08881,MGI:96621,16428,X,X,X,KinHub,10/6/2020
+Jak1,JAK1,JAK1,JAK1,JAK1,Tyrosine-protein kinase JAK1,TK,Jak,,P23458,MGI:96628,16451,X,X,X,KinHub,10/6/2020
+Jak2,JAK2,JAK2,JAK2,JAK2,Tyrosine-protein kinase JAK2,TK,Jak,,O60674,MGI:96629,16452,X,X,X,KinHub,10/6/2020
+Jak3,JAK3,JAK3,JAK3,JAK3,Tyrosine-protein kinase JAK3,TK,Jak,,P52333,MGI:99928,16453,X,X,X,KinHub,10/6/2020
+Kalrn,Trad,Trad,KALRN,Trad,HCG2039851,CAMK,Trio,,O60229,MGI:2685385,545156,X,X,X,KinHub,10/6/2020
+Kdr,KDR,KDR,KDR,KDR,Vascular endothelial growth factor receptor 2,TK,VEGFR,,P35968,MGI:96683,16542,X,X,X,KinHub,10/6/2020
+Khk,,,KHK,,ketohexokinase,Metabolic,,,,MGI:1096353,16548,,,,MGI,10/6/2020
+Kit,KIT,KIT,KIT,KIT,Mast/stem cell growth factor receptor Kit,TK,PDGFR,,P10721,MGI:96677,16590,X,X,X,KinHub,10/6/2020
+Ksr1,KSR1,KSR1,KSR1,KSR1,Kinase suppressor of Ras 1,TKL,RAF,KSR,Q8IVT5,MGI:105051,16706,X,X,X,KinHub,10/6/2020
+Ksr2,KSR2,KSR2,KSR2,KSR2,Kinase suppressor of Ras 2,TKL,RAF,,Q6VAB6,MGI:3610315,333050,X,X,X,KinHub,10/6/2020
+Lats1,LATS1,LATS1,LATS1,LATS1,Serine/threonine-protein kinase LATS1,AGC,NDR,,O95835,MGI:1333883,16798,X,X,X,KinHub,10/6/2020
+Lats2,LATS2,LATS2,LATS2,LATS2,Serine/threonine-protein kinase LATS2,AGC,NDR,,Q9NRM7,MGI:1354386,50523,X,X,X,KinHub,10/6/2020
+Lck,LCK,LCK,LCK,LCK,Tyrosine-protein kinase Lck,TK,Src,,P06239,MGI:96756,16818,X,X,X,KinHub,10/6/2020
+Limk1,LIMK1,LIMK1,LIMK1,LIMK1,LIM domain kinase 1,TKL,LISK,LIMK,P53667,MGI:104572,16885,X,X,X,KinHub,10/6/2020
+Limk2,LIMK2,LIMK2,LIMK2,LIMK2,LIM domain kinase 2,TKL,LISK,LIMK,P53671,MGI:1197517,16886,X,X,X,KinHub,10/6/2020
+Lmtk2,LMR2,LMR2,LMTK2,LMR2,Serine/threonine-protein kinase LMTK2,TK,Lmr,,Q8IWU2,MGI:3036247,231876,X,X,X,KinHub,10/6/2020
+Lmtk3,LMR3,LMR3,LMTK3,LMR3,Serine/threonine-protein kinase LMTK3,TK,Lmr,,Q96Q04,MGI:3039582,381983,X,X,X,KinHub,10/6/2020
+Lrrk1,LRRK1,LRRK1,LRRK1,LRRK1,Leucine-rich repeat serine/threonine-protein kinase 1,TKL,LRRK,,Q38SD2,MGI:2142227,233328,X,X,X,KinHub,10/6/2020
+Lrrk2,LRRK2,LRRK2,LRRK2,LRRK2,Leucine-rich repeat serine/threonine-protein kinase 2,TKL,LRRK,,Q5S007,MGI:1913975,66725,X,X,X,KinHub,10/6/2020
+Ltk,LTK,LTK,LTK,LTK,Leukocyte tyrosine kinase receptor,TK,ALK,,P29376,MGI:96840,17005,X,X,X,KinHub,10/6/2020
+Lyn,LYN,LYN,LYN,LYN,Tyrosine-protein kinase Lyn,TK,Src,,P07948,MGI:96892,17096,X,X,X,KinHub,10/6/2020
+Mak,MAK,MAK,MAK,MAK,Serine/threonine-protein kinase MAK,CMGC,RCK,,P20794,MGI:96913,17152,X,X,X,KinHub,10/6/2020
+Map2k1,MAP2K1,MAP2K1,MAP2K1,MAP2K1,Dual specificity mitogen-activated protein kinase kinase 1,STE,STE7,,Q02750,MGI:1346866,26395,X,X,X,KinHub,10/6/2020
+Map2k2,MAP2K2,MAP2K2,MAP2K2,MAP2K2,Dual specificity mitogen-activated protein kinase kinase 2,STE,STE7,,P36507,MGI:1346867,26396,X,X,X,KinHub,10/6/2020
+Map2k3,MAP2K3,MAP2K3,MAP2K3,MAP2K3,Dual specificity mitogen-activated protein kinase kinase 3,STE,STE7,,P46734,MGI:1346868,26397,X,X,X,KinHub,10/6/2020
+Map2k4,MAP2K4,MAP2K4,MAP2K4,MAP2K4,Dual specificity mitogen-activated protein kinase kinase 4,STE,STE7,,P45985,MGI:1346869,26398,X,X,X,KinHub,10/6/2020
+Map2k5,MAP2K5,MAP2K5,MAP2K5,MAP2K5,Dual specificity mitogen-activated protein kinase kinase 5,STE,STE7,,Q13163,MGI:1346345,23938,X,X,X,KinHub,10/6/2020
+Map2k6,MAP2K6,MAP2K6,MAP2K6,MAP2K6,Dual specificity mitogen-activated protein kinase kinase 6,STE,STE7,,P52564,MGI:1346870,26399,X,X,X,KinHub,10/6/2020
+Map2k7,MAP2K7,MAP2K7,MAP2K7,MAP2K7,Dual specificity mitogen-activated protein kinase kinase 7,STE,STE7,,O14733,MGI:1346871,26400,X,X,X,KinHub,10/6/2020
+Map3k1,MAP3K1,MAP3K1,MAP3K1,MAP3K1,Mitogen-activated protein kinase kinase kinase 1,STE,STE11,,Q13233,MGI:1346872,26401,X,X,X,KinHub,10/6/2020
+Map3k10,MLK2,MLK2,MAP3K10,MLK2,Mitogen-activated protein kinase kinase kinase 10,TKL,MLK,MLK,Q02779,MGI:1346879,269881,X,X,X,KinHub,10/6/2020
+Map3k11,MLK3,MLK3,MAP3K11,MLK3,Mitogen-activated protein kinase kinase kinase 11,TKL,MLK,MLK,Q16584,MGI:1346880,26403,X,X,X,KinHub,10/6/2020
+Map3k12,DLK,DLK,MAP3K12,DLK,Mitogen-activated protein kinase kinase kinase 12,TKL,MLK,LZK,Q12852,MGI:1346881,26404,X,X,X,KinHub,10/6/2020
+Map3k13,LZK,LZK,MAP3K13,LZK,Mitogen-activated protein kinase kinase kinase 13,TKL,MLK,LZK,O43283,MGI:2444243,71751,X,X,X,KinHub,10/6/2020
+Map3k14,NIK,NIK,MAP3K14,NIK,Mitogen-activated protein kinase kinase kinase 14,STE,STE-Unique,,Q99558,MGI:1858204,53859,X,X,X,KinHub,10/6/2020
+Map3k15,MAP3K7,MAP3K7,MAP3K15,MAP3K7,Mitogen-activated protein kinase kinase kinase 15,STE,STE11,,Q6ZN16,MGI:2448588,270672,X,X,X,KinHub,10/6/2020
+Map3k19,MAP3K19,MAP3K8,MAP3K19,MAP3K19,Mitogen-activated protein kinase kinase kinase 19,STE,STE11,,Q56UN5,MGI:1203481,22625,X,X,X,KinHub,10/6/2020
+Map3k2,MAP3K2,MAP3K2,MAP3K2,MAP3K2,Mitogen-activated protein kinase kinase kinase 2,STE,STE11,,Q9Y2U5,MGI:1346873,26405,X,X,X,KinHub,10/6/2020
+Map3k20,ZAK,ZAK,MLTK,ZAK,Mitogen-activated protein kinase kinase kinase MLT,TKL,MLK,ZAK,Q9NYL2,MGI:2443258,65964,X,X,X,KinHub,10/6/2020
+Map3k21,MLK4,MLK4,MLK4,MLK4,Mitogen-activated protein kinase kinase kinase MLK4,TKL,MLK,MLK,Q5TCX8,MGI:2385307,234878,X,X,X,KinHub,10/6/2020
+Map3k3,MAP3K3,MAP3K3,MAP3K3,MAP3K3,Mitogen-activated protein kinase kinase kinase 3,STE,STE11,,Q99759,MGI:1346874,26406,X,X,X,KinHub,10/6/2020
+Map3k4,MAP3K4,MAP3K4,MAP3K4,MAP3K4,Mitogen-activated protein kinase kinase kinase 4,STE,STE11,,Q9Y6R4,MGI:1346875,26407,X,X,X,KinHub,10/6/2020
+Map3k5,MAP3K5,MAP3K5,MAP3K5,MAP3K5,Mitogen-activated protein kinase kinase kinase 5,STE,STE11,,Q99683,MGI:1346876,26408,X,X,X,KinHub,10/6/2020
+Map3k6,MAP3K6,MAP3K6,MAP3K6,MAP3K6,Mitogen-activated protein kinase kinase kinase 6,STE,STE11,,O95382,MGI:1855691,53608,X,X,X,KinHub,10/6/2020
+Map3k7,TAK1,TAK1,MAP3K7,TAK1,Mitogen-activated protein kinase kinase kinase 7,TKL,MLK,TAK1,O43318,MGI:1346877,26409,X,X,X,KinHub,10/6/2020
+Map3k8,COT,COT,MAP3K8,COT,Mitogen-activated protein kinase kinase kinase 8,STE,STE-Unique,,P41279,MGI:1346878,26410,X,X,X,KinHub,10/6/2020
+Map3k9,MLK1,MLK1,MAP3K9,MLK1,Mitogen-activated protein kinase kinase kinase 9,TKL,MLK,MLK,P80192,MGI:2449952,338372,X,X,X,KinHub,10/6/2020
+Map4k1,HPK1,HPK1,MAP4K1,HPK1,Mitogen-activated protein kinase kinase kinase kinase 1,STE,STE20,KHS,Q92918,MGI:1346882,26411,X,X,X,KinHub,10/6/2020
+Map4k2,GCK,GCK,MAP4K2,GCK,Mitogen-activated protein kinase kinase kinase kinase 2,STE,STE20,KHS,Q12851,MGI:1346883,26412,X,X,X,KinHub,10/6/2020
+Map4k3,KHS2,KHS2,MAP4K3,KHS2,Mitogen-activated protein kinase kinase kinase kinase 3,STE,STE20,KHS,Q8IVH8,MGI:2154405,225028,X,X,X,KinHub,10/6/2020
+Map4k4,HGK,ZC1/HGK,MAP4K4,HGK,Mitogen-activated protein kinase kinase kinase kinase 4,STE,STE20,MSN,O95819,MGI:1349394,26921,X,X,X,KinHub,10/6/2020
+Map4k5,KHS1,KHS1,MAP4K5,KHS1,Mitogen-activated protein kinase kinase kinase kinase 5,STE,STE20,KHS,Q9Y4K4,MGI:1925503,399510,X,X,X,KinHub,10/6/2020
+Mapk1,Erk2,Erk2,MAPK1,Erk2,Mitogen-activated protein kinase 1,CMGC,MAPK,ERK1,P28482,MGI:1346858,26413,X,X,X,KinHub,10/6/2020
+Mapk10,JNK3,JNK3,MAPK10,JNK3,Mitogen-activated protein kinase 10,CMGC,MAPK,JNK,P53779,MGI:1346863,26414,X,X,X,KinHub,10/6/2020
+Mapk11,p38b,p38b,MAPK11,p38b,Mitogen-activated protein kinase 11,CMGC,MAPK,p38,Q15759,MGI:1338024,19094,X,X,X,KinHub,10/6/2020
+Mapk12,p38g,p38g,MAPK12,p38g,Mitogen-activated protein kinase 12,CMGC,MAPK,p38,P53778,MGI:1353438,29857,X,X,X,KinHub,10/6/2020
+Mapk13,p38d,p38d,MAPK13,p38d,Mitogen-activated protein kinase 13,CMGC,MAPK,p38,O15264,MGI:1346864,26415,X,X,X,KinHub,10/6/2020
+Mapk14,p38a,p38a,MAPK14,p38a,Mitogen-activated protein kinase 14,CMGC,MAPK,p38,Q16539,MGI:1346865,26416,X,X,X,KinHub,10/6/2020
+Mapk15,Erk7,Erk7,MAPK15,Erk7,Mitogen-activated protein kinase 15,CMGC,MAPK,ERK7,Q8TD08,MGI:2652894,332110,X,X,X,KinHub,10/6/2020
+Mapk3,Erk1,Erk1,MAPK3,Erk1,Mitogen-activated protein kinase 3,CMGC,MAPK,ERK1,P27361,MGI:1346859,26417,X,X,X,KinHub,10/6/2020
+Mapk4,Erk4,Erk4,MAPK4,Erk4,Mitogen-activated protein kinase 4,CMGC,MAPK,ERK3,P31152,MGI:2444559,225724,X,X,X,KinHub,10/6/2020
+Mapk6,Erk3,Erk3,MAPK6,Erk3,Mitogen-activated protein kinase 6,CMGC,MAPK,ERK3,Q16659,MGI:1354946,50772,X,X,X,KinHub,10/6/2020
+Mapk7,Erk5,Erk5,MAPK7,Erk5,Mitogen-activated protein kinase 7,CMGC,MAPK,ERK5,Q13164,MGI:1346347,23939,X,X,X,KinHub,10/6/2020
+Mapk8,JNK1,JNK1,MAPK8,JNK1,Mitogen-activated protein kinase 8,CMGC,MAPK,JNK,P45983,MGI:1346861,26419,X,X,X,KinHub,10/6/2020
+Mapk9,JNK2,JNK2,MAPK9,JNK2,Mitogen-activated protein kinase 9,CMGC,MAPK,JNK,P45984,MGI:1346862,26420,X,X,X,KinHub,10/6/2020
+Mapkapk2,MAPKAPK2,MAPKAPK2,MAPKAPK2,MAPKAPK2,MAP kinase-activated protein kinase 2,CAMK,MAPKAPK,MK2,P49137,MGI:109298,17164,X,X,X,KinHub,10/6/2020
+Mapkapk3,MAPKAPK3,MAPKAPK3,MAPKAPK3,MAPKAPK3,MAP kinase-activated protein kinase 3,CAMK,MAPKAPK,MK2,Q16644,MGI:2143163,102626,X,X,X,KinHub,10/6/2020
+Mapkapk5,MAPKAPK5,MAPKAPK5,MAPKAPK5,MAPKAPK5,MAP kinase-activated protein kinase 5,CAMK,MAPKAPK,MK5,Q8IW41,MGI:1333110,17165,X,X,X,KinHub,10/6/2020
+Mark1,MARK1,MARK1,MARK1,MARK1,Serine/threonine-protein kinase MARK1,CAMK,CAMKL,MARK,Q9P0L2,MGI:2664902,226778,X,X,X,KinHub,10/6/2020
+Mark2,MARK2,MARK2,MARK2,MARK2,Serine/threonine-protein kinase MARK2,CAMK,CAMKL,MARK,Q7KZI7,MGI:99638,13728,X,X,X,KinHub,10/6/2020
+Mark3,MARK3,MARK3,MARK3,MARK3,MAP/microtubule affinity-regulating kinase 3,CAMK,CAMKL,MARK,P27448,MGI:1341865,17169,X,X,X,KinHub,10/6/2020
+Mark4,MARK4,MARK4,MARK4,MARK4,MAP/microtubule affinity-regulating kinase 4,CAMK,CAMKL,MARK,Q96L34,MGI:1920955,232944,X,X,X,KinHub,10/6/2020
+Mast1,MAST1,MAST1,MAST1,MAST1,Microtubule-associated serine/threonine-protein kinase 1,AGC,MAST,,Q9Y2H9,MGI:1861901,56527,X,X,X,KinHub,10/6/2020
+Mast2,MAST2,MAST2,MAST2,MAST2,Microtubule-associated serine/threonine-protein kinase 2,AGC,MAST,,Q6P0Q8,MGI:894676,17776,X,X,X,KinHub,10/6/2020
+Mast3,MAST3,MAST3,MAST3,MAST3,Microtubule-associated serine/threonine-protein kinase 3,AGC,MAST,,O60307,MGI:2683541,546071,X,X,X,KinHub,10/6/2020
+Mast4,MAST4,MAST4,MAST4,MAST4,Microtubule-associated serine/threonine-protein kinase 4,AGC,MAST,,O15021,MGI:1918885,328329,X,X,X,KinHub,10/6/2020
+Mastl,MASTL,MASTL,MASTL,MASTL,Serine/threonine-protein kinase greatwall,AGC,MAST,,Q96GX5,MGI:1914371,67121,X,X,X,KinHub,10/6/2020
+Matk,CTK,CTK,MATK,CTK,Megakaryocyte-associated tyrosine-protein kinase,TK,Csk,,P42679,MGI:99259,17179,X,X,X,KinHub,10/6/2020
+Melk,MELK,MELK,MELK,MELK,Maternal embryonic leucine zipper kinase,CAMK,CAMKL,MELK,Q14680,MGI:106924,17279,X,X,X,KinHub,10/6/2020
+Mertk,MER,MER,MERTK,MER,Tyrosine-protein kinase Mer,TK,Axl,,Q12866,MGI:96965,17289,X,X,X,KinHub,10/6/2020
+Met,MET,MET,MET,MET,Hepatocyte growth factor receptor,TK,Met,,P08581,MGI:96969,17295,X,X,X,KinHub,10/6/2020
+Mink1,MINK,ZC3/MINK,MINK1,MINK,Misshapen-like kinase 1,STE,STE20,MSN,Q8N4C8,MGI:1355329,50932,X,X,X,KinHub,10/6/2020
+Mknk1,MNK1,MNK1,MKNK1,MNK1,MAP kinase-interacting serine/threonine-protein kinase 1,CAMK,MAPKAPK,MNK,Q9BUB5,MGI:894316,17346,X,X,X,KinHub,10/6/2020
+Mknk2,MNK2,MNK2,MKNK2,MNK2,MAP kinase-interacting serine/threonine-protein kinase 2,CAMK,MAPKAPK,MNK,Q9HBH9,MGI:894279,17347,X,X,X,KinHub,10/6/2020
+Mlkl,MLKL,MLKL,MLKL,MLKL,Mixed lineage kinase domain-like protein,TKL,TKL-Unique,,Q8NB16,MGI:1921818,74568,X,X,X,KinHub,10/6/2020
+Mok,MOK,MOK,MOK,MOK,MAPK/MAK/MRK overlapping kinase,CMGC,RCK,,Q9UQ07,MGI:1336881,26448,X,X,X,KinHub,10/6/2020
+Mos,MOS,MOS,MOS,MOS,Proto-oncogene serine/threonine-protein kinase mos,Other,MOS,,P00540,MGI:97052,17451,X,X,X,KinHub,10/6/2020
+Mst1r,RON,RON,MST1R,RON,Macrophage-stimulating protein receptor,TK,Met,,Q04912,MGI:99614,19882,X,X,X,KinHub,10/6/2020
+Mtor,FRAP,FRAP,MTOR,FRAP,Serine/threonine-protein kinase mTOR,Atypical,PIKK,FRAP,P42345,MGI:1928394,56717,X,X,X,KinHub,10/6/2020
+Musk,MUSK,MUSK,MUSK,MUSK,Muscle,TK,Musk,,O15146,MGI:103581,18198,X,X,X,KinHub,10/6/2020
+Mylk,smMLCK,smMLCK,MYLK,smMLCK,Myosin light chain kinase,CAMK,MLCK,,Q15746,MGI:894806,107589,X,X,X,KinHub,10/6/2020
+Mylk2,skMLCK,skMLCK,MYLK2,skMLCK,Myosin light chain kinase 2,CAMK,MLCK,,Q9H1R3,MGI:2139434,228785,X,X,X,KinHub,10/6/2020
+Mylk3,caMLCK,caMLCK,MYLK3,caMLCK,Myosin light chain kinase 3,CAMK,MLCK,,Q32MK0,MGI:2443063,213435,X,X,X,KinHub,10/6/2020
+Mylk4,SgK085,SgK085,MYLK4,SgK085,Myosin light chain kinase family member 4,CAMK,MLCK,,Q86YV6,MGI:3643758,238564,X,X,X,KinHub,10/6/2020
+Myo3a,MYO3A,MYO3A,MYO3A,MYO3A,Myosin-IIIa,STE,STE20,NinaC,Q8NEV4,MGI:2183924,667663,X,X,X,KinHub,10/6/2020
+Myo3b,MYO3B,MYO3B,MYO3B,MYO3B,Myosin-IIIb,STE,STE20,NinaC,Q8WXR4,MGI:2448580,329421,X,X,X,KinHub,10/6/2020
+Nek1,NEK1,NEK1,NEK1,NEK1,Serine/threonine-protein kinase Nek1,Other,NEK,,Q96PY6,MGI:97303,18004,X,X,X,KinHub,10/6/2020
+Nek10,NEK10,NEK10,NEK10,NEK10,Serine/threonine-protein kinase Nek10,Other,NEK,,Q6ZWH5,MGI:2685128,674895,X,X,X,KinHub,10/6/2020
+Nek11,NEK11,NEK11,NEK11,NEK11,Serine/threonine-protein kinase Nek11,Other,NEK,,Q8NG66,MGI:2442276,208583,X,X,X,KinHub,10/6/2020
+Nek2,NEK2,NEK2,NEK2,NEK2,Serine/threonine-protein kinase Nek2,Other,NEK,,P51955,MGI:109359,18005,X,X,X,KinHub,10/6/2020
+Nek3,NEK3,NEK3,NEK3,NEK3,Serine/threonine-protein kinase Nek3,Other,NEK,,P51956,MGI:1344371,23954,X,X,X,KinHub,10/6/2020
+Nek4,NEK4,NEK4,NEK4,NEK4,Serine/threonine-protein kinase Nek4,Other,NEK,,P51957,MGI:1344404,23955,X,X,X,KinHub,10/6/2020
+Nek5,NEK5,NEK5,NEK5,NEK5,Serine/threonine-protein kinase Nek5,Other,NEK,,Q6P3R8,MGI:2142824,330721,X,X,X,KinHub,10/6/2020
+Nek6,NEK6,NEK6,NEK6,NEK6,Serine/threonine-protein kinase Nek6,Other,NEK,,Q9HC98,MGI:1891638,59126,X,X,X,KinHub,10/6/2020
+Nek7,NEK7,NEK7,NEK7,NEK7,Serine/threonine-protein kinase Nek7,Other,NEK,,Q8TDX7,MGI:1890645,59125,X,X,X,KinHub,10/6/2020
+Nek8,NEK8,NEK8,NEK8,NEK8,Serine/threonine-protein kinase Nek8,Other,NEK,,Q86SG6,MGI:1890646,140859,X,X,X,KinHub,10/6/2020
+Nek9,NEK9,NEK9,NEK9,NEK9,Serine/threonine-protein kinase Nek9,Other,NEK,,Q8TD19,MGI:2387995,217718,X,X,X,KinHub,10/6/2020
+Nim1k,NIM1,NIM1,NIM1K,NIM1,Serine/threonine-protein kinase NIM1,CAMK,CAMKL,NIM1,Q8IY84,MGI:2442399,245269,X,X,X,KinHub,10/6/2020
+Nlk,NLK,NLK,NLK,NLK,Serine/threonine-protein kinase NLK,CMGC,MAPK,nmo,Q9UBE8,MGI:1201387,18099,X,X,X,KinHub,10/6/2020
+Nme1,,,NME1,,NME/NM23 nucleoside diphosphate kinase 1,Metabolic,,,,MGI:97355,18102,,,,MGI,10/6/2020
+Nme2,,,NME2,,NME/NM23 nucleoside diphosphate kinase 2,Metabolic,,,,MGI:97356,18103,,,,MGI,10/6/2020
+Nme4,,,NME4,,NME/NM23 nucleoside diphosphate kinase 4,Metabolic,,,,MGI:1931148,56520,,,,MGI,10/6/2020
+Npr1,ANPa,ANPa,NPR1,ANPa,Atrial natriuretic peptide receptor 1,RGC,RGC,,P16066,MGI:97371,18160,X,X,X,KinHub,10/6/2020
+Npr2,ANPb,ANPb,NPR2,ANPb,Atrial natriuretic peptide receptor 2,RGC,RGC,,P20594,MGI:97372,230103,X,X,X,KinHub,10/6/2020
+Nrbp1,NRBP1,NRBP1,NRBP1,NRBP1,Nuclear receptor-binding protein,Other,NRBP,,Q9UHY1,MGI:2183436,192292,X,X,X,KinHub,10/6/2020
+Nrbp2,NRBP2,NRBP2,NRBP2,NRBP2,Nuclear receptor-binding protein 2,Other,NRBP,,Q9NSY0,MGI:2385017,223649,X,X,X,KinHub,10/6/2020
+Nrk,NRK,ZC4/NRK,NRK,NRK,Nik-related protein kinase,STE,STE20,MSN,Q7Z2Y5,MGI:1351326,27206,X,X,X,KinHub,10/6/2020
+Ntrk1,TRKA,TRKA,NTRK1,TRKA,High affinity nerve growth factor receptor,TK,Trk,,P04629,MGI:97383,18211,X,X,X,KinHub,10/6/2020
+Ntrk2,TRKB,TRKB,NTRK2,TRKB,BDNF/NT-3 growth factors receptor,TK,Trk,,Q16620,MGI:97384,18212,X,X,X,KinHub,10/6/2020
+Ntrk3,TRKC,TRKC,NTRK3,TRKC,NT-3 growth factor receptor,TK,Trk,,Q16288,MGI:97385,18213,X,X,X,KinHub,10/6/2020
+Nuak1,NuaK1,NuaK1,NUAK1,NuaK1,NUAK family SNF1-like kinase 1,CAMK,CAMKL,NuaK,O60285,MGI:1925226,77976,X,X,X,KinHub,10/6/2020
+Nuak2,NuaK2,NuaK2,NUAK2,NuaK2,NUAK family SNF1-like kinase 2,CAMK,CAMKL,NuaK,Q9H093,MGI:1921387,74137,X,X,X,KinHub,10/6/2020
+Obscn,Obscn,Obscn,OBSCN,Obscn,Obscurin,CAMK,Trio,,Q5VST9,MGI:2681862,380698,X,X,X,KinHub,10/6/2020
+Oxsr1,OSR1,OSR1,OXSR1,OSR1,Serine/threonine-protein kinase OSR1,STE,STE20,FRAY,O95747,MGI:1917378,108737,X,X,X,KinHub,10/6/2020
+Pak1,PAK1,PAK1,PAK1,PAK1,Serine/threonine-protein kinase PAK 1,STE,STE20,PAKA,Q13153,MGI:1339975,18479,X,X,X,KinHub,10/6/2020
+Pak2,PAK2,PAK2,PAK2,PAK2,Serine/threonine-protein kinase PAK 2,STE,STE20,PAKA,Q13177,MGI:1339984,224105,X,X,X,KinHub,10/6/2020
+Pak3,PAK3,PAK3,PAK3,PAK3,Serine/threonine-protein kinase PAK 3,STE,STE20,PAKA,O75914,MGI:1339656,18481,X,X,X,KinHub,10/6/2020
+Pak4,PAK4,PAK4,PAK4,PAK4,Serine/threonine-protein kinase PAK 4,STE,STE20,PAKB,O96013,MGI:1917834,70584,X,X,X,KinHub,10/6/2020
+Pak5,PAK5,PAK5,PAK7,PAK5,Serine/threonine-protein kinase PAK 7,STE,STE20,PAKB,Q9P286,MGI:1920334,241656,X,X,X,KinHub,10/6/2020
+Pak6,PAK6,PAK6,PAK6,PAK6,Serine/threonine-protein kinase PAK 6,STE,STE20,PAKB,Q9NQU5,MGI:2679420,214230,X,X,X,KinHub,10/6/2020
+Pan3,PAN3,PAN3,PAN3,,PAB-dependent poly(A)-specific ribonuclease subunit 3,Other,PAN3,,Q58A45,MGI:1919837,72587,X,,X,KinHub,10/6/2020
+Pask,PASK,PASK,PASK,PASK,PAS domain-containing serine/threonine-protein kinase,CAMK,CAMKL,PASK,Q96RG2,MGI:2155936,269224,X,X,X,KinHub,10/6/2020
+Pbk,PBK,PBK,PBK,PBK,Lymphokine-activated killer T-cell-originated protein kinase,Other,TOPK,,Q96KB5,MGI:1289156,52033,X,X,X,KinHub,10/6/2020
+Pck2,,,PCK2,,phosphoenolpyruvate carboxykinase 2 (mitochondrial),Metabolic,,,,MGI:1860456,74551,,,,MGI,10/6/2020
+Pdgfra,PDGFRa,PDGFRa,PDGFRA,PDGFRa,Platelet-derived growth factor receptor alpha,TK,PDGFR,,P16234,MGI:97530,18595,X,X,X,KinHub,10/6/2020
+Pdgfrb,PDGFRb,PDGFRb,PDGFRB,PDGFRb,Platelet-derived growth factor receptor beta,TK,PDGFR,,P09619,MGI:97531,18596,X,X,X,KinHub,10/6/2020
+Pdik1l,CLIK1L,CLIK1L,PDIK1L,CLIK1L,Serine/threonine-protein kinase PDIK1L,Other,NKF4,,Q8N165,MGI:2385213,230809,X,X,X,KinHub,10/6/2020
+Pdk1,PDHK1,PDHK1,PDK1,PDHK1,[Pyruvate dehydrogenase [lipoamide]] kinase isozyme 1,Atypical,PDHK,,Q15118,MGI:1926119,228026,X,X,X,KinHub,10/6/2020
+Pdk2,PDHK2,PDHK2,PDK2,,[Pyruvate dehydrogenase [lipoamide]] kinase isozyme 2,Atypical,PDHK,,Q15119,MGI:1343087,18604,X,,X,KinHub,10/6/2020
+Pdk3,PDHK3,PDHK3,PDK3,PDHK3,[Pyruvate dehydrogenase [lipoamide]] kinase isozyme 3,Atypical,PDHK,,Q15120,MGI:2384308,236900,X,X,X,KinHub,10/6/2020
+Pdk4,PDHK4,PDHK4,PDK4,PDHK4,[Pyruvate dehydrogenase [lipoamide]] kinase isozyme 4,Atypical,PDHK,,Q16654,MGI:1351481,27273,X,X,X,KinHub,10/6/2020
+Pdpk1,PDK1,PDK1,PDPK1,PDK1,3-phosphoinositide-dependent protein kinase 1,AGC,PDK1,,O15530,MGI:1338068,18607,X,X,X,KinHub,10/6/2020
+Pdxk,,,PDXK,,"pyridoxal (pyridoxine, vitamin B6) kinase",Metabolic,,,,MGI:1351869,216134,,,,MGI,10/6/2020
+Peak1,SgK269,SgK269,PEAK1,SgK269,Pseudopodium-enriched atypical kinase 1,Other,NKF3,,Q9H792,MGI:2442366,244895,X,X,X,KinHub,10/6/2020
+Pfkl,,,PFKL,,"phosphofructokinase, liver, B-type",Metabolic,,,,MGI:97547,18641,,,,MGI,10/6/2020
+Pfkm,,,PFKM,,"phosphofructokinase, muscle",Metabolic,,,,MGI:97548,18642,,,,MGI,10/6/2020
+Pfkp,,,PFKP,,"phosphofructokinase, platelet",Metabolic,,,,MGI:1891833,56421,,,,MGI,10/6/2020
+Phkg1,PHKg1,PHKg1,PHKG1,PHKg1,Phosphorylase b kinase gamma catalytic chain,CAMK,PHK,,Q16816,MGI:97579,18682,X,X,X,KinHub,10/6/2020
+Phkg2,PHKg2,PHKg2,PHKG2,PHKg2,Phosphorylase b kinase gamma catalytic chain,CAMK,PHK,,P15735,MGI:1916211,68961,X,X,X,KinHub,10/6/2020
+Pi4k2b,,,PI4K2B,,phosphatidylinositol 4-kinase type 2 beta,Other,,,,MGI:1914323,67073,,,,MGI,10/6/2020
+Pi4ka,,,PI4KA,,phosphatidylinositol 4-kinase alpha,Other,,,,MGI:2448506,224020,,,,MGI,10/6/2020
+Pik3c2a,,,PIK3C2A,,phosphatidylinositol-4-phosphate 3-kinase catalytic subunit type 2 alpha,Other,,,,MGI:1203729,18704,,,,MGI,10/6/2020
+Pik3c3,,,PIK3C3,,phosphatidylinositol 3-kinase catalytic subunit type 3,Metabolic,,,,MGI:2445019,225326,,,,MGI,10/6/2020
+Pik3ca,,,PIK3CA,,"phosphatidylinositol-4,5-bisphosphate 3-kinase catalytic subunit alpha",Other,,,,MGI:1206581,18706,,,,MGI,10/6/2020
+Pik3cb,,,PIK3CB,,"phosphatidylinositol-4,5-bisphosphate 3-kinase catalytic subunit beta",Other,,,,MGI:1922019,74769,,,,MGI,10/6/2020
+Pik3cd,,,PIK3CD,,"phosphatidylinositol-4,5-bisphosphate 3-kinase catalytic subunit delta",Other,,,,MGI:1098211,18707,,,,MGI,10/6/2020
+Pik3cg,,,PIK3CG,,"phosphatidylinositol-4,5-bisphosphate 3-kinase catalytic subunit gamma",Other,,,,MGI:1353576,30955,,,,MGI,10/6/2020
+Pik3r4,PIK3R4,PIK3R4,PIK3R4,PIK3R4,Phosphoinositide 3-kinase regulatory subunit 4,Other,VPS15,,Q99570,MGI:1922919,75669,X,X,X,KinHub,10/6/2020
+Pikfyve,,,PIKFYVE,,"phosphoinositide kinase, FYVE type zinc finger containing",Metabolic,,,,MGI:1335106,18711,,,,MGI,10/6/2020
+Pim1,PIM1,PIM1,PIM1,PIM1,Serine/threonine-protein kinase pim-1,CAMK,PIM,,P11309,MGI:97584,18712,X,X,X,KinHub,10/6/2020
+Pim2,PIM2,PIM2,PIM2,PIM2,Serine/threonine-protein kinase pim-2,CAMK,PIM,,Q9P1W9,MGI:97587,18715,X,X,X,KinHub,10/6/2020
+Pim3,PIM3,PIM3,PIM3,PIM3,Serine/threonine-protein kinase pim-3,CAMK,PIM,,Q86V86,MGI:1355297,223775,X,X,X,KinHub,10/6/2020
+Pink1,PINK1,PINK1,PINK1,PINK1,Serine/threonine-protein kinase PINK1,Other,NKF2,,Q9BXM7,MGI:1916193,68943,X,X,X,KinHub,10/6/2020
+Pip4k2a,,,PIP4K2A,,"phosphatidylinositol-5-phosphate 4-kinase, type II, alpha",Metabolic,,,,MGI:1298206,18718,,,,MGI,10/6/2020
+Pip4k2b,,,PIP4K2B,,"phosphatidylinositol-5-phosphate 4-kinase, type II, beta",Metabolic,,,,MGI:1934234,108083,,,,MGI,10/6/2020
+Pip4k2c,,,PIP4K2C,,"phosphatidylinositol-5-phosphate 4-kinase, type II, gamma",Metabolic,,,,MGI:2152214,117150,,,,MGI,10/6/2020
+Pip5k1a,,,PIP5K1A,,"phosphatidylinositol-4-phosphate 5-kinase, type 1 alpha",Metabolic,,,,MGI:107929,18720,,,,MGI,10/6/2020
+Pip5k1c,,,PIP5K1C,,"phosphatidylinositol-4-phosphate 5-kinase, type 1 gamma",Metabolic,,,,MGI:1298224,18717,,,,MGI,10/6/2020
+Pkdcc,SgK493,SgK493,PKDCC,SgK493,Protein kinase domain-containing protein,Other,SgK493,,Q504Y2,MGI:2147077,106522,X,X,X,KinHub,10/6/2020
+Pkm,,,PKM,,"pyruvate kinase, muscle",Metabolic,,,,MGI:97591,18746,,,,MGI,10/6/2020
+Pkmyt1,MYT1,MYT1,PKMYT1,MYT1,Membrane-associated tyrosine- and threonine-specific cdc2-inhibitory kinase,Other,WEE,,Q99640,MGI:2137630,268930,X,X,X,KinHub,10/6/2020
+Pkn1,PKN1,PKN1,PKN1,PKN1,Serine/threonine-protein kinase N1,AGC,PKN,,Q16512,MGI:108022,320795,X,X,X,KinHub,10/6/2020
+Pkn2,PKN2,PKN2,PKN2,PKN2,Serine/threonine-protein kinase N2,AGC,PKN,,Q16513,MGI:109211,109333,X,X,X,KinHub,10/6/2020
+Pkn3,PKN3,PKN3,PKN3,PKN3,Serine/threonine-protein kinase N3,AGC,PKN,,Q6P5Z2,MGI:2388285,263803,X,X,X,KinHub,10/6/2020
+Plk1,PLK1,PLK1,PLK1,PLK1,Serine/threonine-protein kinase PLK1,Other,PLK,,P53350,MGI:97621,18817,X,X,X,KinHub,10/6/2020
+Plk2,PLK2,PLK2,PLK2,PLK2,Serine/threonine-protein kinase PLK2,Other,PLK,,Q9NYY3,MGI:1099790,20620,X,X,X,KinHub,10/6/2020
+Plk3,PLK3,PLK3,PLK3,PLK3,Serine/threonine-protein kinase PLK3,Other,PLK,,Q9H4B4,MGI:109604,12795,X,X,X,KinHub,10/6/2020
+Plk4,PLK4,PLK4,PLK4,PLK4,Serine/threonine-protein kinase PLK4,Other,PLK,,O00444,MGI:101783,20873,X,X,X,KinHub,10/6/2020
+Plk5,,,PLK5,,polo like kinase 5,Other,,,,MGI:3026984,216166,,,,MGI,10/6/2020
+Pnck,CaMK1b,CaMK1b,PNCK,CaMK1b,Calcium/calmodulin-dependent protein kinase type 1B,CAMK,CAMK1,,Q6P2M8,MGI:1347357,93843,X,X,X,KinHub,10/6/2020
+Pomk,SgK196,SgK196,POMK,SgK196,Protein kinase-like protein SgK196,Other,Other-Unique,,Q9H5K3,MGI:1921903,74653,X,X,X,KinHub,10/6/2020
+Ppip5k2,,,PPIP5K2,,diphosphoinositol pentakisphosphate kinase 2,Metabolic,,,,MGI:2142810,227399,,,,MGI,10/6/2020
+Prag1,SgK223,SgK223,,SgK223,Tyrosine-protein kinase SgK223,Other,NKF3,,Q86YV5,MGI:1196223,244418,X,X,X,KinHub,10/6/2020
+Prkaa1,AMPKa1,AMPKa1,PRKAA1,AMPKa1,5'-AMP-activated protein kinase catalytic subunit alpha-1,CAMK,CAMKL,AMPK,Q13131,MGI:2145955,105787,X,X,X,KinHub,10/6/2020
+Prkaa2,AMPKa2,AMPKa2,PRKAA2,AMPKa2,5'-AMP-activated protein kinase catalytic subunit alpha-2,CAMK,CAMKL,AMPK,P54646,MGI:1336173,108079,X,X,X,KinHub,10/6/2020
+Prkaca,PKACa,PKACa,PRKACA,PKACa,cAMP-dependent protein kinase catalytic subunit alpha,AGC,PKA,,P17612,MGI:97592,18747,X,X,X,KinHub,10/6/2020
+Prkacb,PKACb,PKACb,PRKACB,PKACb,cAMP-dependent protein kinase catalytic subunit beta,AGC,PKA,,P22694,MGI:97594,18749,X,X,X,KinHub,10/6/2020
+Prkca,PKCa,PKCa,PRKCA,PKCa,Protein kinase C alpha type,AGC,PKC,PKCa,P17252,MGI:97595,18750,X,X,X,KinHub,10/6/2020
+Prkcb,PKCb,PKCb,PRKCB,PKCb,Protein kinase C beta type,AGC,PKC,PKCa,P05771,MGI:97596,18751,X,X,X,KinHub,10/6/2020
+Prkcd,PKCd,PKCd,PRKCD,PKCd,Protein kinase C delta type,AGC,PKC,PKCd,Q05655,MGI:97598,18753,X,X,X,KinHub,10/6/2020
+Prkce,PKCe,PKCe,PRKCE,PKCe,Protein kinase C epsilon type,AGC,PKC,PKCh,Q02156,MGI:97599,18754,X,X,X,KinHub,10/6/2020
+Prkcg,PKCg,PKCg,PRKCG,PKCg,Protein kinase C gamma type,AGC,PKC,PKCa,P05129,MGI:97597,18752,X,X,X,KinHub,10/6/2020
+Prkch,PKCh,PKCh,PRKCH,PKCh,Protein kinase C eta type,AGC,PKC,PKCh,P24723,MGI:97600,18755,X,X,X,KinHub,10/6/2020
+Prkci,PKCi,PKCi,PRKCI,PKCi,Protein kinase C iota type,AGC,PKC,PKCi,P41743,MGI:99260,18759,X,X,X,KinHub,10/6/2020
+Prkcq,PKCt,PKCt,PRKCQ,PKCt,Protein kinase C theta type,AGC,PKC,PKCd,Q04759,MGI:97601,18761,X,X,X,KinHub,10/6/2020
+Prkcz,PKCz,PKCz,PRKCZ,PKCz,Protein kinase C zeta type,AGC,PKC,PKCi,Q05513,MGI:97602,18762,X,X,X,KinHub,10/6/2020
+Prkd1,PKD1,PKD1,PRKD1,PKD1,Serine/threonine-protein kinase D1,CAMK,PKD,,Q15139,MGI:99879,18760,X,X,X,KinHub,10/6/2020
+Prkd2,PKD2,PKD2,PRKD2,PKD2,Serine/threonine-protein kinase D2,CAMK,PKD,,Q9BZL6,MGI:2141917,101540,X,X,X,KinHub,10/6/2020
+Prkd3,PKD3,PKD3,PRKD3,PKD3,Serine/threonine-protein kinase D3,CAMK,PKD,,O94806,MGI:1922542,75292,X,X,X,KinHub,10/6/2020
+Prkdc,DNAPK,DNAPK,PRKDC,DNAPK,DNA-dependent protein kinase catalytic subunit,Atypical,PIKK,DNAPK,P78527,MGI:104779,19090,X,X,X,KinHub,10/6/2020
+Prkg1,PKG1,PKG1,PRKG1,PKG1,cGMP-dependent protein kinase,AGC,PKG,,Q13976,MGI:108174,19091,X,X,X,KinHub,10/6/2020
+Prkg2,PKG2,PKG2,PRKG2,PKG2,cGMP-dependent protein kinase 2,AGC,PKG,,Q13237,MGI:108173,19092,X,X,X,KinHub,10/6/2020
+Prkx,PRKX,PRKX,PRKX,PRKX,cAMP-dependent protein kinase catalytic subunit PRKX,AGC,PKA,,P51817,MGI:1309999,19108,X,X,X,KinHub,10/6/2020
+Prpf4b,PRP4,PRP4,PRPF4B,PRP4,Serine/threonine-protein kinase PRP4 homolog,CMGC,DYRK,PRP4,Q13523,MGI:109584,19134,X,X,X,KinHub,10/6/2020
+Pskh1,PSKH1,PSKH1,PSKH1,PSKH1,Serine/threonine-protein kinase H1,CAMK,PSK,,P11801,MGI:3528383,244631,X,X,X,KinHub,10/6/2020
+Ptk2,FAK,FAK,PTK2,FAK,Focal adhesion kinase 1,TK,FAK,,Q05397,MGI:95481,14083,X,X,X,KinHub,10/6/2020
+Ptk2b,PYK2,PYK2,PTK2B,PYK2,Protein-tyrosine kinase 2-beta,TK,FAK,,Q14289,MGI:104908,19229,X,X,X,KinHub,10/6/2020
+Ptk6,BRK,BRK,PTK6,BRK,Protein-tyrosine kinase 6,TK,Src,,Q13882,MGI:99683,20459,X,X,X,KinHub,10/6/2020
+Ptk7,CCK4,CCK4,PTK7,CCK4,Inactive tyrosine-protein kinase 7,TK,CCK4,,Q13308,MGI:1918711,71461,X,X,X,KinHub,10/6/2020
+Pxk,Slob,Slob,PXK,Slob,PX domain-containing protein kinase-like protein,Other,Slob,,Q7Z7A4,MGI:1289230,218699,X,X,X,KinHub,10/6/2020
+Raf1,RAF1,RAF1,RAF1,RAF1,RAF proto-oncogene serine/threonine-protein kinase,TKL,RAF,,P04049,MGI:97847,110157,X,X,X,KinHub,10/6/2020
+Ret,RET,RET,RET,RET,Proto-oncogene tyrosine-protein kinase receptor Ret,TK,Ret,,P07949,MGI:97902,19713,X,X,X,KinHub,10/6/2020
+Riok1,RIOK1,RIOK1,RIOK1,RIOK1,Serine/threonine-protein kinase RIO1,Atypical,RIO,RIO1,Q9BRS2,MGI:1918590,71340,X,X,X,KinHub,10/6/2020
+Riok2,RIOK2,RIOK2,RIOK2,RIOK2,Serine/threonine-protein kinase RIO2,Atypical,RIO,RIO2,Q9BVS4,MGI:1914295,67045,X,X,X,KinHub,10/6/2020
+Riok3,RIOK3,RIOK3,RIOK3,RIOK3,Serine/threonine-protein kinase RIO3,Atypical,RIO,RIO3,O14730,MGI:1914128,66878,X,X,X,KinHub,10/6/2020
+Ripk1,RIPK1,RIPK1,RIPK1,RIPK1,Receptor-interacting serine/threonine-protein kinase 1,TKL,RIPK,,Q13546,MGI:108212,19766,X,X,X,KinHub,10/6/2020
+Ripk2,RIPK2,RIPK2,RIPK2,RIPK2,Receptor-interacting serine/threonine-protein kinase 2,TKL,RIPK,,O43353,MGI:1891456,192656,X,X,X,KinHub,10/6/2020
+Ripk3,RIPK3,RIPK3,RIPK3,RIPK3,Receptor-interacting serine/threonine-protein kinase 3,TKL,RIPK,,Q9Y572,MGI:2154952,56532,X,X,X,KinHub,10/6/2020
+Ripk4,ANKRD3,ANKRD3,RIPK4,ANKRD3,Receptor-interacting serine/threonine-protein kinase 4,TKL,RIPK,,P57078,MGI:1919638,72388,X,X,X,KinHub,10/6/2020
+Rnasel,RNAseL,RNAseL,RNASEL,RNAseL,2-5A-dependent ribonuclease,Other,Other-Unique,,Q05823,MGI:1098272,24014,X,X,X,KinHub,10/6/2020
+Rock1,ROCK1,ROCK1,ROCK1,ROCK1,Rho-associated protein kinase 1,AGC,DMPK,ROCK,Q13464,MGI:107927,19877,X,X,X,KinHub,10/6/2020
+Rock2,ROCK2,ROCK2,ROCK2,ROCK2,Rho-associated protein kinase 2,AGC,DMPK,ROCK,O75116,MGI:107926,19878,X,X,X,KinHub,10/6/2020
+Ror1,ROR1,ROR1,ROR1,ROR1,Tyrosine-protein kinase transmembrane receptor ROR1,TK,Ror,,Q01973,MGI:1347520,26563,X,X,X,KinHub,10/6/2020
+Ror2,ROR2,ROR2,ROR2,ROR2,Tyrosine-protein kinase transmembrane receptor ROR2,TK,Ror,,Q01974,MGI:1347521,26564,X,X,X,KinHub,10/6/2020
+Ros1,ROS,ROS,ROS1,ROS,Proto-oncogene tyrosine-protein kinase ROS,TK,Sev,,P08922,MGI:97999,19886,X,X,X,KinHub,10/6/2020
+Rps6ka1,RSK1,RSK3,RPS6KA1,RSK3,Ribosomal protein S6 kinase alpha-1,AGC,RSK,RSKp90,Q15418,MGI:104558,20111,X,X,X,KinHub,10/6/2020
+Rps6ka2,RSK3,RSK1,RPS6KA2,RSK1,Ribosomal protein S6 kinase alpha-2,AGC,RSK,RSKp90,Q15349,MGI:1342290,20112,X,X,X,KinHub,10/6/2020
+Rps6ka3,RSK2,RSK2,RPS6KA3,RSK2,Ribosomal protein S6 kinase alpha-3,AGC,RSK,RSKp90,P51812,MGI:104557,110651,X,X,X,KinHub,10/6/2020
+Rps6ka4,MSK2,MSK2,RPS6KA4,MSK2,Ribosomal protein S6 kinase alpha-4,AGC,RSK,MSK,O75676,MGI:1930076,56613,X,X,X,KinHub,10/6/2020
+Rps6ka5,MSK1,MSK1,RPS6KA5,MSK1,Ribosomal protein S6 kinase alpha-5,AGC,RSK,MSK,O75582,MGI:1920336,73086,X,X,X,KinHub,10/6/2020
+Rps6ka6,RSK4,RSK4,RPS6KA6,RSK4,Ribosomal protein S6 kinase alpha-6,AGC,RSK,RSKp90,Q9UK32,MGI:1914321,67071,X,X,X,KinHub,10/6/2020
+Rps6kb1,p70S6K,p70S6K,RPS6KB1,p70S6K,Ribosomal protein S6 kinase beta-1,AGC,RSK,RSKp70,P23443,MGI:1270849,72508,X,X,X,KinHub,10/6/2020
+Rps6kb2,p70S6Kb,p70S6Kb,RPS6KB2,p70S6Kb,Ribosomal protein S6 kinase beta-2,AGC,RSK,RSKp70,Q9UBS0,MGI:1927343,58988,X,X,X,KinHub,10/6/2020
+Rps6kc1,RSKL1,RSKL1,RPS6KC1,RSKL1,Ribosomal protein S6 kinase delta-1,AGC,RSKL,,Q96S38,MGI:2443419,320119,X,X,X,KinHub,10/6/2020
+Rps6kl1,RSKL2,RSKL2,RPS6KL1,RSKL2,Ribosomal protein S6 kinase-like 1,AGC,RSKL,,Q9Y6S9,MGI:2443413,238323,X,X,X,KinHub,10/6/2020
+Rskr,SgK494,SgK494,,SgK494,Uncharacterized serine/threonine-protein kinase SgK494,AGC,RSKR,,Q96LW2,MGI:2652869,216976,X,X,X,KinHub,10/6/2020
+Ryk,RYK,RYK,RYK,RYK,Tyrosine-protein kinase RYK,TK,Ryk,,P34925,MGI:101766,20187,X,X,X,KinHub,10/6/2020
+Sbk1,SBK,SBK,SBK1,SBK,Serine/threonine-protein kinase SBK1,Other,NKF1,,Q52WX2,MGI:2135937,104175,X,X,X,KinHub,10/6/2020
+Sbk2,SgK069,SgK069,SBK2,SgK069,Serine/threonine-protein kinase SBK2,Other,NKF1,,P0C263,MGI:2685925,381836,X,X,X,KinHub,10/6/2020
+Sbk3,SgK110,SgK110,SBK3,SgK110,Putative uncharacterized serine/threonine-protein kinase SgK110,Other,NKF1,,P0C264,MGI:2685924,381835,X,X,X,KinHub,10/6/2020
+Scyl1,SCYL1,SCYL1,SCYL1,SCYL1,N-terminal kinase-like protein,Other,SCY1,,Q96KG9,MGI:1931787,78891,X,X,X,KinHub,10/6/2020
+Scyl2,SCYL2,SCYL2,SCYL2,SCYL2,SCY1-like protein 2,Other,SCY1,,Q6P3W7,MGI:1289172,213326,X,X,X,KinHub,10/6/2020
+Scyl3,SCYL3,SCYL3,SCYL3,SCYL3,Protein-associating with the carboxyl-terminal domain of ezrin,Other,SCY1,,Q8IZE3,MGI:1921385,240880,X,X,X,KinHub,10/6/2020
+Sgk1,SGK1,SGK,SGK1,SGK1,Serine/threonine-protein kinase Sgk1,AGC,SGK,,O00141,MGI:1340062,20393,X,X,X,KinHub,10/6/2020
+Sgk2,SGK2,SGK2,SGK2,SGK2,Serine/threonine-protein kinase Sgk2,AGC,SGK,,Q9HBY8,MGI:1351318,27219,X,X,X,KinHub,10/6/2020
+Sgk3,SGK3,SGK3,SGK3,SGK3,Serine/threonine-protein kinase Sgk3,AGC,SGK,,Q96BR1,MGI:2182368,170755,X,X,X,KinHub,10/6/2020
+Sik1,SIK,SIK,SIK1,SIK,Serine/threonine-protein kinase SIK1,CAMK,CAMKL,QIK,P57059,MGI:104754,17691,X,X,X,KinHub,10/6/2020
+Sik2,QIK,QIK,SIK2,QIK,Serine/threonine-protein kinase SIK2,CAMK,CAMKL,QIK,Q9H0K1,MGI:2445031,235344,X,X,X,KinHub,10/6/2020
+Sik3,QSK,QSK,SIK3,QSK,Serine/threonine-protein kinase SIK3,CAMK,CAMKL,QIK,Q9Y2K2,MGI:2446296,70661,X,X,X,KinHub,10/6/2020
+Slk,SLK,SLK,SLK,SLK,STE20-like serine/threonine-protein kinase,STE,STE20,SLK,Q9H2G2,MGI:103241,20874,X,X,X,KinHub,10/6/2020
+Smg1,SMG1,SMG1,SMG1,SMG1,Serine/threonine-protein kinase SMG1,Atypical,PIKK,SMG1,Q96Q15,MGI:1919742,233789,X,X,X,KinHub,10/6/2020
+Snrk,SNRK,SNRK,SNRK,SNRK,SNF-related serine/threonine-protein kinase,CAMK,CAMKL,SNRK,Q9NRH2,MGI:108104,20623,X,X,X,KinHub,10/6/2020
+Speg,SPEG,SPEG,SPEG,SPEG,Striated muscle preferentially expressed protein kinase,CAMK,Trio,,Q15772,MGI:109282,11790,X,X,X,KinHub,10/6/2020
+Src,SRC,SRC,SRC,SRC,Proto-oncogene tyrosine-protein kinase Src,TK,Src,,P12931,MGI:98397,20779,X,X,X,KinHub,10/6/2020
+Srms,SRM,SRM,SRMS,SRM,Tyrosine-protein kinase Srms,TK,Src,,Q9H3Y6,MGI:101865,20811,X,X,X,KinHub,10/6/2020
+Srpk1,SRPK1,SRPK1,SRPK1,SRPK1,SRSF protein kinase 1,CMGC,SRPK,,Q96SB4,MGI:106908,20815,X,X,X,KinHub,10/6/2020
+Srpk2,SRPK2,SRPK2,SRPK2,SRPK2,SRSF protein kinase 2,CMGC,SRPK,,P78362,MGI:1201408,20817,X,X,X,KinHub,10/6/2020
+Srpk3,MSSK1,MSSK1,SRPK3,MSSK1,SRSF protein kinase 3,CMGC,SRPK,,Q9UPE1,MGI:1891338,56504,X,X,X,KinHub,10/6/2020
+Stk10,LOK,LOK,STK10,LOK,Serine/threonine-protein kinase 10,STE,STE20,SLK,O94804,MGI:1099439,20868,X,X,X,KinHub,10/6/2020
+Stk11,LKB1,LKB1,STK11,LKB1,Serine/threonine-protein kinase STK11,CAMK,CAMKL,LKB,Q15831,MGI:1341870,20869,X,X,X,KinHub,10/6/2020
+Stk16,MPSK1,MPSK1,STK16,MPSK1,Serine/threonine-protein kinase 16,Other,NAK,,O75716,MGI:1313271,20872,X,X,X,KinHub,10/6/2020
+Stk17b,DRAK2,DRAK2,STK17B,DRAK2,Serine/threonine-protein kinase 17B,CAMK,DAPK,,O94768,MGI:2138162,98267,X,X,X,KinHub,10/6/2020
+Stk19,G11,G11,STK19,,Serine/threonine-protein kinase 19,Atypical,G11,,P49842,MGI:1860085,54402,X,,,KinHub,10/6/2020
+Stk24,MST3,MST3,STK24,MST3,Serine/threonine-protein kinase 24,STE,STE20,YSK,Q9Y6E0,MGI:2385007,223255,X,X,X,KinHub,10/6/2020
+Stk25,YSK1,YSK1,STK25,YSK1,Serine/threonine-protein kinase 25,STE,STE20,YSK,O00506,MGI:1891699,59041,X,X,X,KinHub,10/6/2020
+Stk26,MST4,MST4,STK26,MST4,Serine/threonine-protein kinase MST4,STE,STE20,YSK,Q9P289,MGI:1917665,70415,X,X,X,KinHub,10/6/2020
+Stk3,MST2,MST2,STK3,MST2,Serine/threonine-protein kinase 3,STE,STE20,MST,Q13188,MGI:1928487,56274,X,X,X,KinHub,10/6/2020
+Stk31,SgK396,SgK396,STK31,SgK396,Serine/threonine-protein kinase 31,Other,Other-Unique,,Q9BXU1,MGI:1924735,77485,X,X,X,KinHub,10/6/2020
+Stk32a,YANK1,YANK1,STK32A,YANK1,Serine/threonine-protein kinase 32A,AGC,YANK,,Q8WU08,MGI:2442403,269019,X,X,X,KinHub,10/6/2020
+Stk32b,YANK2,YANK2,STK32B,YANK2,Serine/threonine-protein kinase 32B,AGC,YANK,,Q9NY57,MGI:1927552,64293,X,X,X,KinHub,10/6/2020
+Stk32c,YANK3,YANK3,STK32C,YANK3,Serine/threonine-protein kinase 32C,AGC,YANK,,Q86UX6,MGI:2385336,57740,X,X,X,KinHub,10/6/2020
+Stk33,STK33,STK33,STK33,STK33,Serine/threonine-protein kinase 33,CAMK,STK33,,Q9BYT3,MGI:2152419,117229,X,X,X,KinHub,10/6/2020
+Stk35,CLIK1,CLIK1,STK35,CLIK1,Serine/threonine-protein kinase 35,Other,NKF4,,Q8TDR2,MGI:1914583,67333,X,X,X,KinHub,10/6/2020
+Stk36,Fused,Fused,STK36,Fused,Serine/threonine-protein kinase 36,Other,ULK,,Q9NRP7,MGI:1920831,269209,X,X,X,KinHub,10/6/2020
+Stk38,NDR1,NDR1,STK38,NDR1,Serine/threonine-protein kinase 38,AGC,NDR,,Q15208,MGI:2442572,106504,X,X,X,KinHub,10/6/2020
+Stk38l,NDR2,NDR2,STK38L,NDR2,Serine/threonine-protein kinase 38-like,AGC,NDR,,Q9Y2H1,MGI:1922250,232533,X,X,X,KinHub,10/6/2020
+Stk39,STLK3,STLK3,STK39,STLK3,STE20/SPS1-related proline-alanine-rich protein kinase,STE,STE20,FRAY,Q9UEW8,MGI:1858416,53416,X,X,X,KinHub,10/6/2020
+Stk4,MST1,MST1,STK4,MST1,Serine/threonine-protein kinase 4,STE,STE20,MST,Q13043,MGI:1929004,58231,X,X,X,KinHub,10/6/2020
+Stk40,SgK495,SgK495,STK40,SgK495,Serine/threonine-protein kinase 40,CAMK,SgK495,,Q8N2I9,MGI:1921428,74178,X,X,X,KinHub,10/6/2020
+Stkld1,SgK071,SgK071,STKLD1,SgK071,Protein kinase-like protein SgK071,Other,SgK071,,Q8NE28,MGI:2685557,279029,X,X,X,KinHub,10/6/2020
+Strada,STLK5,STLK5,STRADA,STLK5,STE20-related kinase adapter protein alpha,STE,STE20,STLK,Q7RTN6,MGI:1919399,72149,X,X,X,KinHub,10/6/2020
+Stradb,STLK6,STLK6,STRADB,STLK6,STE20-related kinase adapter protein beta,STE,STE20,STLK,Q9C0K7,MGI:2144047,227154,X,X,X,KinHub,10/6/2020
+Styk1,SuRTK106,SuRTK106,STYK1,SuRTK106,Tyrosine-protein kinase STYK1,TK,TK-Unique,,Q6J9G0,MGI:2141396,243659,X,X,X,KinHub,10/6/2020
+Syk,SYK,SYK,SYK,SYK,Tyrosine-protein kinase SYK,TK,Syk,,P43405,MGI:99515,20963,X,X,X,KinHub,10/6/2020
+Taf1,TAF1,TAF1,TAF1,,Transcription initiation factor TFIID subunit 1,Atypical,TAF1,,P21675,MGI:1336878,270627,X,,,KinHub,10/6/2020
+Taok1,TAO1,TAO1,TAOK1,TAO1,Serine/threonine-protein kinase TAO1,STE,STE20,TAO,Q7L7X3,MGI:1914490,216965,X,X,X,KinHub,10/6/2020
+Taok2,TAO2,TAO2,TAOK2,TAO2,Serine/threonine-protein kinase TAO2,STE,STE20,TAO,Q9UL54,MGI:1915919,381921,X,X,X,KinHub,10/6/2020
+Taok3,TAO3,TAO3,TAOK3,TAO3,Serine/threonine-protein kinase TAO3,STE,STE20,TAO,Q9H2K8,MGI:3041177,330177,X,X,X,KinHub,10/6/2020
+Tbck,TBCK,TBCK,TBCK,TBCK,TBC domain-containing protein kinase-like protein,Other,TBCK,,Q8TEA7,MGI:2445052,271981,X,X,X,KinHub,10/6/2020
+Tbk1,TBK1,TBK1,TBK1,TBK1,Serine/threonine-protein kinase TBK1,Other,IKK,,Q9UHD2,MGI:1929658,56480,X,X,X,KinHub,10/6/2020
+Tec,TEC,TEC,TEC,TEC,Tyrosine-protein kinase Tec,TK,Tec,,P42680,MGI:98662,21682,X,X,X,KinHub,10/6/2020
+Tek,TIE2,TIE2,TEK,TIE2,Angiopoietin-1 receptor,TK,Tie,,Q02763,MGI:98664,21687,X,X,X,KinHub,10/6/2020
+Tesk1,TESK1,TESK1,TESK1,TESK1,Dual specificity testis-specific protein kinase 1,TKL,LISK,TESK,Q15569,MGI:1201675,21754,X,X,X,KinHub,10/6/2020
+Tesk2,TESK2,TESK2,TESK2,TESK2,Dual-specificity testis-specific protein kinase 2,TKL,LISK,TESK,Q96S53,MGI:2385204,230661,X,X,X,KinHub,10/6/2020
+Tex14,SgK307,SgK307,TEX14,SgK307,Inactive serine/threonine-protein kinase TEX14,Other,NKF5,,Q8IWB6,MGI:1933227,83560,X,X,X,KinHub,10/6/2020
+Tgfbr1,TGFbR1,TGFbR1,TGFBR1,TGFbR1,TGF-beta receptor type-1,TKL,STKR,STKR1,P36897,MGI:98728,21812,X,X,X,KinHub,10/6/2020
+Tgfbr2,TGFbR2,TGFbR2,TGFBR2,TGFbR2,TGF-beta receptor type-2,TKL,STKR,STKR2,P37173,MGI:98729,21813,X,X,X,KinHub,10/6/2020
+Tie1,TIE1,TIE1,TIE1,TIE1,Tyrosine-protein kinase receptor Tie-1,TK,Tie,,P35590,MGI:99906,21846,X,X,X,KinHub,10/6/2020
+Tk2,,,TK2,,"thymidine kinase 2, mitochondrial",Metabolic,,,,MGI:1913266,57813,,,,MGI,10/6/2020
+Tlk1,TLK1,TLK1,TLK1,TLK1,Serine/threonine-protein kinase tousled-like 1,Other,TLK,,Q9UKI8,MGI:2441683,228012,X,X,X,KinHub,10/6/2020
+Tlk2,TLK2,TLK2,TLK2,TLK2,Serine/threonine-protein kinase tousled-like 2,Other,TLK,,Q86UE8,MGI:1346023,24086,X,X,X,KinHub,10/6/2020
+Tnik,TNIK,ZC2/TNIK,TNIK,TNIK,TRAF2 and NCK-interacting protein kinase,STE,STE20,MSN,Q9UKE5,MGI:1916264,665113,X,X,X,KinHub,10/6/2020
+Tnk1,TNK1,TNK1,TNK1,TNK1,Non-receptor tyrosine-protein kinase TNK1,TK,Ack,,Q13470,MGI:1930958,83813,X,X,X,KinHub,10/6/2020
+Tnk2,ACK,ACK,TNK2,ACK,Activated CDC42 kinase 1,TK,Ack,,Q07912,MGI:1858308,51789,X,X,X,KinHub,10/6/2020
+Tnni3k,HH498,HH498,TNNI3K,HH498,Serine/threonine-protein kinase TNNI3K,TKL,MLK,HH498,Q59H18,MGI:2443276,435766,X,X,X,KinHub,10/6/2020
+Trib1,Trb1,Trb1,TRIB1,Trb1,Tribbles homolog 1,CAMK,Trbl,,Q96RU8,MGI:2443397,211770,X,X,X,KinHub,10/6/2020
+Trib2,Trb2,Trb2,TRIB2,Trb2,Tribbles homolog 2,CAMK,Trbl,,Q92519,MGI:2145021,217410,X,X,X,KinHub,10/6/2020
+Trib3,Trb3,Trb3,TRIB3,Trb3,Tribbles homolog 3,CAMK,Trbl,,Q96RU7,MGI:1345675,228775,X,X,X,KinHub,10/6/2020
+Trim24,TIF1a,TIF1a,TRIM24,TIF1a,Transcription intermediary factor 1-alpha,Atypical,TIF1,,O15164,MGI:109275,21848,X,X,,KinHub,10/6/2020
+Trim28,TIF1b,TIF1b,TRIM28,TIF1b,Transcription intermediary factor 1-beta,Atypical,TIF1,,Q13263,MGI:109274,21849,X,X,,KinHub,10/6/2020
+Trim33,TIF1g,TIF1g,TRIM33,TIF1g,E3 ubiquitin-protein ligase TRIM33,Atypical,TIF1,,Q9UPN9,MGI:2137357,94093,X,X,,KinHub,10/6/2020
+Trim66,TIF1D,TIF1D,TRIM66,,Tripartite motif-containing protein 66,Atypical,TIF1,,B5MCJ9,MGI:2152406,330627,X,,,KinHub,10/6/2020
+Trio,Trio,Trio,TRIO,Trio,Triple functional domain protein,CAMK,Trio,,O75962,MGI:1927230,223435,X,X,X,KinHub,10/6/2020
+Trp53rka,,,TP53RK,,transformation related protein 53 regulating kinase A,Other,,,,MGI:1918294,381406,,,,MGI,10/6/2020
+Trp53rkb,PRPK,PRPK,TP53RK,PRPK,TP53-regulating kinase,Other,Bud32,,Q96S44,MGI:1914050,76367,X,X,X,KinHub,10/6/2020
+Trpm6,ChaK2,ChaK2,TRPM6,ChaK2,Transient receptor potential cation channel subfamily M member 6,Atypical,Alpha,ChaK,Q9BX84,MGI:2675603,225997,X,X,X,KinHub,10/6/2020
+Trpm7,ChaK1,ChaK1,TRPM7,ChaK1,Transient receptor potential cation channel subfamily M member 7,Atypical,Alpha,ChaK,Q96QT4,MGI:1929996,58800,X,X,X,KinHub,10/6/2020
+Trrap,TRRAP,TRRAP,TRRAP,TRRAP,Transformation/transcription domain-associated protein,Atypical,PIKK,TRRAP,Q9Y4A5,MGI:2153272,100683,X,X,,KinHub,10/6/2020
+Tssk1,TSSK1,TSSK1,TSSK1B,TSSK1,Testis-specific serine/threonine-protein kinase 1,CAMK,TSSK,,Q9BXA7,MGI:1347557,22114,X,X,X,KinHub,10/6/2020
+Tssk2,TSSK2,TSSK2,TSSK2,TSSK2,Testis-specific serine/threonine-protein kinase 2,CAMK,TSSK,,Q96PF2,MGI:1347559,22115,X,X,X,KinHub,10/6/2020
+Tssk3,TSSK3,TSSK3,TSSK3,TSSK3,Testis-specific serine/threonine-protein kinase 3,CAMK,TSSK,,Q96PN8,MGI:1929914,58864,X,X,X,KinHub,10/6/2020
+Tssk4,TSSK4,TSSK4,TSSK4,TSSK4,Testis-specific serine/threonine-protein kinase 4,CAMK,TSSK,,Q6SA08,MGI:1918349,71099,X,X,X,KinHub,10/6/2020
+Tssk6,SSTK,SSTK,TSSK6,SSTK,Testis-specific serine/threonine-protein kinase 6,CAMK,TSSK,,Q9BXA6,MGI:2148775,83984,X,X,X,KinHub,10/6/2020
+Ttbk1,TTBK1,TTBK1,TTBK1,TTBK1,Tau-tubulin kinase 1,CK1,TTBK,,Q5TCY1,MGI:2147036,106763,X,X,X,KinHub,10/6/2020
+Ttbk2,TTBK2,TTBK2,TTBK2,TTBK2,Tau-tubulin kinase 2,CK1,TTBK,,Q6IQ55,MGI:2155779,140810,X,X,X,KinHub,10/6/2020
+Ttk,TTK,TTK,TTK,TTK,Dual specificity protein kinase TTK,Other,TTK,,P33981,MGI:1194921,22137,X,X,X,KinHub,10/6/2020
+Ttn,TTN,TTN,TTN,TTN,Titin,CAMK,MLCK,,Q8WZ42,MGI:98864,22138,X,X,X,KinHub,10/6/2020
+Txk,TXK,TXK,TXK,TXK,Tyrosine-protein kinase TXK,TK,Tec,,P42681,MGI:102960,22165,X,X,X,KinHub,10/6/2020
+Tyk2,TYK2,TYK2,TYK2,TYK2,Non-receptor tyrosine-protein kinase TYK2,TK,Jak,,P29597,MGI:1929470,54721,X,X,X,KinHub,10/6/2020
+Tyro3,TYRO3,TYRO3,TYRO3,TYRO3,Tyrosine-protein kinase receptor TYRO3,TK,Axl,,Q06418,MGI:104294,22174,X,X,X,KinHub,10/6/2020
+Uhmk1,KIS,KIS,UHMK1,KIS,Serine/threonine-protein kinase Kist,Other,KIS,,Q8TAS1,MGI:1341908,16589,X,X,X,KinHub,10/6/2020
+Ulk1,ULK1,ULK1,ULK1,ULK1,Serine/threonine-protein kinase ULK1,Other,ULK,,O75385,MGI:1270126,22241,X,X,X,KinHub,10/6/2020
+Ulk2,ULK2,ULK2,ULK2,ULK2,Serine/threonine-protein kinase ULK2,Other,ULK,,Q8IYT8,MGI:1352758,29869,X,X,X,KinHub,10/6/2020
+Ulk3,ULK3,ULK3,ULK3,ULK3,Serine/threonine-protein kinase ULK3,Other,ULK,,Q6PHR2,MGI:1918992,71742,X,X,X,KinHub,10/6/2020
+Ulk4,ULK4,ULK4,ULK4,ULK4,Serine/threonine-protein kinase ULK4,Other,ULK,,Q96C45,MGI:1921622,209012,X,X,X,KinHub,10/6/2020
+Vrk1,VRK1,VRK1,VRK1,VRK1,Serine/threonine-protein kinase VRK1,CK1,VRK,,Q99986,MGI:1261847,22367,X,X,X,KinHub,10/6/2020
+Vrk2,VRK2,VRK2,VRK2,VRK2,Serine/threonine-protein kinase VRK2,CK1,VRK,,Q86Y07,MGI:1917172,69922,X,X,X,KinHub,10/6/2020
+Vrk3,VRK3,VRK3,VRK3,VRK3,Inactive serine/threonine-protein kinase VRK3,CK1,VRK,,Q8IV63,MGI:2182465,101568,X,X,X,KinHub,10/6/2020
+Wee1,Wee1,Wee1,WEE1,Wee1,Wee1-like protein kinase,Other,WEE,,P30291,MGI:103075,22390,X,X,X,KinHub,10/6/2020
+Wee2,Wee1B,Wee1B,WEE2,Wee1B,Wee1-like protein kinase 2,Other,WEE,,P0C1S8,MGI:3027899,381759,X,X,X,KinHub,10/6/2020
+Wnk1,Wnk1,Wnk1,WNK1,Wnk1,Serine/threonine-protein kinase WNK1,Other,WNK,,Q9H4A3,MGI:2442092,232341,X,X,X,KinHub,10/6/2020
+Wnk2,Wnk2,Wnk2,WNK2,Wnk2,Serine/threonine-protein kinase WNK2,Other,WNK,,Q9Y3S1,MGI:1922857,75607,X,X,X,KinHub,10/6/2020
+Wnk3,Wnk3,Wnk3,WNK3,Wnk3,Serine/threonine-protein kinase WNK3,Other,WNK,,Q9BYP7,MGI:2652875,279561,X,X,X,KinHub,10/6/2020
+Wnk4,Wnk4,Wnk4,WNK4,Wnk4,Serine/threonine-protein kinase WNK4,Other,WNK,,Q96J92,MGI:1917097,69847,X,X,X,KinHub,10/6/2020
+Yes1,YES,YES,YES1,YES,Tyrosine-protein kinase Yes,TK,Src,,P07947,MGI:99147,22612,X,X,X,KinHub,10/6/2020
+Zap70,ZAP70,ZAP70,ZAP70,ZAP70,Tyrosine-protein kinase ZAP-70,TK,Syk,,P43403,MGI:99613,22637,X,X,X,KinHub,10/6/2020

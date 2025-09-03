@@ -1,62 +1,67 @@
 # 02_data_prep.R
-message("--- Running 02_data_prep.R: Preparing DESeq2 Objects from new tx2gene maps ---")
-library(tximport)
-library(DESeq2)
+# Contains a function to prepare DESeq2 data objects.
 
-# --- Create a list of the tx2gene maps to process ---
-tx2gene_maps <- list(
-  all = tx2gene_all,
-  pcg = tx2gene_pcg
-)
+#' Prepare DESeq2 Datasets
+#'
+#' @param files_sf Named vector of paths to Salmon quant.sf files.
+#' @param samples_df Data frame with sample metadata.
+#' @param tx2gene_maps A list of tx2gene data frames (e.g., list(all = ..., pcg = ...)).
+#' @param design_formulas A named list of design formulas for DESeq2.
+#' @param filter_cutoff Minimum count for the low-count filter.
+#' @return A list containing 'dds_models' and 'vsd_models'.
 
-# Initialize master lists to hold the results for each model
-dds_models <- list()
-vsd_models <- list()
-
-message("Creating and processing DESeqDataSet for each model and gene subset...")
-
-# Loop through each of the main DESeq2 statistical models
-for (model_name in names(designs)) {
-  message(paste("\n... processing model:", model_name))
-  design_formula <- designs[[model_name]]
+prepare_deseq_objects <- function(files_sf,
+                                  samples_df,
+                                  tx2gene_maps,
+                                  design_formulas,
+                                  filter_cutoff) {
+  message("--- Running prepare_deseq_objects function ---")
   
-  # Create an inner list to hold the dds objects for this model (all, filt, pcg)
-  current_model_dds_list <- list()
+  dds_models <- list()
+  vsd_models <- list()
   
-  # --- Step 1: Import counts using the 'all' and 'pcg' maps ---
-  # CORRECTED: Added ignoreTxVersion = TRUE to both tximport calls
-  txi_all <- tximport(files_sf, type = "salmon", tx2gene = tx2gene_maps$all, ignoreTxVersion = TRUE)
-  dds_all <- DESeqDataSetFromTximport(txi_all, colData = samples, design = design_formula)
+  for (model_name in names(design_formulas)) {
+    message(paste("\n... processing model:", model_name))
+    design_formula <- design_formulas[[model_name]]
+    
+    # --- SF File Logic ---
+    # The 'files_sf' vector (created in the Rmd) is used here by tximport.
+    # The function itself doesn't know the file structure; it just receives the paths.
+    txi_all <- tximport(
+      files_sf,
+      type = "salmon",
+      tx2gene = tx2gene_maps$all,
+      ignoreTxVersion = TRUE
+    ) #
+    dds_all <- DESeqDataSetFromTximport(txi_all, colData = samples_df, design = design_formula) #
+    
+    txi_pcg <- tximport(
+      files_sf,
+      type = "salmon",
+      tx2gene = tx2gene_maps$pcg,
+      ignoreTxVersion = TRUE
+    ) #
+    dds_pcg <- DESeqDataSetFromTximport(txi_pcg, colData = samples_df, design = design_formula) #
+    # --- END SF File Logic ---
+    
+    # Apply a consistent low-count filter
+    smallest_group_size <- min(table(samples_df$Driver))
+    keep_all <- rowSums(counts(dds_all) >= filter_cutoff) >= smallest_group_size #
+    dds_all_filt <- dds_all[keep_all, ] #
+    
+    keep_pcg <- rowSums(counts(dds_pcg) >= filter_cutoff) >= smallest_group_size #
+    dds_pcg_filt <- dds_pcg[keep_pcg, ] #
+    
+    current_model_dds_list <- list(all = dds_all,
+                                   filt = dds_all_filt,
+                                   pcg = dds_pcg_filt)
+    
+    # Estimate size factors and perform VST
+    dds_models[[model_name]] <- lapply(current_model_dds_list, estimateSizeFactors) #
+    message(paste("... applying VST to filtered data for", model_name))
+    vsd_models[[model_name]] <- vst(dds_models[[model_name]]$filt, blind = TRUE) #
+  }
   
-  txi_pcg <- tximport(files_sf, type = "salmon", tx2gene = tx2gene_maps$pcg, ignoreTxVersion = TRUE)
-  dds_pcg <- DESeqDataSetFromTximport(txi_pcg, colData = samples, design = design_formula)
-  
-  # --- Step 2: Apply a low-count filter to the 'all' and 'pcg' sets ---
-  # Keep genes with at least 'filt' counts in the smallest group of samples
-  smallest_group_size <- 3 
-  keep_all <- rowSums(counts(dds_all) >= filt) >= smallest_group_size
-  dds_all_filt <- dds_all[keep_all, ]
-  
-  keep_pcg <- rowSums(counts(dds_pcg) >= filt) >= smallest_group_size
-  dds_pcg_filt <- dds_pcg[keep_pcg, ]
-  
-  # --- Step 3: Assemble the list of datasets for this model ---
-  # Note: we use 'dds_all_filt' as the 'filt' subset for QC and analysis
-  current_model_dds_list <- list(
-    all = dds_all,
-    filt = dds_all_filt,
-    pcg = dds_pcg_filt # This is now the refined AND filtered pcg set
-  )
-  
-  # Estimate size factors for each dataset
-  current_model_dds_list <- lapply(current_model_dds_list, estimateSizeFactors)
-  
-  # Add the processed list to the master list
-  dds_models[[model_name]] <- current_model_dds_list
-  
-  # Perform VST on the filtered data for this model
-  message(paste("... applying VST to", model_name))
-  vsd_models[[model_name]] <- vst(dds_models[[model_name]]$filt, blind = TRUE)
+  message("\n--- Completed DESeq2 object preparation ---")
+  return(list(dds_models = dds_models, vsd_models = vsd_models))
 }
-
-message("\n--- Completed 02_data_prep.R ---")
