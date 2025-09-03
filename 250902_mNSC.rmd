@@ -27,11 +27,11 @@ source("./scripts/00_setup.R", local = knitr::knit_global(), echo = TRUE)
 #### 2. Sample metadata 
 ```{r}
 # Load from the project root directory
-[cite_start]samples <- read.csv("./input/samples.csv", row.names = 1, header = TRUE) [cite: 1]
+samples <- read.csv("./input/samples.csv", row.names = 1, header = TRUE)
 
 # --- Convert all model variables to factors ---
 # This ensures DESeq2 treats them as discrete categories, not continuous numbers.
-[cite_start]vars <- c("SeqBatch", "Host", "Model", "Driver") [cite: 1]
+vars <- c("SeqBatch", "Host", "Model", "Driver")
 message("...Converting model variables to factors...")
 for (v in vars) {
   samples[[v]] <- factor(samples[[v]])
@@ -47,7 +47,6 @@ if (!all(file.exists(files_sf))) {
   stop("One or more Salmon quantification files are missing from the ./sf/ directory.")
 }
 ```
-
 
 #### 3. Define Directories and Parameters
 Global parameters for the analysis are defined here. Child scripts will inherit these.
@@ -68,7 +67,7 @@ lfc <- 1
 filt <- 20 # Low read count filter cutoff
 
 # Other variables
-date <- format(Sys.Date(), format = "%Y%m%d")
+date <- format(Sys.Date(), format = "%y%m%d")
 nc <- BiocParallel::multicoreWorkers()
 set.seed(888)
 
@@ -147,7 +146,7 @@ anno_colors <- list(
 #### 7. Sample subsets
 ```{r}
 message("--- Creating subset for Model == 'NS1' ---")
-[cite_start]samples_ns1 <- samples[samples$Model == "NS1", ] [cite: 1]
+samples_ns1 <- samples[samples$Model == "NS1", ]
 
 # Drop unused factor levels to avoid errors in the model
 samples_ns1$Model <- droplevels(samples_ns1$Model)
@@ -183,4 +182,14 @@ source("./scripts/03_QC.R", local = knitr::knit_global(), echo = TRUE)
 #### 4. Differential Expression Analysis
 ```{r echo=TRUE, message=TRUE, include = TRUE}
 source("./scripts/04_DESeq.R", local = knitr::knit_global(), echo = TRUE)
+```
+
+#### 5. Differential Expression Analysis (Model == 'NS1' Subset)
+```{r}
+source("./scripts/05_DESeq_NS1_subset.R", local = knitr::knit_global(), echo = TRUE)
+```
+
+#### 6. Differential Expression Analysis (Host == 'BL6' Subset)
+```{r}
+source("./scripts/06_DESeq_BL6_subset.R", local = knitr::knit_global(), echo = TRUE)
 ```

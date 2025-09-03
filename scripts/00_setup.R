@@ -5,7 +5,7 @@ message("Loading required packages...")
 packages_to_load <- c(
   "tidyverse", "rmarkdown", "reactable", "BiocManager", "DESeq2", 
   "tximport", "pheatmap", "RColorBrewer", "ggplotify", 
-  "BiocParallel", "RNAseqQC", "rtracklayer"
+  "BiocParallel", "RNAseqQC", "rtracklayer", "EnhancedVolcano"
 )
 
 # Load all libraries, suppressing startup messages
