@@ -16,7 +16,6 @@ This document runs a full differential expression analysis pipeline within a con
 <hr>
 
 # R Setup and Global Variables
-
 ### 1. Library Loading
 ```{r, echo=TRUE, message=TRUE, include=TRUE}
 # Source the setup script to load all packages
@@ -35,7 +34,6 @@ message("...Converting model variables to factors...")
 for (v in vars) {
   samples[[v]] <- factor(samples[[v]])
 }
-
 message("Displaying sample metadata")
 reactable::reactable(samples)
 
@@ -142,23 +140,28 @@ anno_colors <- list(
 )
 ```
 
-### 7. Sample subsets
+### 7. Full DESeq2 Model Design
+```{r}
+# Defining DESeq2 Model Designs for full dataset
+vars_model <- c("SeqBatch", "Host", "Model", "Driver")
+vars_int <- c("Model*Driver")
+designs <- list(
+  model_1 = as.formula(paste("~", paste(vars_model, collapse = " + "))),
+  model_2 = as.formula(paste("~", "SeqBatch", "+", paste(vars_int, collapse = " + ")))
+)
+```
+
+### 8. Defined subsets
 ```{r}
 # --- Subset 1: Model == 'NS1' ---
-message("--- Defining subset for Model == 'NS1' ---")
 samples_ns1 <- samples[samples$Model == "NS1", ]
-samples_ns1$Model <- droplevels(samples_ns1$Model)
-samples_ns1$Driver <- factor(samples_ns1$Driver)
-samples_ns1$Host <- factor(samples_ns1$Host)
+samples_ns1 <- droplevels(samples_ns1)
 files_sf_ns1 <- files_sf[rownames(samples_ns1)]
 message(paste("Subset 'samples_ns1' contains", nrow(samples_ns1), "samples."))
 
 # --- Subset 2: Host == 'BL6' ---
-message("\n--- Defining subset for Host == 'BL6' ---")
 samples_bl6 <- samples[samples$Host == "BL6", ]
-samples_bl6$Host <- droplevels(samples_bl6$Host)
-samples_bl6$Model <- factor(samples_bl6$Model)
-samples_bl6$Driver <- factor(samples_bl6$Driver)
+samples_bl6 <- droplevels(samples_bl6)
 files_sf_bl6 <- files_sf[rownames(samples_bl6)]
 message(paste("Subset 'samples_bl6' contains", nrow(samples_bl6), "samples."))
 ```
@@ -173,7 +176,7 @@ This section sources the external R scripts that perform the analysis. Each scri
 source("./scripts/01_genes_mouse.R", local = knitr::knit_global(), echo = TRUE)
 ```
 
-### 2. Prepare Data
+### 2. Data Prep
 ```{r echo=TRUE, message=TRUE, include = TRUE}
 source("./scripts/02_data_prep.R", local = knitr::knit_global(), echo = TRUE)
 ```
@@ -190,22 +193,32 @@ source("./scripts/04_DESeq.R", local = knitr::knit_global(), echo = TRUE)
 
 ### 5. Differential Expression Analysis (Model == 'NS1' Subset)
 ```{r}
-# Assign the specific subset to generic variables
-samples_subset <- samples_ns1
-files_sf_subset <- files_sf_ns1
+# --- Set Parameters for this run ---
+analysis_params <- list(
+  samples_df = samples_ns1,
+  files_sf_vec = files_sf_ns1,
+  design_formula = as.formula("~ SeqBatch + Host + Driver"),
+  factors_to_compare = c("Driver"),
+  subset_name = "NS1_Model"
+)
 
-# Source the child script, which will use the generic variables
-source("./scripts/05_DESeq_NS1_subset.R", local = knitr::knit_global(), echo = TRUE)
+# Source the generic child script
+source("./scripts/05_DESeq_subset.R", local = knitr::knit_global(), echo = TRUE)
 ```
 
 ### 6. Differential Expression Analysis (Host == 'BL6' Subset)
 ```{r}
-# Re-assign the other specific subset to the same generic variables
-samples_subset <- samples_bl6
-files_sf_subset <- files_sf_bl6
+# --- Set Parameters for this run ---
+analysis_params <- list(
+  samples_df = samples_bl6,
+  files_sf_vec = files_sf_bl6,
+  design_formula = as.formula("~ SeqBatch + Model + Driver"),
+  factors_to_compare = c("Model", "Driver"),
+  subset_name = "BL6_Host"
+)
 
-# Source the child script
-source("./scripts/06_DESeq_BL6_subset.R", local = knitr::knit_global(), echo = TRUE)
+# Source the generic child script
+source("./scripts/05_DESeq_subset.R", local = knitr::knit_global(), echo = TRUE)
 ```
 
 # Session Info
