@@ -19,39 +19,39 @@ This document runs a full differential expression analysis pipeline within a con
 ### R Setup and Global Variables
 
 #### 1. Library Loading
-This chunk sources the setup script to install any missing packages. Then it loads the core libraries for the main document.
-```{r echo=TRUE, message=TRUE, include = TRUE}
-# Source the setup script to ensure a reproducible environment and load all packages
+```{r, echo=TRUE, message=TRUE, include=TRUE}
+# Source the setup script to load all packages
 source("./scripts/00_setup.R", local = knitr::knit_global(), echo = TRUE)
 ```
 
 #### 2. Sample metadata 
 ```{r}
-# load from the project root directory
-samples <- read.csv("./input/samples.csv", row.names = 1, header = TRUE)
+# Load from the project root directory
+[cite_start]samples <- read.csv("./input/samples.csv", row.names = 1, header = TRUE) [cite: 1]
+
 # --- Convert all model variables to factors ---
-vars <- c("SeqBatch", "Host", "Model", "Driver")
-# This ensures DESeq2 treats SeqGatch as discrete categories, not continuous numbers.
+# This ensures DESeq2 treats them as discrete categories, not continuous numbers.
+[cite_start]vars <- c("SeqBatch", "Host", "Model", "Driver") [cite: 1]
 message("...Converting model variables to factors...")
 for (v in vars) {
   samples[[v]] <- factor(samples[[v]])
 }
 
-message("Displaying sample metadata:")
-reactable(samples)
+message("Displaying sample metadata")
+reactable::reactable(samples)
 
 # Generate paths to salmon quantification files
 files_sf <- paste0("./sf/", rownames(samples), ".sf")
 names(files_sf) <- rownames(samples)
 if (!all(file.exists(files_sf))) {
-  stop("One or more Salmon quantification files are missing")
+  stop("One or more Salmon quantification files are missing from the ./sf/ directory.")
 }
 ```
 
 
 #### 3. Define Directories and Parameters
 Global parameters for the analysis are defined here. Child scripts will inherit these.
-```{r global_vars}
+```{r}
 # Output directories
 dir_output <- "./output/"
 dir_graph <- "./graphs/"
@@ -72,7 +72,7 @@ date <- format(Sys.Date(), format = "%Y%m%d")
 nc <- BiocParallel::multicoreWorkers()
 set.seed(888)
 
-# GOI
+# Genes of Interest
 project_genes <- c("Egfr", "Pdgfra", "Pten", "Cdkn2a")
 
 # Colors
@@ -82,20 +82,21 @@ ryb <- colorRampPalette(rev(brewer.pal(n = 7, name = "RdYlBu")))(100)
 
 #### 4. DESeq2 Model Design
 Define the statistical models that will be used for the analysis.
-```{r model_design}
+```{r}
 # Variables for the DESeq2 model designs
-vars
+vars_model <- c("SeqBatch", "Host", "Model", "Driver")
 vars_int <- c("Model*Driver")
 sb <- "SeqBatch"
 
 # Create a named list of design formulas
-designs <- list(model_1 = as.formula(paste("~", paste(vars, collapse = " + "))),
+designs <- list(model_1 = as.formula(paste("~", paste(vars_model, collapse = " + "))),
                 model_2 = as.formula(paste("~", sb, "+", 
                                            paste(vars_int, collapse = " + ")
 )))
-print("Models to be used in the analysis:")
+print("Models to be used in the main analysis:")
 print(designs)
 ```
+
 #### 5. Genesets
 ```{r}
 #### Kinases
@@ -110,7 +111,7 @@ kinase_genes <- kinases$Mouse_symbol
 
 #### 6. Graph Annotations and Colors
 ```{r echo=TRUE, message=FALSE}
-anno_vars <- c("Model", "Host", "Driver")
+anno_vars <- c("Host", "Model", "Driver")
 anno <- as.data.frame(samples[, anno_vars])
 summarized_anno <- anno %>%
   group_by(across(all_of(anno_vars))) %>%
@@ -128,7 +129,6 @@ unique_values_by_var <- lapply(anno, unique)
 unique_values_by_var
 
 anno_colors <- list(
-  Host = c("NSG" = "gray", "BL6" = "black"),
   Driver = c(
     "EGFRvIII" = "blue",
     "EGFRvV" = "dodgerblue",
@@ -139,10 +139,27 @@ anno_colors <- list(
     "NS2" = "blue",
     "GBO" = "black",
     "Tumor" = "purple"
-  )
+  ),
+  Host = c("NSG" = "gray", "BL6" = "black")
 )
 ```
 
+#### 7. Sample subsets
+```{r}
+message("--- Creating subset for Model == 'NS1' ---")
+[cite_start]samples_ns1 <- samples[samples$Model == "NS1", ] [cite: 1]
+
+# Drop unused factor levels to avoid errors in the model
+samples_ns1$Model <- droplevels(samples_ns1$Model)
+samples_ns1$Driver <- factor(samples_ns1$Driver)
+samples_ns1$Host <- factor(samples_ns1$Host)
+
+# Subset the quantification file paths
+files_sf_ns1 <- files_sf[rownames(samples_ns1)]
+
+message(paste("Subset contains", nrow(samples_ns1), "samples."))
+reactable::reactable(samples_ns1)
+```
 <hr>
 
 ### Analysis Pipeline

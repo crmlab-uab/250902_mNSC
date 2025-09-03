@@ -129,4 +129,57 @@ for (model_name in names(dds_models)) {
   }
 }
 
+message("--- Running DESeq2 on NS1 subset ---")
+
+# Import counts using the protein-coding gene map from script 01
+txi_ns1 <- tximport(files_sf_ns1, type = "salmon", tx2gene = tx2gene_pcg, ignoreTxVersion = TRUE)
+
+# Create the DESeqDataSet with the corrected design
+dds_ns1 <- DESeqDataSetFromTximport(txi_ns1,
+                                    colData = samples_ns1,
+                                    design = ~ SeqBatch + Driver)
+
+# Filter for low counts
+smallest_group_size <- min(table(samples_ns1$Driver))
+keep <- rowSums(counts(dds_ns1) >= filt) >= smallest_group_size
+dds_ns1_filt <- dds_ns1[keep,]
+
+# Run the DESeq2 analysis
+message("...Running DESeq()...")
+dds_ns1_results <- DESeq(dds_ns1_filt)
+message("DESeq2 analysis for NS1 subset complete.")
+
+
+message("--- Extracting pairwise DEG results for NS1 drivers ---")
+
+# Initialize a list to store results
+res_ns1_drivers <- list()
+
+# ---- Comparison 1: EGFRvV vs. EGFRvIII ----
+res_name_1 <- "Driver_EGFRvV_vs_EGFRvIII_in_NS1"
+res_ns1_drivers[[res_name_1]] <- results(dds_ns1_results, 
+                                         contrast = c("Driver", "EGFRvV", "EGFRvIII"),
+                                         alpha = qval,
+                                         lfcThreshold = lfc)
+message("\nSummary for: ", res_name_1)
+summary(res_ns1_drivers[[res_name_1]])
+
+# ---- Comparison 2: PDGFRA vs. EGFRvIII ----
+res_name_2 <- "Driver_PDGFRA_vs_EGFRvIII_in_NS1"
+res_ns1_drivers[[res_name_2]] <- results(dds_ns1_results, 
+                                         contrast = c("Driver", "PDGFRA", "EGFRvIII"),
+                                         alpha = qval,
+                                         lfcThreshold = lfc)
+message("\nSummary for: ", res_name_2)
+summary(res_ns1_drivers[[res_name_2]])
+
+# ---- Comparison 3: PDGFRA vs. EGFRvV ----
+res_name_3 <- "Driver_PDGFRA_vs_EGFRvV_in_NS1"
+res_ns1_drivers[[res_name_3]] <- results(dds_ns1_results, 
+                                         contrast = c("Driver", "PDGFRA", "EGFRvV"),
+                                         alpha = qval,
+                                         lfcThreshold = lfc)
+message("\nSummary for: ", res_name_3)
+summary(res_ns1_drivers[[res_name_3]])
+
 message("--- Completed 04_DESeq.R ---")

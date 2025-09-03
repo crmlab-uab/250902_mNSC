@@ -1,4 +1,4 @@
-sample,fastq_1,fastq_2,strandedness,ID,ID2,Driver,Host,CDKN2AB,PTEN,Type,Clone,Replicate,OriginalOrder,LibQuickID,Random_Sample_No,Adapter,LibraryBatch,SeqBatch,SeqBatchSample
+﻿sample,fastq_1,fastq_2,strandedness,ID,ID2,Driver,Host,CDKN2AB,PTEN,Model,Clone,Replicate,OriginalOrder,LibQuickID,Random_Sample_No,Adapter,LibraryBatch,SeqBatch,SeqBatchSample
 TK001,/data/project/MillerLab/projects/mNSC/220902_RB_Tomo/01_fastq/TK_1_S1_R1_001.fastq.gz,,auto,TK_1,TK_001_S1,EGFRvIII,NSG,Hom_del,Hom_del,NS1,15.4.4,1,1,TK85,85,1,8,8,S1
 TK002,/data/project/MillerLab/projects/mNSC/220902_RB_Tomo/01_fastq/TK_2_S4_R1_001.fastq.gz,,auto,TK_2,TK_002_S4,EGFRvIII,NSG,Hom_del,Hom_del,NS1,15.4.4,2,2,TK100,100,9,9,9,S4
 TK003,/data/project/MillerLab/projects/mNSC/220902_RB_Tomo/01_fastq/TK_3_S11_R1_001.fastq.gz,,auto,TK_3,TK_003_S11,EGFRvIII,NSG,Hom_del,Hom_del,NS1,15.4.4,3,3,TK35,35,25,3,3,S11
