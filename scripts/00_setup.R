@@ -1,85 +1,88 @@
 # =============================================================================
 #
-# 00_setup.R: PROJECT PACKAGE LOADER
+# 00_setup.R: PROJECT PACKAGE LOADER AND VALIDATION
 #
 # Description:
-# This script loads all R packages required for the entire analysis pipeline.
-# It also contains a function to validate that the configuration list and
-# the samples metadata file are compatible.
+# This script loads all R packages required for the analysis pipeline and
+# contains a validation function to check inputs before running the analysis.
+# It will automatically attempt to install any missing packages.
 #
 # =============================================================================
 
 message("Loading required packages...")
 
 packages_to_load <- c(
-  "tidyverse",
-  "here",
-  "rmarkdown",
-  "reactable",
-  "BiocManager",
-  "DESeq2",
-  "tximport",
-  "pheatmap",
-  "RColorBrewer",
-  "ggplotify",
-  "BiocParallel",
-  "rtracklayer",
-  "EnhancedVolcano",
-  "knitr",
-  "styler",
-  "ggsci" # Added for publication-quality color palettes
+  "tidyverse", "here", "rmarkdown", "reactable", "BiocManager",
+  "DESeq2", "tximport", "pheatmap", "RColorBrewer", "ggplotify",
+  "BiocParallel", "rtracklayer", "EnhancedVolcano", "knitr",
+  "ggsci", "styler"
 )
 
-# Load each package, suppressing startup messages for cleaner output
+# --- Automated Package Installation ---
+# This loop checks for each package. If it's not installed, it attempts
+# to install it using BiocManager, then issues a warning with the version.
+for (pkg in packages_to_load) {
+  if (!requireNamespace(pkg, quietly = TRUE)) {
+    message(paste("Package", pkg, "not found. Attempting installation..."))
+    BiocManager::install(pkg, ask = FALSE, update = FALSE)
+    
+    # After installation, issue a warning to the user with the version.
+    if (requireNamespace(pkg, quietly = TRUE)) {
+      pkg_version <- as.character(utils::packageVersion(pkg))
+      warning(
+        paste0(
+          "SETUP WARNING: Package '", pkg, "' was not found and has been installed. ",
+          "Version: ", pkg_version
+        ),
+        call. = FALSE
+      )
+    } else {
+      stop(paste("CRITICAL ERROR: Failed to install package:", pkg, ". Please install it manually and restart."), call. = FALSE)
+    }
+  }
+}
+
+# --- Load all packages ---
 suppressPackageStartupMessages({
   for (pkg in packages_to_load) {
-    if (requireNamespace(pkg, quietly = TRUE)) {
-      library(pkg, character.only = TRUE)
-    } else {
-      warning(paste("Package", pkg, "not found and could not be loaded."))
-    }
+    library(pkg, character.only = TRUE)
   }
 })
 
 message("All packages loaded successfully.")
 
 
-#' Validate Project Configuration Against Input Files
+#' Validate Configuration and Input Files
 #'
-#' This function checks that the columns specified in the `cfg` list exist
-#' in the samples data frame. It provides a single, early-fail point to
-#' catch common configuration errors.
+#' This function checks that the `cfg` list and the `samples` data frame are
+#' correctly configured before the main analysis begins. It stops with an
+#' informative error if a required column is missing.
 #'
 #' @param cfg The project configuration list.
-#' @param samples_df The data frame loaded from the samples metadata file.
+#' @param samples A data frame with sample metadata, read from samples.csv.
 #'
-#' @return This function does not return a value. It will stop with an error
-#'   if validation fails.
+#' @return This function does not return a value; it stops on error.
 #'
-validate_config_and_inputs <- function(cfg, samples_df) {
-  message("--- Validating configuration against sample metadata ---")
-
-  # Gather all column names required by the configuration
+validate_config_and_inputs <- function(cfg, samples) {
+  message("--- Validating configuration and input files ---")
+  
   required_cols <- unique(c(
     cfg$batch_vars,
     cfg$main_vars,
     cfg$interaction_vars,
     cfg$filter_by_factor
   ))
-
-  # Check which columns are missing from the samples data frame
-  missing_cols <- setdiff(required_cols, names(samples_df))
-
+  
+  missing_cols <- setdiff(required_cols, names(samples))
+  
   if (length(missing_cols) > 0) {
     stop(paste(
-      "\n\nERROR: The following required columns were not found in your samples file:\n  -",
-      paste(missing_cols, collapse = "\n  - "),
-      "\nPlease check the 'file_samples' path and column names in both your config and CSV file."
+      "\n\nERROR: The samples.csv file is missing the following required columns defined in your cfg list:",
+      paste(missing_cols, collapse = ", "),
+      "\nPlease check your column names and the 'batch_vars', 'main_vars', etc., in the RMD.",
+      "\n"
     ))
   }
-
+  
   message("...Validation successful.")
 }
-# =============================================================================
-# End of 00_setup.R
-# =============================================================================
