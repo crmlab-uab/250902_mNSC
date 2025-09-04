@@ -37,7 +37,7 @@ run_deseq_core <- function(samples_df,
     ignoreTxVersion = TRUE
   )
   dds <- DESeqDataSetFromTximport(txi_data, colData = samples_df, design = design_formula)
-  
+
   if (!filter_by_factor %in% names(samples_df)) {
     stop(
       paste(
@@ -47,11 +47,11 @@ run_deseq_core <- function(samples_df,
       )
     )
   }
-  
+
   smallest_group_size <- min(table(samples_df[[filter_by_factor]]))
   keep <- rowSums(counts(dds) >= filter_min_count) >= smallest_group_size
   dds_filt <- dds[keep, ]
-  
+
   dds_processed <- DESeq(dds_filt)
   message("--- Core analysis complete. ---")
   return(dds_processed)
@@ -79,25 +79,29 @@ extract_comparisons <- function(dds_processed,
     "---"
   ))
   results_list <- list()
-  
+
   for (comp in comparisons_list) {
-    res_name <- paste0(analysis_name,
-                       "_",
-                       comp$factor,
-                       "_",
-                       comp$group1,
-                       "_vs_",
-                       comp$group2)
+    res_name <- paste0(
+      analysis_name,
+      "_",
+      comp$factor,
+      "_",
+      comp$group1,
+      "_vs_",
+      comp$group2
+    )
     message(paste("...Processing comparison:", res_name))
-    
-    res <- try(results(
-      dds_processed,
-      contrast = c(comp$factor, comp$group1, comp$group2),
-      alpha = cfg$qval_threshold,
-      lfcThreshold = cfg$lfc_threshold
-    ),
-    silent = TRUE)
-    
+
+    res <- try(
+      results(
+        dds_processed,
+        contrast = c(comp$factor, comp$group1, comp$group2),
+        alpha = cfg$qval_threshold,
+        lfcThreshold = cfg$lfc_threshold
+      ),
+      silent = TRUE
+    )
+
     if (inherits(res, "try-error")) {
       message(
         paste(
@@ -108,41 +112,59 @@ extract_comparisons <- function(dds_processed,
       )
       next
     }
-    
+
     res_df <- as.data.frame(res) %>%
       tibble::rownames_to_column("gene_id") %>%
       dplyr::left_join(gene_map, by = "gene_id") %>%
       dplyr::arrange(padj)
-    
+
     results_list[[res_name]] <- res_df
-    
+
     # Save full results table
-    csv_filename <- here::here(cfg$dir_results_csv,
-                               paste0(cfg$date, "_", res_name, "_results.csv"))
+    csv_filename <- here::here(
+      cfg$dir_results_csv,
+      paste0(cfg$date, "_", res_name, "_results.csv")
+    )
     write.csv(res_df, file = csv_filename, row.names = FALSE)
-    
+
     # Create and save Volcano Plot
     volcano_plot <- EnhancedVolcano(
       res_df,
       lab = res_df$gene_name,
-      x = 'log2FoldChange',
-      y = 'padj',
+      x = "log2FoldChange",
+      y = "padj",
       pCutoff = cfg$qval_threshold,
       FCcutoff = cfg$lfc_threshold,
       title = res_name,
       subtitle = analysis_name
     )
-    plot_filename <- here::here(cfg$dir_graphs,
-                                paste0(cfg$date, "_", res_name, "_volcano.png"))
+
+    # Save as PNG for HTML report
+    plot_filename_png <- here::here(
+      cfg$dir_graphs_png,
+      paste0(cfg$date, "_", res_name, "_volcano.png")
+    )
     ggsave(
-      filename = plot_filename,
+      filename = plot_filename_png,
       plot = volcano_plot,
       width = 12,
       height = 10,
       dpi = 300
     )
+    # Save as PDF for high-quality figures
+    plot_filename_pdf <- here::here(
+      cfg$dir_graphs_pdf,
+      paste0(cfg$date, "_", res_name, "_volcano.pdf")
+    )
+    ggsave(
+      filename = plot_filename_pdf,
+      plot = volcano_plot,
+      width = 12,
+      height = 10,
+      device = "pdf"
+    )
   }
-  
+
   message("--- All valid comparisons processed and saved. ---")
   return(results_list)
 }

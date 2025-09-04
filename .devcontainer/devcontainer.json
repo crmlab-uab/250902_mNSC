@@ -1,0 +1,14 @@
+{
+    "name": "Rocker Container",
+    "service": "rstudio", // Or the service name for your Rocker container
+    "workspaceFolder": "/data, // Set to your desired working directory
+    "shutdownAction": "none",
+    "customizations": {
+      "vscode": {
+        "extensions": [
+          "reditorsupport.r"
+        ]
+      }
+    },
+    "postAttachCommand": "Rscript -e 'install.packages(\"languageserver\")'"
+  } 
