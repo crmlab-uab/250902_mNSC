@@ -1,14 +1,33 @@
-# 00_setup.R
-# In a containerized environment, this script simply loads all required packages.
+# =============================================================================
+#
+# 00_setup.R: PROJECT PACKAGE LOADER
+#
+# Description:
+# This script loads all R packages required for the entire analysis pipeline.
+# It is sourced by the parent R Markdown file at the beginning of a run.
+#
+# =============================================================================
+
 message("Loading required packages...")
 
 packages_to_load <- c(
-  "tidyverse", "rmarkdown", "reactable", "BiocManager", "DESeq2", 
-  "tximport", "pheatmap", "RColorBrewer", "ggplotify", 
-  "BiocParallel", "RNAseqQC", "rtracklayer", "EnhancedVolcano"
+  "tidyverse",
+  "here",
+  "rmarkdown",
+  "reactable",
+  "BiocManager",
+  "DESeq2",
+  "tximport",
+  "pheatmap",
+  "RColorBrewer",
+  "ggplotify",
+  "BiocParallel",
+  "rtracklayer",
+  "EnhancedVolcano",
+  "knitr"
 )
 
-# Load all libraries, suppressing startup messages
+# Suppress startup messages for a cleaner console output.
 suppressPackageStartupMessages({
   for (pkg in packages_to_load) {
     if (requireNamespace(pkg, quietly = TRUE)) {
@@ -19,4 +38,4 @@ suppressPackageStartupMessages({
   }
 })
 
-message("All packages loaded.")
+message("All packages loaded successfully.")

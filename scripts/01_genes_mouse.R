@@ -1,22 +1,39 @@
-# 01_genes_mouse.R
-# Contains a function to create transcript-to-gene mapping files.
+# =============================================================================
+#
+# 01_genes_mouse.R: GENE ANNOTATION FUNCTIONS
+#
+# Description:
+# This script contains functions to process a GTF annotation file.
+# The filtering criteria are parameterized to make the function reusable
+# across different projects with different analytical goals.
+#
+# =============================================================================
 
-#' Create Transcript-to-Gene and Gene ID-to-Name Maps
+#' Create Transcript-to-Gene and Gene ID-to-Name Maps from a GTF File (Modular)
 #'
-#' @param gtf_path Path to the GTF annotation file.
-#' @param cache_dir Directory to save the cached RDS file.
-#' @param current_date A string (e.g., "250903") for naming the cache file.
-#' @return A list containing three data frames: 'tx2gene_all', 'tx2gene_pcg',
-#'         and 'gene_name_map'.
-
-create_tx2gene_maps <- function(gtf_path, cache_dir, current_date) {
+#' This function parses a GTF file to generate mapping tables used by `tximport`.
+#' It implements a caching mechanism to speed up subsequent runs.
+#'
+#' @param gtf_path character. Path to the gzipped GTF annotation file.
+#' @param cache_dir character. Directory to save the cached .rds file.
+#' @param current_date character. Date string for naming the cache file.
+#' @param filter_gene_types character vector. Gene biotypes to keep.
+#' @param exclude_patterns character vector. Patterns in gene description to filter out.
+#' @param exclude_chromosomes character vector. Chromosomes to exclude.
+#'
+#' @return A list containing three data frames: 'tx2gene_all', 'tx2gene_pcg', and 'gene_name_map'.
+#'
+create_tx2gene_maps <- function(gtf_path,
+                                cache_dir,
+                                current_date,
+                                filter_gene_types,
+                                exclude_patterns,
+                                exclude_chromosomes) {
   message("--- Running create_tx2gene_maps function ---")
   
   file_cache_rds <- file.path(cache_dir, paste0(current_date, "_gtf_data_cache.rds"))
-  
-  if (!file.exists(gtf_path)) {
-    stop(paste("GTF file not found at:", gtf_path))
-  }
+  if (!file.exists(gtf_path))
+    stop(paste("GTF file not found:", gtf_path))
   
   if (file.exists(file_cache_rds)) {
     message(paste("...Loading cached GTF data from:", file_cache_rds))
@@ -32,7 +49,6 @@ create_tx2gene_maps <- function(gtf_path, cache_dir, current_date) {
   full_map <- as.data.frame(mcols(gtf_data))
   full_map$chromosome_name <- as.character(seqnames(gtf_data))
   
-  # Create a robust base map
   base_map <- full_map %>%
     dplyr::select(any_of(
       c(
@@ -44,43 +60,46 @@ create_tx2gene_maps <- function(gtf_path, cache_dir, current_date) {
         "description"
       )
     )) %>%
-    dplyr::filter(!is.na(transcript_id) & !is.na(gene_id))
+    dplyr::filter(!is.na(.data$transcript_id) &
+                    !is.na(.data$gene_id))
   
-  # --- 1. Create tx2gene map for ALL genes ---
+  # --- Create initial maps ---
   tx2gene_all <- base_map %>%
-    dplyr::select(transcript_id, gene_id) %>%
-    dplyr::distinct() %>%
-    dplyr::mutate(
-      transcript_id = gsub("\\..*", "", transcript_id),
-      gene_id = gsub("\\..*", "", gene_id)
-    ) %>%
+    dplyr::select(.data$transcript_id, .data$gene_id) %>%
     dplyr::distinct()
   
-  # --- 2. Create refined PROTEIN-CODING (pcg) map ---
-  tx2gene_pcg <- base_map %>%
-    dplyr::filter(gene_type == "protein_coding") %>%
-    dplyr::filter(
-      !grepl(
-        "RIKEN|cDNA sequence|DNA segment|predicted gene",
-        description,
-        ignore.case = TRUE
-      )
-    ) %>%
-    dplyr::filter(!chromosome_name %in% c("MT", "X", "Y")) %>%
-    dplyr::select(transcript_id, gene_id) %>%
-    dplyr::distinct() %>%
-    dplyr::mutate(
-      transcript_id = gsub("\\..*", "", transcript_id),
-      gene_id = gsub("\\..*", "", gene_id)
-    ) %>%
+  filtered_map <- base_map
+  if (!is.null(filter_gene_types)) {
+    filtered_map <- filtered_map %>% dplyr::filter(.data$gene_type %in% filter_gene_types)
+  }
+  
+  if (!is.null(exclude_patterns) &&
+      "description" %in% names(filtered_map)) {
+    message("...Filtering based on 'description' column.")
+    pattern_regex <- paste(exclude_patterns, collapse = "|")
+    filtered_map <- filtered_map %>% dplyr::filter(!grepl(pattern_regex, .data$description, ignore.case = TRUE))
+  } else if (!is.null(exclude_patterns)) {
+    message("...NOTE: 'description' column not found in GTF, skipping pattern exclusion filter.")
+  }
+  
+  if (!is.null(exclude_chromosomes)) {
+    filtered_map <- filtered_map %>% dplyr::filter(!(.data$chromosome_name %in% exclude_chromosomes))
+  }
+  
+  tx2gene_filtered <- filtered_map %>%
+    dplyr::select(.data$transcript_id, .data$gene_id) %>%
     dplyr::distinct()
   
-  # --- 3. Create Gene ID to Gene Name Map for Plotting ---
   gene_name_map <- as.data.frame(mcols(gtf_data)) %>%
-    dplyr::filter(type == "gene") %>%
-    dplyr::select(gene_id, gene_name) %>%
-    dplyr::distinct() %>%
-    dplyr::mutate(gene_id = gsub("\\..*", "", gene_id))
+    dplyr::filter(.data$type == "gene") %>%
+    dplyr::select(.data$gene_id, .data$gene_name) %>%
+    dplyr::distinct()
+  
+  # --- Remove transcript version numbers to ensure matching ---
+  # This makes the matching robust against annotation/quantification mismatches.
+  message("...Removing transcript version numbers from mapping files.")
+  tx2gene_all$transcript_id <- gsub("\\..*$", "", tx2gene_all$transcript_id)
+  tx2gene_filtered$transcript_id <- gsub("\\..*$", "", tx2gene_filtered$transcript_id)
   
   message(paste(
     "...tx2gene_all map created with",
@@ -88,20 +107,15 @@ create_tx2gene_maps <- function(gtf_path, cache_dir, current_date) {
     "entries."
   ))
   message(paste(
-    "...tx2gene_pcg map created with",
-    nrow(tx2gene_pcg),
-    "entries."
-  ))
-  message(paste(
-    "...gene_name_map created with",
-    nrow(gene_name_map),
+    "...tx2gene_filtered map created with",
+    nrow(tx2gene_filtered),
     "entries."
   ))
   
   return(
     list(
       tx2gene_all = tx2gene_all,
-      tx2gene_pcg = tx2gene_pcg,
+      tx2gene_pcg = tx2gene_filtered,
       gene_name_map = gene_name_map
     )
   )

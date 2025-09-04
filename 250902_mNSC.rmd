@@ -1,425 +1,416 @@
 ---
-title: "Tomo mouse NSC bulk RNAseq profiling"
-subtitle: "DESeq2 (Modular & Reproducible Analysis)"
+title: "mNSC Bulk RNA-Seq Analysis"
+subtitle: "A Modular and Reproducible Pipeline"
 author: "Ryan Miller"
 date: '`r format(Sys.time(), "Last modified: %d %b %Y")`'
 output:
   html_document:
     toc: yes
+    toc_float: yes
     code_folding: show
-    theme: journal
+    theme: united
 ---
 
-This document runs a full differential expression analysis pipeline within a containerized environment.  It assumes all packages are pre-installed, as in a Docker container. All paths are relative to the /data project root.
-<hr>
-
-# R Setup and Global Variables
-
-### 1. Define Directories and Parameters
-Global parameters and paths for the entire analysis are defined here. Child scripts are now functions that will receive these paths as arguments.
-
-```{r, message=FALSE, warning=FALSE}
-# --- Define Relative Paths for the Project ---
-dir_scripts <- "./scripts"
-dir_input   <- "./input"
-dir_output  <- "./output"
-dir_graphs  <- "./graphs" # Centralized directory for all plots
-
-# --- Create Output Directories if They Don't Exist ---
-dir.create(dir_output, recursive = TRUE, showWarnings = FALSE)
-dir.create(dir_graphs, recursive = TRUE, showWarnings = FALSE)
-
-# --- File Paths ---
-file_gtf <- file.path(dir_input, "gencode.vM37.primary_assembly.annotation.gft.gz")
-file_samples <- file.path(dir_input, "samples.csv")
-file_kinases <- file.path(dir_input, "genesets/201006_composite_kinases.csv")
-dir_sf <- "./sf" # Base directory for Salmon quantification files
-
-# --- DESeq2 Parameters ---
-pval <- 0.05
-qval <- 0.05
-lfc  <- 1.0 # Log2 fold-change cutoff
-filt <- 20  # Low read count filter cutoff
-
-# --- Other Variables ---
-date <- format(Sys.Date(), format = "%y%m%d")
-nc <- BiocParallel::multicoreWorkers()
-set.seed(888)
-
-# --- Genes of Interest ---
-project_genes <- c("Egfr", "Pdgfra", "Pten", "Cdkn2a")
-
-# Colors
-blp <- colorRampPalette(rev(brewer.pal(9, "Blues")))(255)
-ryb <- colorRampPalette(rev(brewer.pal(n = 7, name = "RdYlBu")))(100)
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 ```
 
-### 2. Library Loading
-Source the setup script to load packages.
-```{r, echo=TRUE, message=TRUE, include=TRUE}
-# Source the setup script to load all required packages
-source(file.path(dir_scripts, "00_setup.R"), local = knitr::knit_global())
+# Project 250902_mNSC
+
+This R Markdown document serves as the central hub for a modular DESeq2 RNA-seq analysis pipeline. The workflow is designed to be highly reproducible and easily adaptable to new projects by centralizing all configuration parameters.
+
+Please ensure your project follows this directory structure. Opening the .Rproj file within the appropriate <project_folder> is the key step that makes all the relative paths work correctly.
+
+/project_folder/
+|
+|-- project_folder.Rproj      <-- ALWAYS double-click this file to open the project
+|-- project_folder.rmd              <-- The main script to "knit"
+|
+|-- scripts/                     
+|   |-- 00_setup.R
+|   |-- 01_genes_mouse.R
+|   |-- 02_QC.R
+|   |-- 03_DESeq_runner.R
+|
+|-- input/
+|   |-- samples.csv         <-- The first column of this file should be sample names                                          correpsonding to sf files below (e.g. sample_name_001.sf)
+|   |-- gencode.vM37.primary_assembly.annotation.gft.gz
+                            <-- This analysis is designed for mouse.
+|
+|-- sf/
+|   |-- sample_name_001.sf
+|   |-- ... (and so on)
+
+**Key Features:**
+
+* **Modular Functions:** Core tasks like package loading, gene annotation, quality control, and DESeq2 analysis are handled by external, version-controlled `.R` scripts.
+* **Centralized Configuration:** All project-specific paths, parameters, and analysis definitions are set in a single `cfg` list in the chunk below.
+* **Dynamic Analysis Plan:** The pipeline programmatically generates analysis plans based on defined subsets and model types, eliminating redundant code.
+* **Reproducibility:** The `RUN_ANALYSIS` switch separates time-consuming computation from rapid report generation. Results are cached, and package versions can be managed with `renv`.
+
+---
+
+# 1. Setup and Configuration
+
+This section loads necessary libraries and functions and defines all project-specific parameters. **This is the only section you need to edit for a new project.**
+
+```{r configuration}
+# =============================================================================
+# CHUNK 1: CONFIGURATION SETUP
+# =============================================================================
+
+# --- Master Switch ---
+# Set to TRUE to run the full, time-consuming analysis.
+# Set to FALSE to load the latest saved results and quickly generate the report.
+RUN_ANALYSIS <- TRUE
+
+# --- Load Libraries and Child Scripts ---
+# These scripts must be in a subfolder named 'scripts'.
+source(here::here("scripts", "00_setup.R"))
+source(here::here("scripts", "01_genes_mouse.R"))
+source(here::here("scripts", "02_QC.R"))
+source(here::here("scripts", "03_DESeq2.R"))
+
+# --- Project-Specific Configuration (cfg) ---
+cfg <- list(
+  # A. General Settings
+  date = format(Sys.Date(), "%y%m%d"),
+  project_name = "250902_mNSC",
+  
+  # B. File Paths (relative to the project root)
+  file_samples = here::here("input", "samples.csv"),
+  file_gtf = here::here("input", "gencode.vM37.primary_assembly.annotation.gtf.gz"),
+  dir_sf = here::here("sf"),
+  dir_output = here::here("output"),
+  dir_graphs = here::here("graphs"),
+  dir_results_csv = here::here("output", "results_csv"),
+  
+  # C. Gene Annotation Settings
+  filter_gene_types = "protein_coding",
+  exclude_patterns = c("RIKEN", "cDNA sequence", "predicted gene"),
+  exclude_chromosomes = c("MT", "X", "Y"),
+  
+  # D. DESeq2 Settings
+  qval_threshold = 0.05,
+  lfc_threshold = 1.0,
+  filter_min_count = 10,
+  # Parameterized filter count
+  
+  # E. Experimental Design Definition
+  batch_vars = c("SeqBatch"),
+  main_vars = c("Host", "Model", "Driver"),
+  interaction_vars = c("Model", "Driver"),
+  filter_by_factor = "Driver",
+  
+  # F. QC Plot Settings
+  qc_plot_settings = list(
+    project_genes = c("Egfr", "Pdgfra", "Pten", "Cdkn2a"),
+    annotation_colors = list(
+      Driver = c(
+        "EGFRvIII" = "blue",
+        "EGFRvV" = "dodgerblue",
+        "PDGFRA" = "red"
+      ),
+      Model = c(
+        "NS1" = "#7FC97F",
+        "NS2" = "#BEAED4",
+        "GBO" = "#FDC086",
+        "Tumor" = "#386CB0"
+      ),
+      Host = c("NSG" = "grey50", "BL6" = "black")
+    )
+  ),
+  
+  # G. Analysis Plan Definition (DYNAMIC)
+  # Define the building blocks for the analysis here. The script will
+  # programmatically generate all combinations.
+  analysis_definitions = list(
+    # Define a named list of data subsets to analyze. An empty list means 'all data'.
+    subsets = list(
+      Full_Dataset = list(),
+      NS1_Model = list(Model = "NS1"),
+      BL6_Host = list(Host = "BL6")
+    ),
+    # Define the model types to run on each subset.
+    model_types = c("additive", "interaction")
+  )
+)
+
+# --- Programmatically Generate the Full Analysis Plan ---
+# This loop creates the final `cfg$analysis_plan` based on the definitions above.
+cfg$analysis_plan <- list()
+for (s_name in names(cfg$analysis_definitions$subsets)) {
+  for (m_type in cfg$analysis_definitions$model_types) {
+    analysis_name <- paste(s_name, m_type, sep = "_")
+    cfg$analysis_plan[[analysis_name]] <- list(
+      model_type = m_type,
+      subset_criteria = cfg$analysis_definitions$subsets[[s_name]]
+    )
+  }
+}
+rm(analysis_name, m_type, s_name) # Clean up temp variables
 ```
 
-### 3. Sample metadata 
-```{r}
-# Load from the project root directory
-samples <- read.csv(file_samples, row.names = 1, header = TRUE)
+---
 
-# --- Auto-detect and convert potential experimental factors ---
-message("\n--- Auto-detecting potential experimental factors from sample metadata ---")
+# 2. Computational Analysis
 
-# Identify columns suitable for use as factors in statistical modeling.
-# A column is considered a potential factor if:
-#   1. It has more than one unique value (i.e., it's not constant).
-#   2. It has fewer unique values than the number of samples (i.e., it's not a unique ID).
-#   3. If it's a numeric column, it must have a low number of unique values (e.g., < 15)
-#      to be considered categorical (like 'SeqBatch') rather than continuous.
-# Auto-detect and convert potential experimental factors.
+This section executes the full analysis when `RUN_ANALYSIS` is `TRUE`. It processes the data according to the `analysis_plan` and saves all results to disk.
+
+```{r computational-analysis, include=FALSE, eval=RUN_ANALYSIS}
+# =============================================================================
+# CHUNK 2: DATA PROCESSING AND ANALYSIS
+# =============================================================================
+
+set.seed(42) # Set seed for reproducibility
+
+# Create all output directories.
+lapply(
+  c(cfg$dir_output, cfg$dir_graphs, cfg$dir_results_csv),
+  dir.create,
+  recursive = TRUE,
+  showWarnings = FALSE
+)
+
+# Load and process sample metadata.
+message("--- Loading and preparing data ---")
+samples <- read.csv(cfg$file_samples, row.names = 1, header = TRUE)
 potential_factors <- names(which(sapply(samples, function(col) {
-  num_unique <- length(unique(col))
-  is_categorical <- num_unique > 1 && num_unique < nrow(samples)
-  if (is.numeric(col) && num_unique >= 15) { is_categorical <- FALSE }
-  return(is_categorical)
+  n_unique <- length(unique(col))
+  n_unique > 1 &&
+    n_unique < nrow(samples) && (!is.numeric(col) || n_unique < 15)
 })))
-
 samples[, potential_factors] <- lapply(samples[, potential_factors], factor)
 
-# --- REINSERTED: SF File Path Logic ---
-# The logic to create the full path to each 'quant.sf' file is centralized here.
-# It uses the 'dir_sf' variable defined in the setup chunk and the sample names
-# from the metadata's row names.
-message("--- Generating paths to quantification files ---")
-files_sf <- file.path(dir_sf, paste0(rownames(samples), ".sf"))
+files_sf <- file.path(cfg$dir_sf, paste0(rownames(samples), ".sf"))
 names(files_sf) <- rownames(samples)
-
-# Verification step to ensure all files exist before proceeding
 if (!all(file.exists(files_sf))) {
-  stop("One or more Salmon quantification files are missing. Check the 'dir_sf' path.")
-}
-message(paste("Successfully located", length(files_sf), "quantification files."))
-# --- END SF File Logic ---
-
-reactable::reactable(samples)
-```
-
-### 3. Generate File Paths to Count Data
-```{r}
-# --- Dynamically Create File Paths ---
-message("\\n--- Generating paths to sf quant files ---")
-
-# Define the base directory where the Salmon output folders are located.
-# This path should be relative to your project root.
-quant_base_dir <- "./sf" 
-
-# Get the sample names from your metadata file (assuming they are row names).
-sample_names <- rownames(samples)
-
-# Construct the full path to each 'quant.sf' file.
-# This assumes a structure like: ./sf/TK001.sf
-files_sf_vec <- file.path(quant_base_dir, sample_names, ".sf")
-
-# It's good practice to name the elements of the vector with the sample names.
-names(files_sf_vec) <- sample_names
-
-# --- Verification Step ---
-# Check that all the generated file paths actually exist before proceeding.
-if (!all(file.exists(files_sf_vec))) {
-  stop("One or more quantification files could not be found. Please check the 'quant_base_dir' path and your directory structure.")
+  stop("One or more Salmon files are missing in the 'sf' directory.")
 }
 
-message(paste("Successfully located", length(files_sf_vec), "quantification files."))
-print(head(files_sf_vec))
-```
+gtf_maps <- create_tx2gene_maps(
+  gtf_path = cfg$file_gtf,
+  cache_dir = cfg$dir_output,
+  current_date = cfg$date,
+  filter_gene_types = cfg$filter_gene_types,
+  exclude_patterns = cfg$exclude_patterns,
+  exclude_chromosomes = cfg$exclude_chromosomes
+)
 
+all_dds_objects <- list()
+all_results_lists <- list()
 
-### 5. DESeq2 Model Design - Full dataset
-Define the statistical models that will be used for the analysis.
-```{r}
-# Variables for the DESeq2 model designs
-vars_model <- c("SeqBatch", "Host", "Model", "Driver")
-vars_int <- c("Model*Driver")
-sb <- "SeqBatch"
-
-# Create a named list of design formulas
-designs <- list(model_1 = as.formula(paste("~", paste(vars_model, collapse = " + "))),
-                model_2 = as.formula(paste("~", sb, "+", 
-                                           paste(vars_int, collapse = " + ")
-)))
-print("Models to be used in the main analysis")
-print(designs)
-```
-
-### 6. Define data subsets
-```{r}
-# --- Subset 1: Model == 'NS1' ---
-message("--- Defining subset for Model == 'NS1' ---")
-samples_ns1 <- samples[samples$Model == "NS1", ]
-samples_ns1 <- droplevels(samples_ns1)
-files_sf_ns1 <- files_sf[rownames(samples_ns1)]
-message(paste("Subset 'samples_ns1' contains", nrow(samples_ns1), "samples."))
-
-# --- Subset 2: Host == 'BL6' ---
-message("\n--- Defining subset for Host == 'BL6' ---")
-samples_bl6 <- samples[samples$Host == "BL6", ]
-samples_bl6 <- droplevels(samples_bl6)
-files_sf_bl6 <- files_sf[rownames(samples_bl6)]
-message(paste("Subset 'samples_bl6' contains", nrow(samples_bl6), "samples."))
-```
-
-### 7. Genesets
-```{r}
-#### Kinases
-file_kinases <- "./genesets/201006_composite_kinases.csv"
-if (file.exists(file_kinases)) {
-  kinases <- read.csv(file_kinases, header = TRUE, fileEncoding = "UTF-8-BOM")
-} else {
-  stop(paste("File not found:", file_kinases))
+# --- Dynamic Analysis Loop ---
+for (analysis_name in names(cfg$analysis_plan)) {
+  message(paste("\n--- Starting Analysis:", analysis_name, "---"))
+  plan <- cfg$analysis_plan[[analysis_name]]
+  
+  # 1. Subset data based on criteria.
+  current_samples <- samples
+  if (length(plan$subset_criteria) > 0) {
+    for (col in names(plan$subset_criteria)) {
+      current_samples <- current_samples[current_samples[[col]] %in% plan$subset_criteria[[col]], ]
+    }
+  }
+  current_samples <- droplevels(current_samples)
+  current_files_sf <- files_sf[rownames(current_samples)]
+  
+  # 2. Programmatically build the DESeq2 design formula.
+  relevant_vars <- names(which(sapply(current_samples, function(col) length(unique(col)) > 1)))
+  batch_terms <- intersect(cfg$batch_vars, relevant_vars)
+  main_terms <- intersect(cfg$main_vars, relevant_vars)
+  design_str <- paste("~", paste(c(batch_terms, main_terms), collapse = " + "))
+  
+  if (plan$model_type == "interaction" && all(cfg$interaction_vars %in% main_terms)) {
+    other_main_terms <- setdiff(main_terms, cfg$interaction_vars)
+    interaction_term <- paste(cfg$interaction_vars, collapse = " * ")
+    design_str <- paste("~", paste(c(batch_terms, other_main_terms, interaction_term), collapse = " + "))
+  } else if (plan$model_type == "interaction") {
+      message("...Interaction not possible for this subset, running additive model instead.")
+  }
+  
+  design_formula <- as.formula(design_str)
+  message(paste("...Using design:", design_str))
+  
+  # 3. Run core DESeq2 analysis.
+  dds_processed <- run_deseq_core(
+    samples_df = current_samples,
+    files_sf_vec = current_files_sf,
+    design_formula = design_formula,
+    tx2gene_map = gtf_maps$tx2gene_pcg,
+    filter_by_factor = cfg$filter_by_factor,
+    filter_min_count = cfg$filter_min_count
+  )
+  all_dds_objects[[analysis_name]] <- dds_processed
+  
+  # 4. Generate and Save QC Plots for this analysis.
+  generate_qc_plots(
+    dds_processed = dds_processed,
+    analysis_name = analysis_name,
+    gtf_map = gtf_maps$gene_name_map,
+    cfg = cfg
+  )
+  
+  # 5. Generate comparisons and extract results.
+  factors_to_compare <- intersect(cfg$main_vars, relevant_vars)
+  comparisons <- list()
+  for (f in factors_to_compare) {
+    level_pairs <- combn(levels(current_samples[[f]]), 2, simplify = FALSE)
+    for (pair in level_pairs) {
+      comparisons <- append(comparisons, list(list(
+        factor = f, group1 = pair[1], group2 = pair[2]
+      )))
+    }
+  }
+  
+  results_list <- extract_comparisons(
+    dds_processed = dds_processed,
+    comparisons_list = comparisons,
+    analysis_name = analysis_name,
+    gene_map = gtf_maps$gene_name_map,
+    cfg = cfg
+  )
+  all_results_lists[[analysis_name]] <- results_list
 }
-kinase_genes <- kinases$Mouse_symbol
+
+# --- Save All Results ---
+message("\n--- Saving analysis session to file ---")
+results_filename <- here::here(cfg$dir_output,
+                               paste0(cfg$date, "_", cfg$project_name, "_results.RData"))
+save(cfg, samples, gtf_maps, all_dds_objects, all_results_lists, file = results_filename)
+message(paste("...Session saved to:", results_filename))
 ```
 
-### 8. Graph Annotations and Colors
-```{r echo=TRUE, message=FALSE}
-anno_vars <- c("Host", "Model", "Driver")
-anno <- as.data.frame(samples[, anno_vars])
-summarized_anno <- anno %>%
-  group_by(across(all_of(anno_vars))) %>%
-  summarize(n = n(), .groups = "drop")
-# Display as an interactive table
-reactable(
-  summarized_anno,
+---
+
+# 3. Report Generation
+
+This section loads the saved results (if `RUN_ANALYSIS` is `FALSE`) and generates the final report with tables and figures.
+
+```{r load-results, include=FALSE}
+# =============================================================================
+# CHUNK 3: LOAD RESULTS
+# =============================================================================
+if (!exists("all_results_lists")) {
+  results_files <- list.files(
+    path = cfg$dir_output,
+    pattern = "_results.RData$",
+    full.names = TRUE
+  )
+  if (length(results_files) > 0) {
+    latest_results_file <- sort(results_files, decreasing = TRUE)[1]
+    message(paste("Loading latest results from:", latest_results_file))
+    load(latest_results_file)
+  } else {
+    stop("No results file found. Please set RUN_ANALYSIS to TRUE and knit.")
+  }
+}
+```
+
+## 3.1 Sample Metadata
+
+The following table displays the metadata for all samples included in the project.
+
+```{r sample-metadata-table}
+reactable::reactable(
+  samples,
   searchable = TRUE,
   filterable = TRUE,
-  resizable = TRUE
-)
-
-# Get unique entries for each variable
-unique_values_by_var <- lapply(anno, unique)
-unique_values_by_var
-
-anno_colors <- list(
-  Driver = c(
-    "EGFRvIII" = "blue",
-    "EGFRvV" = "dodgerblue",
-    "PDGFRA" = "red"
-  ),
-  Model = c(
-    "NS1" = "green",
-    "NS2" = "blue",
-    "GBO" = "black",
-    "Tumor" = "purple"
-  ),
-  Host = c("NSG" = "gray", "BL6" = "black")
+  bordered = TRUE,
+  highlight = TRUE,
+  defaultPageSize = 10
 )
 ```
 
-### 9. DESeq2 - Full dataset
-```{r}
-# Defining DESeq2 Model Designs for full dataset
-vars_model <- c("SeqBatch", "Host", "Model", "Driver")
-vars_int <- c("Model*Driver")
-designs <- list(
-  model_1 = as.formula(paste("~", paste(vars_model, collapse = " + "))),
-  model_2 = as.formula(paste("~", "SeqBatch", "+", paste(vars_int, collapse = " + ")))
-)
+## 3.2 Quality Control
 
-# Source the runner script
-source("./scripts/04_DESeq_runner.R",
-       local = knitr::knit_global(),
-       echo = TRUE)
+The plots below provide a QC overview for the `Full_Dataset_additive` analysis. A complete set of QC plots for *every* analysis defined in the `analysis_plan` has been saved to the `graphs/` directory.
+
+### PCA Plot
+
+Principal Component Analysis (PCA) visualizes the sample-to-sample distances. Samples that are biologically similar should cluster together.
+
+```{r pca-plot, fig.width=10, fig.height=8}
+pca_plot_path <- here::here(cfg$dir_graphs,
+                            paste0(cfg$date, "_Full_Dataset_additive_PCA.png"))
+if (file.exists(pca_plot_path)) {
+  knitr::include_graphics(pca_plot_path)
+} else {
+  "PCA plot not found. Please run the analysis."
+}
 ```
 
-### 10. DESeq2 Comparisons - Subset == 'NS1' Models
-```{r}
-# --- Programmatically define all pairwise comparisons for the subset ---
-message("\n--- Generating all pairwise comparisons for the NS1 subset ---")
-# For this subset, the relevant factors that vary are Driver and Host
-factors_to_compare_ns1 <- c("Driver", "Host")
-all_comparisons_ns1 <- list()
+### Sample Distance Heatmap
 
-for (f in factors_to_compare_ns1) {
-  # Get factor levels from the subsetted dataframe
-  factor_levels <- levels(samples_ns1[[f]])
-  level_pairs <- combn(factor_levels, 2, simplify = FALSE)
+This heatmap provides another view of sample similarity based on variance-stabilized expression data.
+
+```{r heatmap-plot, fig.width=10, fig.height=8}
+heatmap_plot_path <- here::here(cfg$dir_graphs,
+                                paste0(cfg$date, "_Full_Dataset_additive_Heatmap.png"))
+if (file.exists(heatmap_plot_path)) {
+  knitr::include_graphics(heatmap_plot_path)
+} else {
+  "Heatmap not found. Please run the analysis."
+}
+```
+
+## 3.3 Differential Expression Results
+
+This section dynamically generates a summary table for each significant comparison made in each analysis.
+
+* Full, sortable results tables for every comparison are saved as `.csv` files in `output/results_csv/`.
+* Volcano plots for every comparison are saved as `.png` files in `graphs/`.
+
+```{r dynamic-results-report, results='asis'}
+# =============================================================================
+# CHUNK 4: DYNAMIC RESULTS REPORTING
+# =============================================================================
+for (analysis_name in names(all_results_lists)) {
+  cat(paste("\n###", gsub("_", " ", analysis_name), "\n"))
+  analysis_results <- all_results_lists[[analysis_name]]
   
-  for (pair in level_pairs) {
-    comp <- list(factor = f,
-                 group1 = pair[1],
-                 group2 = pair[2])
-    all_comparisons_ns1 <- append(all_comparisons_ns1, list(comp))
+  if (is.null(analysis_results) || length(analysis_results) == 0) {
+    cat("\nNo valid comparisons were performed for this analysis group.\n")
+    next
+  }
+  
+  for (comp_name in names(analysis_results)) {
+    cat(paste("\n####", gsub("_", " ", comp_name), "\n"))
+    comp_df <- analysis_results[[comp_name]]
+    
+    sig_genes <- comp_df %>%
+      dplyr::filter(padj < cfg$qval_threshold)
+    
+    if (nrow(sig_genes) > 0) {
+      results_table <- sig_genes %>%
+        arrange(padj) %>%
+        reactable::reactable(
+          searchable = TRUE, filterable = TRUE, bordered = TRUE, highlight = TRUE,
+          defaultPageSize = 5,
+          columns = list(
+            log2FoldChange = colDef(format = colFormat(digits = 2)),
+            # FIX: Use a custom cell function for scientific notation
+            padj = colDef(
+              name = "Adjusted P-value",
+              cell = function(value) {
+                formatC(value, format = "e", digits = 2)
+              }
+            )
+          )
+        )
+      print(results_table)
+    } else {
+      cat("\n*No significant genes found for this comparison.*\n")
+    }
+    cat("\n")
   }
 }
-message(paste(
-  "...Generated",
-  length(all_comparisons_ns1),
-  "pairwise comparisons."
-))
-
-# --- Set Parameters for this run ---
-analysis_params <- list(
-  samples_df = samples_ns1,
-  files_sf_vec = files_sf_ns1,
-  design_formula = as.formula("~ SeqBatch + Host + Driver"),
-  analysis_name = "NS1_Model_Subset",
-  comparisons_list = all_comparisons_ns1
-)
-
-# Source the runner script
-source("./scripts/04_DESeq_runner.R",
-       local = knitr::knit_global(),
-       echo = TRUE)
 ```
 
-### 11. DESeq2 Comparisons - Subset == 'BL6' Host
-```{r}
-# --- Programmatically define all pairwise comparisons for the subset ---
-message("\n--- Generating all pairwise comparisons for the BL6 subset ---")
-# For this subset, the relevant factors that vary are Model and Driver
-factors_to_compare_bl6 <- c("Model", "Driver")
-all_comparisons_bl6 <- list()
+---
 
-for (f in factors_to_compare_bl6) {
-  # Get factor levels from the subsetted dataframe
-  factor_levels <- levels(samples_bl6[[f]])
-  level_pairs <- combn(factor_levels, 2, simplify = FALSE)
-  
-  for (pair in level_pairs) {
-    comp <- list(factor = f,
-                 group1 = pair[1],
-                 group2 = pair[2])
-    all_comparisons_bl6 <- append(all_comparisons_bl6, list(comp))
-  }
-}
-message(paste(
-  "...Generated",
-  length(all_comparisons_bl6),
-  "pairwise comparisons."
-))
-
-# --- Set Parameters for this run ---
-analysis_params <- list(
-  samples_df = samples_bl6,
-  files_sf_vec = files_sf_bl6,
-  design_formula = as.formula("~ SeqBatch + Model + Driver"),
-  analysis_name = "BL6_Host_Subset",
-  comparisons_list = all_comparisons_bl6
-)
-
-# Source the generic runner script
-source("./scripts/04_DESeq_runner.R",
-       local = knitr::knit_global(),
-       echo = TRUE)
-```
-<hr>
-
-# Analysis Pipeline
-This section sources the external R scripts that perform the analysis. Each script is run in the global environment to ensure it can access and modify shared data objects. local = knitr::knit_global() is critical for ensuring they all run in the same environment and can share variables.
-
-### 1. Mouse Genes
-```{r echo=TRUE, message=TRUE, include = TRUE}
-source("./scripts/01_genes_mouse.R", local = knitr::knit_global(), echo = TRUE)
-```
-
-### 2. Data Prep
-```{r echo=TRUE, message=TRUE, include = TRUE}
-source("./scripts/02_data_prep.R", local = knitr::knit_global(), echo = TRUE)
-```
-
-### 3. Quality Control
-```{r echo=TRUE, message=TRUE, include = TRUE}
-source("./scripts/03_QC.R", local = knitr::knit_global(), echo = TRUE)
-```
-
-### 4. Differential Expression Analysis (Full dataset)
-```{r echo=TRUE, message=TRUE, include = TRUE}
-# --- Programmatically define all pairwise comparisons for key factors ---
-message("\n--- Generating all pairwise comparisons for Driver, Model, and Host factors ---")
-
-# List of factors to generate comparisons for
-factors_to_compare <- c("Driver", "Model", "Host")
-all_comparisons <- list()
-
-for (f in factors_to_compare) {
-  # Get the unique levels for the factor from the main samples table
-  factor_levels <- levels(samples[[f]])
-  
-  # Generate all unique 2-item combinations (pairs) of the levels
-  level_pairs <- combn(factor_levels, 2, simplify = FALSE)
-  
-  # Create the list structure required by the 04_DESeq_runner.R script
-  for (pair in level_pairs) {
-    comp <- list(factor = f,
-                 group1 = pair[1],
-                 group2 = pair[2])
-    all_comparisons <- append(all_comparisons, list(comp))
-  }
-}
-
-message(paste(
-  "...Generated",
-  length(all_comparisons),
-  "pairwise comparisons to be executed."
-))
-
-# --- Set Parameters for this run ---
-analysis_params <- list(
-  samples_df = samples,
-  files_sf_vec = files_sf,
-  design_formula = designs$model_1,
-  # Using the main effects model
-  analysis_name = "Full_Dataset_Main_Effects",
-  # Use the new, complete list of comparisons
-  comparisons_list = all_comparisons
-)
-
-# Source the runner script to execute the analysis for all comparisons
-source("./scripts/04_DESeq_runner.R",
-       local = knitr::knit_global(),
-       echo = TRUE)
-```
-
-### 5. Differential Expression Analysis (Model == 'NS1' Subset)
-```{r}
-# --- Set Parameters for this run ---
-analysis_params <- list(
-  samples_df = samples_ns1,
-  files_sf_vec = files_sf_ns1,
-  design_formula = as.formula("~ SeqBatch + Host + Driver"),
-  analysis_name = "NS1_Model_Subset",
-  comparisons_list = list(
-    list(factor = "Driver", group1 = "EGFRvV", group2 = "EGFRvIII"),
-    list(factor = "Driver", group1 = "PDGFRA", group2 = "EGFRvIII"),
-    list(factor = "Driver", group1 = "PDGFRA", group2 = "EGFRvV")
-  )
-)
-
-# Source the runner script
-source("./scripts/04_DESeq_runner.R", local = knitr::knit_global(), echo = TRUE)
-```
-
-### 6. Differential Expression Analysis (Host == 'BL6' Subset)
-```{r}
-# --- Set Parameters for this run ---
-analysis_params <- list(
-  samples_df = samples_bl6,
-  files_sf_vec = files_sf_bl6,
-  design_formula = as.formula("~ SeqBatch + Model + Driver"),
-  analysis_name = "BL6_Host_Subset",
-  # Define all pairwise comparisons for both factors
-  comparisons_list = list(
-    list(factor = "Model", group1 = "Tumor", group2 = "GBO"),
-    list(factor = "Model", group1 = "NS1", group2 = "NS2"),
-    list(factor = "Driver", group1 = "PDGFRA", group2 = "EGFRvIII"),
-    list(factor = "Driver", group1 = "PDGFRA", group2 = "EGFRvV")
-  )
-)
-
-# Source the generic runner script
-source("./scripts/04_DESeq_runner.R", local = knitr::knit_global(), echo = TRUE)
-```
-
-# Session Info
-```{r}
+# 4. Session
+This section provides details about the R environment, operating system, and package versions used to run this analysis, ensuring reproducibility.
+```{r session-info}
 sessionInfo()
 ```
