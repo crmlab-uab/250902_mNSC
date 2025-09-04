@@ -30,7 +30,6 @@ create_tx2gene_maps <- function(gtf_path,
                                 exclude_chromosomes) {
   message("--- Running create_tx2gene_maps function ---")
 
-  # Use a fixed, date-independent cache file name
   file_cache_rds <- file.path(cache_dir, "gtf_data_cache.rds")
 
   if (!file.exists(gtf_path)) {
