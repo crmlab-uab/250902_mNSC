@@ -34,7 +34,7 @@ This document is the central hub for a modular DESeq2 RNA-seq analysis pipeline.
 
 ## 1.2 Project Setup and Data Loading
 ```{r project-setup-and-caching}
-RUN_ANALYSIS <- FALSE
+RUN_ANALYSIS <- TRUE
 cfg <- list(
   project_name = "250902_mNSC",
   dir_input = here::here("input"),
@@ -60,7 +60,6 @@ cfg <- list(
   qc_plot_settings = list(project_genes = c("Egfr", "Pdgfra", "Pten", "Cdkn2a")),
   ryb = colorRampPalette(rev(RColorBrewer::brewer.pal(n = 9, name = "RdYlBu")))(100),
   analysis_definitions = list(
-    # <<< FIX: Implemented requested sample subsetting plan >>>
     sample_subsets = list(
       Full_Dataset = list(),
       NS1_Model = list(Model = "NS1"),
@@ -90,7 +89,6 @@ samples <- read.csv(cfg$file_samples, row.names = 1, header = TRUE)
 validate_config_and_inputs(cfg, samples)
 if (file.exists(cfg$file_kinases)) {
   kinase_list <- read.csv(cfg$file_kinases)
-  # <<< FIX: Standardize kinase gene names to uppercase for matching >>>
   kinase_genes <- toupper(unique(kinase_list$Mouse_symbol))
 } else {
   kinase_genes <- NULL
@@ -226,14 +224,16 @@ for (analysis_name in names(all_results_lists)) {
     res_df <- analysis_results[[comp_name]]
     sig_genes <- res_df %>% dplyr::filter(padj < cfg$qval_threshold & abs(log2FoldChange) > cfg$lfc_threshold & !is.na(padj))
     if (nrow(sig_genes) > 0) {
-      print(reactable::reactable(sig_genes %>% arrange(padj), defaultPageSize = 5, searchable = TRUE, bordered = TRUE))
+      print(reactable::reactable(sig_genes %>% 
+              dplyr::arrange(padj) %>%
+              dplyr::select(gene_name, human_ortholog, baseMean, log2FoldChange, padj, everything()), 
+              defaultPageSize = 5, searchable = TRUE, bordered = TRUE))
     } else { cat("\n*No significant genes found.*\n") }
 
     cat("\n\n##### Volcano Plot\n")
     cat(paste0("![](", here::here(cfg$dir_graphs_png, paste0(comp_name, "_volcano.png")), ")"))
     cat("\n\n##### Top 50 DEG Heatmap\n")
     cat(paste0("![](", here::here(cfg$dir_graphs_png, paste0(comp_name, "_DEG_heatmap_top50.png")), ")"))
-    # <<< FIX: Embed the new Top 250 DEG heatmap >>>
     cat("\n\n##### Top 250 DEG Heatmap\n")
     path_250 <- here::here(cfg$dir_graphs_png, paste0(comp_name, "_DEG_heatmap_top250.png"))
     if(file.exists(path_250)) cat(paste0("![](", path_250, ")"))
@@ -242,7 +242,7 @@ for (analysis_name in names(all_results_lists)) {
     cat(paste0("![](", here::here(cfg$dir_graphs_png, paste0(comp_name, "_Kinase_DEG_heatmap.png")), ")"))
 
     cat("\n\n##### DE Kinase Box Plots\n")
-    sig_kinases <- sig_genes %>% dplyr::filter(toupper(gene_name) %in% kinase_genes)
+    sig_kinases <- sig_genes %>% dplyr::filter(toupper(gene_name) %in% kinase_genes | toupper(human_ortholog) %in% kinase_genes)
     if (nrow(sig_kinases) > 0) {
       for (kinase_name in sig_kinases$gene_name) {
         plot_path <- here::here(cfg$dir_graphs_png_kinase_boxplots, paste0(comp_name, "_Boxplot_", kinase_name, ".png"))
