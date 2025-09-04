@@ -34,7 +34,7 @@ This document is the central hub for a modular DESeq2 RNA-seq analysis pipeline.
 
 ## 1.2 Project Setup and Data Loading
 ```{r project-setup-and-caching}
-RUN_ANALYSIS <- TRUE
+RUN_ANALYSIS <- FALSE
 cfg <- list(
   project_name = "250902_mNSC",
   dir_input = here::here("input"),
