@@ -33,105 +33,164 @@ This document is the central hub for a modular DESeq2 RNA-seq analysis pipeline.
 ```
 ```{r child-script-deseq, file='scripts/03_DESeq2.R', echo=TRUE}
 ```
+```{r child-script-genesets, file='scripts/04_genesets.R', echo=TRUE}
+```
+```{r child-script-plotting-utils, file='scripts/05_plotting_utils.R', echo=TRUE}
+```
 
 ## 1.2 Project Setup and Data Loading
 ```{r project-setup-and-caching}
-RUN_ANALYSIS <- TRUE
 cfg <- list(
+  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # GENERAL PROJECT SETTINGS
+  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   date = format(Sys.Date(), "%y%m%d"),
   project_name = "250902_mNSC",
-  nc = parallel::detectCores() - 2,
+  use_cache = FALSE, # Set to FALSE to re-run all analyses from scratch
+  run_styler = TRUE, # Set to TRUE to format all R and Rmd files
+  nc = parallel::detectCores() - 2, # Number of cores for parallel processing
+
+  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # DIRECTORY AND FILE PATHS
+  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   dir_input = here::here("input"),
   dir_output = here::here("output"),
-  dir_sf = here::here("sf"),
-  dir_genesets = here::here("genesets"),
+  dir_sf = here::here("sf"), # Salmon quantification files
+  dir_genesets = here::here("input", "genesets"),
   dir_graphs_png = here::here("graphs", "png"),
   dir_graphs_pdf = here::here("graphs", "pdf"),
-  dir_graphs_png_kinases = here::here("graphs", "png", "kinases"),
-  dir_graphs_pdf_kinases = here::here("graphs", "pdf", "kinases"),
   file_samples = here::here("input", "samples.csv"),
   file_gtf = here::here("input", "gencode.vM37.primary_assembly.annotation.gtf.gz"),
-  file_kinases = here::here("genesets", "201006_composite_kinases.csv"),
-  qval_threshold = 0.05,
-  lfc_threshold = 1.0,
-  filter_min_count = 10,
-  batch_vars = c("SeqBatch"),
-  main_vars = c("Driver", "Model", "Host"),
-  deg_design_vars = c("Host", "Model", "Driver"),
-  interaction_vars = c("Model", "Driver"),
-  filter_by_factor = "Driver",
+
+  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # DESEQ2 ANALYSIS SETTINGS
+  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  qval_threshold = 0.05, # Adjusted p-value threshold for significance
+  lfc_threshold = 1.0, # Log2 fold change threshold for significance
+  filter_min_count = 10, # Minimum read count for a gene to be kept
+  batch_vars = c("SeqBatch"), # Variables to include as batch effects
+  main_vars = c("Driver", "Model", "Host"), # Main experimental variables
+  deg_design_vars = c("Host", "Model", "Driver"), # Variables for the design formula
+  interaction_vars = c("Model", "Driver"), # Variables to test for interaction effects
+  filter_by_factor = "Driver", # Factor to determine smallest group size for filtering
+
+  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # PLOTTING SETTINGS
+  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   qc_plot_settings = list(project_genes = c("Egfr", "Pdgfra", "Pten", "Cdkn2a")),
   ryb = colorRampPalette(rev(RColorBrewer::brewer.pal(n = 9, name = "RdYlBu")))(100),
+
+  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # ANALYSIS DEFINITIONS
+  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   analysis_definitions = list(
+    # Define subsets of the data to analyze independently
     sample_subsets = list(
       Full_Dataset = list(),
       NS1_Model = list(Model = "NS1"),
       BL6_Host = list(Host = "BL6")
     ),
+    # Define gene filters to apply
     gene_filters = list(
       all_genes = list(filter_gene_types = NULL),
       protein_coding = list(filter_gene_types = "protein_coding")
     ),
+    # Define model types to run
     model_types = c("additive", "interaction")
   )
 )
 
-RUN_STYLER <- TRUE
-if (RUN_STYLER) {
-  files_to_style <- c(here::here(paste0(cfg$project_name, ".Rmd")), list.files(here::here("scripts"), pattern = "\\.R$", full.names = TRUE))
-  styler::style_file(files_to_style)
+# If run_styler is TRUE, format all R and Rmd files in the project.
+if (cfg$run_styler) {
+  styler::style_file(c("250902_mNSC.rmd", list.files("scripts", pattern = "[.][rR]$", full.names = TRUE)))
 }
 
-if (RUN_ANALYSIS == FALSE) {
-  results_file_path <- here::here(cfg$dir_input, paste0(cfg$project_name, "_results.RData"))
-  if (file.exists(results_file_path)) {
-    load(results_file_path, envir = .GlobalEnv)
-    RUN_ANALYSIS <- FALSE
-  }
+# Check if the analysis should be run or if cached results should be loaded.
+run_analysis_flag <- TRUE
+results_file_path <- here::here(cfg$dir_input, paste0(cfg$project_name, "_results.RData"))
+if (cfg$use_cache && file.exists(results_file_path)) {
+  message("Loading results from cache...")
+  load(results_file_path, envir = .GlobalEnv)
+  run_analysis_flag <- FALSE
 }
 
+# Load sample metadata, remove unnecessary columns, and validate inputs.
 samples <- read.csv(cfg$file_samples, row.names = 1, header = TRUE)
+# Remove columns only needed for nf-core preprocessing
+samples <- samples %>% dplyr::select(-c(fastq_1, fastq_2, strandedness))
 validate_config_and_inputs(cfg, samples)
-kinase_genes <- if (file.exists(cfg$file_kinases)) toupper(unique(read.csv(cfg$file_kinases)$Mouse_symbol)) else NULL
+
+# Load all gene sets from the specified directory.
+gene_sets <- load_gene_sets(cfg$dir_genesets)
 ```
 
 ---
 
 # 2. Computational Analysis
-```{r computational-analysis, echo=FALSE, eval=RUN_ANALYSIS}
+
+This section performs the core DESeq2 analysis. The analysis is structured as a series of nested loops that iterate through different sample subsets, gene filters, and statistical models, as defined in the `cfg$analysis_definitions` list.
+
+```{r computational-analysis, echo=FALSE, eval=run_analysis_flag}
+# Set a seed for reproducibility of stochastic processes.
 set.seed(42)
-# Function to find and create all directory paths in the config list
+
+# This function finds all directory paths in the config list and creates them.
 create_project_dirs <- function(config) {
-  # Recursively find all values that look like directory paths
-  dir_paths <- unlist(rapply(config, function(x) if (is.character(x) && grepl("dir_", deparse(substitute(x)))) x else NULL, how = "list"))
-  # Add CSV output directories based on gene filters
+  dir_paths <- c()
+  for (name in names(config)) {
+    if (startsWith(name, "dir_")) {
+      dir_paths <- c(dir_paths, config[[name]])
+    }
+  }
+
+  # Add CSV output directories for each gene filter
   csv_subdirs <- file.path(config$dir_output, "csv", names(config$analysis_definitions$gene_filters))
   all_dirs <- c(dir_paths, csv_subdirs)
+
+  # Create all directories
   lapply(unique(all_dirs), dir.create, recursive = TRUE, showWarnings = FALSE)
 }
+
 create_project_dirs(cfg)
 
-# Register parallel backend
+# Register a parallel backend to speed up the analysis, using the number of cores specified in the config.
 if (cfg$nc > 1) {
   BiocParallel::register(BiocParallel::MulticoreParam(workers = cfg$nc))
 }
 
-samples[,sapply(samples, is.character)] <- lapply(samples[,sapply(samples, is.character)], as.factor)
+# Convert character and integer columns in the sample metadata to factors, which is required for DESeq2.
+samples[, sapply(samples, is.character)] <- lapply(samples[, sapply(samples, is.character)], as.factor)
+vars_to_factor <- unique(c(cfg$batch_vars, cfg$main_vars))
+for (var in vars_to_factor) {
+  if (is.integer(samples[[var]])) {
+    samples[[var]] <- as.factor(samples[[var]])
+  }
+}
+
+# Create a named vector of paths to the Salmon quantification files.
 files_sf <- file.path(cfg$dir_sf, paste0(rownames(samples), ".sf"))
 names(files_sf) <- rownames(samples)
 
+# Initialize lists to store the results of each analysis.
 all_dds_objects <- list()
 all_results_lists <- list()
 
+# Main analysis loop iterates through all combinations of sample subsets, gene filters, and model types.
 for (s_name in names(cfg$analysis_definitions$sample_subsets)) {
   for (filt_name in names(cfg$analysis_definitions$gene_filters)) {
     filt_params <- cfg$analysis_definitions$gene_filters[[filt_name]]
-    gtf_maps <- create_tx2gene_maps(cfg$file_gtf, cfg$dir_input, filt_params$filter_gene_types)
+
+    # Create transcript-to-gene and gene name maps.
+    gtf_maps <- create_tx2gene_maps(
+      cfg$file_gtf, cfg$dir_input, filt_params$filter_gene_types,
+      use_cache = cfg$use_cache
+    )
 
     for (m_type in cfg$analysis_definitions$model_types) {
       analysis_name <- paste(s_name, filt_name, m_type, sep = "_")
       message(paste("\n--- STARTING ANALYSIS FOR:", analysis_name, "---"))
 
+      # Subset the samples based on the criteria defined in the config.
       current_samples <- samples
       subset_criteria <- cfg$analysis_definitions$sample_subsets[[s_name]]
       if (length(subset_criteria) > 0) {
@@ -148,44 +207,63 @@ for (s_name in names(cfg$analysis_definitions$sample_subsets)) {
       }
 
       current_files_sf <- files_sf[rownames(current_samples)]
+
+      # Dynamically create the design formula based on the selected model type and the variables present in the current data subset.
       relevant_vars <- names(which(sapply(current_samples, function(col) length(unique(col)) > 1)))
       batch_terms <- intersect(cfg$batch_vars, relevant_vars)
 
       if (m_type == "additive") {
         design_terms <- intersect(cfg$deg_design_vars, relevant_vars)
-        design_str <- paste("~ ", paste(c(batch_terms, design_terms), collapse = " + "))
+        design_str <- paste("~", paste(c(batch_terms, design_terms), collapse = " + "))
       } else {
         main_terms <- intersect(cfg$main_vars, relevant_vars)
         if (all(cfg$interaction_vars %in% main_terms)) {
           other_main_terms <- setdiff(main_terms, cfg$interaction_vars)
-          design_str <- paste("~ ", paste(c(batch_terms, other_main_terms, paste(cfg$interaction_vars, collapse = " * ")), collapse = " + "))
+          design_str <- paste("~", paste(c(batch_terms, other_main_terms, paste(cfg$interaction_vars, collapse = " * ")), collapse = " + "))
         } else {
           design_terms <- intersect(cfg$deg_design_vars, relevant_vars)
-          design_str <- paste("~ ", paste(c(batch_terms, design_terms), collapse = " + "))
+          design_str <- paste("~", paste(c(batch_terms, design_terms), collapse = " + "))
         }
       }
 
-      dds_processed <- run_deseq_core(current_samples, current_files_sf, as.formula(design_str), gtf_maps$tx2gene_pcg, cfg$filter_by_factor, cfg$filter_min_count, parallel = (cfg$nc > 1))
+      # Run the core DESeq2 analysis.
+      dds_processed <- run_deseq_core(
+        current_samples, current_files_sf, as.formula(design_str),
+        gtf_maps$tx2gene_pcg, cfg$filter_by_factor, cfg$filter_min_count,
+        parallel = (cfg$nc > 1)
+      )
       all_dds_objects[[analysis_name]] <- dds_processed
+
+      # Generate QC plots for the current analysis.
       generate_qc_plots(dds_processed, analysis_name, gtf_maps$gene_name_map, cfg)
 
+      # Define all possible pairwise comparisons for the main experimental variables.
       factors_to_compare <- intersect(cfg$main_vars, relevant_vars)
       comparisons <- unlist(lapply(factors_to_compare, function(f) {
         if (length(levels(current_samples[[f]])) > 1) {
-          combn(levels(current_samples[[f]]), 2, function(p) list(list(factor = f, group1 = p[1], group2 = p[2])), simplify = FALSE)
+          combn(levels(current_samples[[f]]), 2, function(p) {
+            list(list(factor = f, group1 = p[1], group2 = p[2]))
+          }, simplify = FALSE)
         }
       }), recursive = FALSE)
-      
-      # <<< FIX: Pass the `filt_name` to the function
+
+      # Extract and save the results for each comparison.
       all_results_lists[[analysis_name]] <- extract_comparisons(
-        dds_processed = dds_processed, comparisons_list = comparisons,
-        analysis_name = analysis_name, gene_map = gtf_maps$gene_name_map,
-        cfg = cfg, kinase_genes = kinase_genes, filt_name = filt_name
+        dds_processed = dds_processed,
+        comparisons_list = comparisons,
+        analysis_name = analysis_name,
+        gene_map = gtf_maps$gene_name_map,
+        cfg = cfg,
+        gene_sets = gene_sets,
+        filt_name = filt_name
       )
     }
   }
 }
-save(cfg, samples, gtf_maps, all_dds_objects, all_results_lists, kinase_genes,
+
+# Save all results to an RData file for easy reloading.
+save(
+  cfg, samples, gtf_maps, all_dds_objects, all_results_lists, gene_sets,
   file = here::here(cfg$dir_input, paste0(cfg$project_name, "_results.RData"))
 )
 ```
@@ -193,11 +271,21 @@ save(cfg, samples, gtf_maps, all_dds_objects, all_results_lists, kinase_genes,
 ---
 
 # 3. Report Generation
+
+This section generates the final report, including tables of sample metadata, QC plots, and detailed results for each differential expression comparison.
+
 ## 3.1 Sample Metadata
+
+The following table displays the sample metadata used in this analysis.
+
 ```{r sample-metadata-table}
 reactable::reactable(samples, searchable = TRUE, filterable = TRUE, bordered = TRUE, highlight = TRUE)
 ```
+
 ## 3.2 Quality Control
+
+This section contains QC plots for each analysis performed. The plots include PCA to visualize sample clustering and sample distance heatmaps to show the correlation between samples.
+
 ```{r dynamic-qc-plots, results='asis'}
 cat("\n### PCA Plots\n")
 for (analysis_name in names(all_dds_objects)) {
@@ -211,7 +299,11 @@ for (analysis_name in names(all_dds_objects)) {
   cat(paste0("![](", here::here(cfg$dir_graphs_png, paste0(cfg$date, "_", analysis_name, "_Heatmap.png")), ")"))
 }
 ```
+
 ## 3.3 Gene of Interest Expression
+
+This section displays boxplots of normalized counts for a set of pre-defined genes of interest, allowing for a quick check of their expression across different conditions.
+
 ```{r goi-plots, results='asis'}
 for (analysis_name in names(all_dds_objects)) {
   cat(paste("\n### GOI Expression for", gsub("_", " ", analysis_name), "\n"))
@@ -221,11 +313,17 @@ for (analysis_name in names(all_dds_objects)) {
   }
 }
 ```
+
 ## 3.4 Differential Expression Summary
+
+This table summarizes the number of differentially expressed genes (DEGs) for each comparison, providing a high-level overview of the results.
+
 ```{r results-summary-table}
 summary_list <- lapply(names(all_results_lists), function(analysis_name) {
   analysis_results <- all_results_lists[[analysis_name]]
-  if (length(analysis_results) == 0) return(NULL)
+  if (length(analysis_results) == 0) {
+    return(NULL)
+  }
 
   lapply(names(analysis_results), function(comp_name) {
     res_df <- analysis_results[[comp_name]]
@@ -246,7 +344,11 @@ if (!is.null(summary_df) && nrow(summary_df) > 0) {
   cat("\n*No valid comparisons were found to summarize.*\n")
 }
 ```
+
 ## 3.5 Detailed Comparison Results
+
+This section provides detailed results for each comparison, including interactive tables of DEGs and various plots.
+
 ```{r dynamic-results-report, results='asis'}
 for (analysis_name in names(all_results_lists)) {
   cat(paste("\n### DEG Results for", gsub("_", " ", analysis_name), "\n"))
@@ -257,10 +359,11 @@ for (analysis_name in names(all_results_lists)) {
     res_df <- analysis_results[[comp_name]]
     sig_genes <- res_df %>% dplyr::filter(padj < cfg$qval_threshold & abs(log2FoldChange) > cfg$lfc_threshold & !is.na(padj))
     if (nrow(sig_genes) > 0) {
-      print(reactable::reactable(sig_genes %>%
-        dplyr::select(gene_name, human_ortholog, baseMean, log2FoldChange, padj) %>%
-        dplyr::arrange(padj),
-      defaultPageSize = 5, searchable = TRUE, bordered = TRUE
+      print(reactable::reactable(
+        sig_genes %>%
+          dplyr::select(gene_name, human_ortholog, baseMean, log2FoldChange, padj) %>%
+          dplyr::arrange(padj),
+        defaultPageSize = 5, searchable = TRUE, bordered = TRUE
       ))
     }
 
@@ -272,29 +375,35 @@ for (analysis_name in names(all_results_lists)) {
     path_250 <- here::here(cfg$dir_graphs_png, paste0(cfg$date, "_", comp_name, "_DEG_heatmap_top250.png"))
     if (file.exists(path_250)) cat(paste0("![](", path_250, ")"))
 
-    cat("\n\n##### Top Kinase DEG Heatmap\n")
-    path_kinase_heatmap <- here::here(cfg$dir_graphs_png, paste0(cfg$date, "_", comp_name, "_Kinase_DEG_heatmap.png"))
-    if (file.exists(path_kinase_heatmap)) cat(paste0("![](", path_kinase_heatmap, ")"))
+    if (length(gene_sets) > 0) {
+      for (gs_name in names(gene_sets)) {
+        cat(paste("\n\n##### Top", gs_name, "DEG Heatmap\n"))
+        path_gs_heatmap <- here::here(cfg$dir_graphs_png, paste0(cfg$date, "_", comp_name, "_", gs_name, "_DEG_heatmap.png"))
+        if (file.exists(path_gs_heatmap)) cat(paste0("![](", path_gs_heatmap, ")"))
 
-    cat("\n\n##### DE Kinase Box Plots\n")
-    sig_kinases <- sig_genes %>% dplyr::filter(gene_name_upper %in% kinase_genes | toupper(human_ortholog) %in% kinase_genes)
-    if (nrow(sig_kinases) > 0) {
-      for (kinase_name in sig_kinases$gene_name) {
-        plot_path <- here::here(cfg$dir_graphs_png_kinases, paste0(cfg$date, "_", comp_name, "_Boxplot_", kinase_name, ".png"))
-        if (file.exists(plot_path)) cat(paste0("![](", plot_path, ")"))
+        cat(paste("\n\n##### DE", gs_name, "Box Plots\n"))
+        gs_genes <- gene_sets[[gs_name]]
+        sig_gs <- sig_genes %>% dplyr::filter(gene_name_upper %in% gs_genes | toupper(human_ortholog) %in% gs_genes)
+        if (nrow(sig_gs) > 0) {
+          for (gs_gene_name in sig_gs$gene_name) {
+            plot_path <- here::here(cfg$dir_graphs_png, paste0(cfg$date, "_", comp_name, "_Boxplot_", gs_gene_name, ".png"))
+            if (file.exists(plot_path)) cat(paste0("![](", plot_path, ")"))
+          }
+        } else {
+          cat(paste0("\n*No DE ", gs_name, "s found.*\n"))
+        }
       }
-    } else {
-      cat("\n*No DE kinases found.*\n")
     }
   }
 }
-
-
 ```
 
 ---
 
 # 4. Session
+
+This section provides information about the R session, including the versions of all loaded packages, to ensure reproducibility.
+
 ```{r session-info}
 sessionInfo()
 ```

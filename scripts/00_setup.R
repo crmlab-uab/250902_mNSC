@@ -24,38 +24,46 @@ packages_to_load <- c(
   "ggsci",
   "styler",
   "biomaRt",
-  "dendextend"
+  "dendextend",
+  "GSEABase"
 )
 
 suppressPackageStartupMessages({
   for (pkg in packages_to_load) {
-    if (!requireNamespace(pkg, quietly = TRUE)) {
-      message(paste("Package", pkg, "not found. Attempting to install..."))
-      BiocManager::install(pkg, update = FALSE)
-      if (requireNamespace(pkg, quietly = TRUE)) {
-        library(pkg, character.only = TRUE)
-        version <- packageVersion(pkg)
-        warning(paste(
-          "PACKAGE WAS MISSING:",
-          pkg,
-          "(v",
-          version,
-          ") was installed."
-        ),
-        call. = FALSE)
-      } else {
-        stop(paste("Failed to install package:", pkg), call. = FALSE)
-      }
-    } else {
-      library(pkg, character.only = TRUE)
-    }
+    library(pkg, character.only = TRUE)
   }
 })
 
 message("All packages loaded successfully.")
 
+#' Validate Configuration and Input Files
+#'
+#' This function checks for the existence of critical input files and directories,
+#' and ensures that the sample metadata file contains all required columns
+#' defined in the configuration list.
+#'
+#' @param cfg A list containing the project configuration.
+#' @param samples A data frame containing the sample metadata.
+#'
+#' @return This function does not return a value but will stop execution if
+#'   critical files are missing or if required columns are not found in the
+#'   sample metadata. It will issue a warning if the genesets directory is
+#'   missing.
 validate_config_and_inputs <- function(cfg, samples) {
-  message("--- Validating configuration and input files ---")
+  message("Validating configuration and inputs...")
+
+  # Check for critical file existence
+  if (!file.exists(cfg$file_samples)) {
+    stop("Sample file not found: ", cfg$file_samples)
+  }
+  if (!file.exists(cfg$file_gtf)) {
+    stop("GTF file not found: ", cfg$file_gtf)
+  }
+  if (!dir.exists(cfg$dir_genesets)) {
+    warning("Genesets directory not found: ", cfg$dir_genesets)
+  }
+
+  # Check for required columns in samples.csv
   required_cols <- unique(c(
     cfg$batch_vars,
     cfg$main_vars,
@@ -72,5 +80,6 @@ validate_config_and_inputs <- function(cfg, samples) {
       )
     )
   }
+
   message("...Validation successful.")
 }
