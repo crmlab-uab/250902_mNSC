@@ -7,30 +7,23 @@
 create_tx2gene_maps <- function(gtf_path, cache_dir, filter_gene_types) {
   file_cache_rds <- file.path(cache_dir, "gtf_data_cache.rds")
   ortholog_cache_rds <- file.path(cache_dir, "ortholog_map_cache.rds")
-
+  
   if (file.exists(file_cache_rds)) {
     gtf_data <- readRDS(file_cache_rds)
   } else {
     gtf_data <- rtracklayer::import(gtf_path)
     saveRDS(gtf_data, file = file_cache_rds)
   }
-
+  
   if (file.exists(ortholog_cache_rds)) {
     message("...Loading cached ortholog map.")
     ortholog_map <- readRDS(ortholog_cache_rds)
   } else {
     message("...Querying Ensembl for human orthologs. This may take a moment...")
     ensembl <- biomaRt::useMart("ensembl", dataset = "mmusculus_gene_ensembl")
-
-    # <<< FIX: Querying for attributes on different pages is not allowed.
-    # Perform two separate queries and merge the results.
-    message("......Query 1: Fetching mouse gene symbols.")
-    map1 <- biomaRt::getBM(
-      attributes = c("ensembl_gene_id", "mgi_symbol"),
-      mart = ensembl
-    )
-
-    message("......Query 2: Fetching human homolog symbols.")
+    
+    map1 <- biomaRt::getBM(attributes = c("ensembl_gene_id", "mgi_symbol"),
+                           mart = ensembl)
     map2 <- biomaRt::getBM(
       attributes = c(
         "ensembl_gene_id",
@@ -38,52 +31,48 @@ create_tx2gene_maps <- function(gtf_path, cache_dir, filter_gene_types) {
       ),
       mart = ensembl
     )
-
+    
     ortholog_map <- dplyr::full_join(map1, map2, by = "ensembl_gene_id")
     saveRDS(ortholog_map, file = ortholog_cache_rds)
   }
-
+  
   full_map <- as.data.frame(mcols(gtf_data))
   full_map$chromosome_name <- as.character(seqnames(gtf_data))
-
+  
   base_map <- full_map %>%
     dplyr::filter(
       !is.na(transcript_id) & !is.na(gene_id) &
         !grepl("^Gm", gene_name) &
         !grepl("Rik$", gene_name) & !is.na(gene_name)
     )
-
+  
   if (!is.null(filter_gene_types)) {
     base_map <- base_map %>% dplyr::filter(gene_type %in% filter_gene_types)
   }
-
+  
   tx2gene_pcg <- base_map %>%
     dplyr::select(transcript_id, gene_id) %>%
     dplyr::distinct() %>%
     dplyr::mutate(transcript_id = gsub("\\..*$", "", transcript_id))
-
+  
   gene_name_map <- base_map %>%
     dplyr::filter(type == "gene") %>%
     dplyr::select(gene_id, gene_name) %>%
     dplyr::distinct()
-
-  # Join the GTF data with the comprehensive ortholog map using the stable Ensembl ID
+  
   gene_name_map <- gene_name_map %>%
     dplyr::left_join(ortholog_map, by = c("gene_id" = "ensembl_gene_id"))
-
-  # Robustly handle the human ortholog column
+  
   if ("hsapiens_homolog_associated_gene_name" %in% names(gene_name_map)) {
     gene_name_map <- gene_name_map %>%
       dplyr::rename(human_ortholog = hsapiens_homolog_associated_gene_name)
   } else {
-    warning(
-      "Could not retrieve human orthologs from Ensembl. The `human_ortholog` column will be empty."
-    )
+    warning("Could not retrieve human orthologs. `human_ortholog` column will be empty.")
     gene_name_map$human_ortholog <- NA_character_
   }
-
+  
   gene_name_map <- gene_name_map %>%
     dplyr::mutate(gene_name_upper = toupper(gene_name))
-
+  
   return(list(tx2gene_pcg = tx2gene_pcg, gene_name_map = gene_name_map))
 }

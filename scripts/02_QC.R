@@ -10,18 +10,19 @@ generate_qc_plots <- function(dds_processed,
                               cfg) {
   vsd <- vst(dds_processed, blind = FALSE)
   num_genes <- nrow(dds_processed)
-
+  
   # PCA Plot
+  # <<< FIX: Remapped aesthetics to Driver=shape, Model=color, Host=fill
   pca_data <- plotPCA(vsd, intgroup = cfg$main_vars, returnData = TRUE)
   percent_var <- round(100 * attr(pca_data, "percentVar"))
-  pca_plot <- ggplot(pca_data) +
+  pca_plot <- ggplot(pca_data, aes(x = PC1, y = PC2)) +
     geom_point(
       mapping = aes(
-        x = PC1,
-        y = PC2,
-        color = .data[[cfg$main_vars[1]]],
-        fill = .data[[cfg$main_vars[3]]],
-        shape = .data[[cfg$main_vars[2]]]
+        shape = .data[[cfg$main_vars[1]]],
+        # Driver
+        color = .data[[cfg$main_vars[2]]],
+        # Model
+        fill = .data[[cfg$main_vars[3]]] # Host
       ),
       size = 5,
       stroke = 1.5
@@ -31,16 +32,16 @@ generate_qc_plots <- function(dds_processed,
     labs(
       title = paste("PCA:", gsub("_", " ", analysis_name)),
       subtitle = paste(num_genes, "genes included"),
-      color = cfg$main_vars[1],
-      fill = cfg$main_vars[3],
-      shape = cfg$main_vars[2]
+      shape = cfg$main_vars[1],
+      color = cfg$main_vars[2],
+      fill = cfg$main_vars[3]
     ) +
-    scale_shape_manual(values = c(21, 22, 24, 25)) +
-    scale_fill_manual(values = c("BL6" = "black", "NSG" = "white")) +
+    scale_shape_manual(values = c(21, 22, 24)) + # Fillable shapes
+    scale_fill_manual(values = c("BL6" = "black", "NSG" = "grey80")) +
     ggsci::scale_color_jco() +
     coord_fixed() +
     theme_bw(base_size = 14)
-
+  
   ggsave(
     filename = here::here(
       cfg$dir_graphs_png,
@@ -61,20 +62,20 @@ generate_qc_plots <- function(dds_processed,
     height = 8.5,
     device = "pdf"
   )
-
+  
   # Sample Distance Heatmap
   sample_dists <- dist(t(assay(vsd)))
   sample_dist_matrix <- as.matrix(sample_dists)
-
-  # <<< FIX: Explicitly set the track order and droplevels() to prevent color mismatch errors.
+  
+  # <<< FIX: Explicitly set the track order
   track_order <- intersect(c("Driver", "Model", "Host"), names(colData(dds_processed)))
   annotation_df <- as.data.frame(colData(dds_processed)[, track_order, drop = FALSE]) %>%
     droplevels()
-
+  
   ann_colors <- list()
   jco_palette <- ggsci::pal_jco("default")(10)
   color_idx <- 1
-
+  
   for (var in names(annotation_df)) {
     levels_in_data <- levels(annotation_df[[var]])
     if (length(levels_in_data) > 0) {
@@ -84,20 +85,19 @@ generate_qc_plots <- function(dds_processed,
       color_idx <- color_idx + length(levels_in_data)
     }
   }
-
+  
   dend <- as.dendrogram(hclust(sample_dists))
   dend <- dendextend::rotate(dend, order = rownames(sample_dist_matrix))
-
+  
   pheatmap::pheatmap(
     sample_dist_matrix,
     main = paste("Sample-to-Sample Distance:", gsub("_", " ", analysis_name)),
-    subtitle = paste(num_genes, "genes included"),
     annotation_col = annotation_df,
     annotation_colors = ann_colors,
     color = cfg$ryb,
     border_color = NA,
-    cluster_rows = dend,
-    cluster_cols = dend,
+    cluster_rows = as.hclust(dend),
+    cluster_cols = as.hclust(dend),
     show_rownames = FALSE,
     show_colnames = FALSE,
     filename = here::here(
@@ -108,13 +108,12 @@ generate_qc_plots <- function(dds_processed,
   pheatmap::pheatmap(
     sample_dist_matrix,
     main = paste("Sample-to-Sample Distance:", gsub("_", " ", analysis_name)),
-    subtitle = paste(num_genes, "genes included"),
     annotation_col = annotation_df,
     annotation_colors = ann_colors,
     color = cfg$ryb,
     border_color = NA,
-    cluster_rows = dend,
-    cluster_cols = dend,
+    cluster_rows = as.hclust(dend),
+    cluster_cols = as.hclust(dend),
     show_rownames = FALSE,
     show_colnames = FALSE,
     filename = here::here(
@@ -122,27 +121,28 @@ generate_qc_plots <- function(dds_processed,
       paste0(cfg$date, "_", analysis_name, "_Heatmap.pdf")
     )
   )
-
-
+  
   # GOI Boxplots
   for (gene_name in cfg$qc_plot_settings$project_genes) {
-    gene_id <- gtf_map$gene_id[gtf_map$gene_name == gene_name]
+    gene_id <- gtf_map$gene_id[gtf_map$gene_name_upper == toupper(gene_name)]
     if (length(gene_id) == 1 &&
-      gene_id %in% rownames(dds_processed)) {
+        gene_id %in% rownames(dds_processed)) {
       plot_data <- plotCounts(
         dds_processed,
         gene = gene_id,
         intgroup = cfg$main_vars,
         returnData = TRUE
       )
-
+      
       p <- ggplot(plot_data, aes(x = .data[[cfg$main_vars[1]]], y = count)) +
         geom_boxplot(outlier.shape = NA, alpha = 0.5) +
         geom_jitter(
           aes(
-            color = .data[[cfg$main_vars[1]]],
-            fill = .data[[cfg$main_vars[3]]],
-            shape = .data[[cfg$main_vars[2]]]
+            shape = .data[[cfg$main_vars[1]]],
+            # Driver
+            color = .data[[cfg$main_vars[2]]],
+            # Model
+            fill = .data[[cfg$main_vars[3]]] # Host
           ),
           width = 0.2,
           size = 4,
@@ -155,12 +155,12 @@ generate_qc_plots <- function(dds_processed,
           y = "Normalized Counts"
         ) +
         scale_y_log10() +
-        scale_shape_manual(values = c(21, 22, 24, 25)) +
-        scale_fill_manual(values = c("BL6" = "black", "NSG" = "white")) +
+        scale_shape_manual(values = c(21, 22, 24)) +
+        scale_fill_manual(values = c("BL6" = "black", "NSG" = "grey80")) +
         ggsci::scale_color_jco() +
         theme_bw(base_size = 14) +
         theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
+      
       ggsave(
         filename = here::here(
           cfg$dir_graphs_png,

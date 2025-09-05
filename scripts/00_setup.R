@@ -32,24 +32,22 @@ suppressPackageStartupMessages({
     if (!requireNamespace(pkg, quietly = TRUE)) {
       message(paste("Package", pkg, "not found. Attempting to install..."))
       BiocManager::install(pkg, update = FALSE)
-    }
-    if (requireNamespace(pkg, quietly = TRUE)) {
-      # Issue a warning if a package was just installed
-      if (!pkg %in% loadedNamespaces()) {
-        warning(
-          paste0(
-            "Package '",
-            pkg,
-            "' (version ",
-            packageVersion(pkg),
-            ") was not found and has been installed. ",
-            "Please review your environment for reproducibility."
-          )
-        )
+      if (requireNamespace(pkg, quietly = TRUE)) {
+        library(pkg, character.only = TRUE)
+        version <- packageVersion(pkg)
+        warning(paste(
+          "PACKAGE WAS MISSING:",
+          pkg,
+          "(v",
+          version,
+          ") was installed."
+        ),
+        call. = FALSE)
+      } else {
+        stop(paste("Failed to install package:", pkg), call. = FALSE)
       }
-      library(pkg, character.only = TRUE)
     } else {
-      stop(paste("Failed to install and load package:", pkg))
+      library(pkg, character.only = TRUE)
     }
   }
 })
@@ -66,10 +64,13 @@ validate_config_and_inputs <- function(cfg, samples) {
   ))
   missing_cols <- setdiff(required_cols, names(samples))
   if (length(missing_cols) > 0) {
-    stop(paste(
-      "\nERROR: samples.csv is missing required columns:",
-      paste(missing_cols, collapse = ", ")
-    ))
+    stop(
+      paste(
+        "\nERROR: samples.csv is missing required columns:",
+        paste(missing_cols, collapse = ", "),
+        "\nPlease check column names and cfg variables (batch_vars, main_vars, etc.)."
+      )
+    )
   }
   message("...Validation successful.")
 }
