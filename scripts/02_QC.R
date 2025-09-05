@@ -29,16 +29,21 @@ generate_qc_plots <- function(dds_processed,
   # PCA Plot
   pca_data <- plotPCA(vsd, intgroup = cfg$main_vars, returnData = TRUE)
   percent_var <- round(100 * attr(pca_data, "percentVar"))
-  
+
+  # Create a custom color mapping for the Model variable
+  model_levels <- levels(pca_data$Model)
+  model_colors <- ggsci::pal_jco("default")(length(model_levels))
+  names(model_colors) <- model_levels
+
   # Create a custom fill variable for the PCA plot
-  pca_data$fill_var <- ifelse(pca_data$Host == "BL6", as.character(pca_data$Model), "white")
-  
+  pca_data$fill_color <- ifelse(pca_data$Host == "BL6", model_colors[as.character(pca_data$Model)], "white")
+
   pca_plot <- ggplot(pca_data, aes(x = PC1, y = PC2)) +
     geom_point(
       mapping = aes(
         shape = .data[[cfg$main_vars[1]]], # Driver
         color = .data[[cfg$main_vars[2]]], # Model
-        fill = I(fill_var) # Use I() to set fill color directly
+        fill = I(fill_color)
       ),
       size = 5,
       stroke = 1.5
@@ -52,7 +57,7 @@ generate_qc_plots <- function(dds_processed,
       color = cfg$main_vars[2]
     ) +
     scale_shape_manual(values = c(21, 22, 24)) + # Fillable shapes
-    ggsci::scale_color_jco() +
+    scale_color_manual(values = model_colors) +
     coord_fixed() +
     theme_bw(base_size = 14)
 
@@ -88,7 +93,7 @@ generate_qc_plots <- function(dds_processed,
   }
 
   dend <- as.dendrogram(hclust(sample_dists))
-  dend <- dendextend::rotate_best(dend, sample_dists)
+  dend <- dendextend::rotate(dend, order = rownames(sample_dist_matrix))
 
   p_heatmap <- pheatmap::pheatmap(
     sample_dist_matrix,

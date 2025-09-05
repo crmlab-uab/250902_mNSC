@@ -22,7 +22,7 @@ save_plot_formats <- function(plot_object,
   if (inherits(plot_object, "pheatmap")) {
     plot_object <- ggplotify::as.ggplot(plot_object)
   }
-  
+
   ggsave(
     filename = here::here(dir_png, paste0(filename_base, ".png")),
     plot = plot_object,
