@@ -22,9 +22,9 @@ This document is the central hub for a modular DESeq2 RNA-seq analysis pipeline.
 
 ---
 
-# 1. Setup and Configuration
+# 1. Setup
 
-## 1.1 Load Child Scripts
+## 1.1 Child Scripts
 ```{r child-script-setup, file='scripts/00_setup.R', echo=TRUE}
 ```
 ```{r child-script-genes, file='scripts/01_genes_mouse.R', echo=TRUE}
@@ -38,7 +38,7 @@ This document is the central hub for a modular DESeq2 RNA-seq analysis pipeline.
 ```{r child-script-plotting-utils, file='scripts/05_plotting_utils.R', echo=TRUE}
 ```
 
-## 1.2 Project Setup and Data Loading
+## 1.2 Project Setup
 ```{r project-setup-and-caching}
 cfg <- list(
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -46,8 +46,8 @@ cfg <- list(
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   date = format(Sys.Date(), "%y%m%d"),
   project_name = "250902_mNSC",
-  use_cache = FALSE, # Set to FALSE to re-run all analyses from scratch
-  run_styler = TRUE, # Set to TRUE to format all R and Rmd files
+  use_cache = TRUE, # Set to FALSE to re-run all analyses from scratch
+  run_styler = FALSE, # Set to TRUE to format all R and Rmd files
   nc = parallel::detectCores() - 2, # Number of cores for parallel processing
 
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -126,7 +126,7 @@ gene_sets <- load_gene_sets(cfg$dir_genesets)
 
 ---
 
-# 2. Computational Analysis
+# 2. Analysis
 
 This section performs the core DESeq2 analysis. The analysis is structured as a series of nested loops that iterate through different sample subsets, gene filters, and statistical models, as defined in the `cfg$analysis_definitions` list.
 
@@ -270,7 +270,7 @@ save(
 
 ---
 
-# 3. Report Generation
+# 3. Reports and Visualizations
 
 This section generates the final report, including tables of sample metadata, QC plots, and detailed results for each differential expression comparison.
 
