@@ -145,14 +145,24 @@ generate_comparison_plots <- function(res_df,
                                       gene_sets,
                                       gene_map) {
   # Volcano Plot
-  p_volcano <- EnhancedVolcano::EnhancedVolcano(
-    res_df,
-    lab = res_df$gene_name,
-    x = "log2FoldChange",
-    y = "padj",
-    pCutoff = cfg$qval_threshold,
-    FCcutoff = cfg$lfc_threshold,
-    title = gsub("_", " ", comp_name)
+  p_volcano <- tryCatch(
+    {
+      EnhancedVolcano::EnhancedVolcano(
+        res_df,
+        lab = res_df$gene_name,
+        x = "log2FoldChange",
+        y = "padj",
+        pCutoff = cfg$qval_threshold,
+        FCcutoff = cfg$lfc_threshold,
+        title = gsub("_", " ", comp_name)
+      )
+    },
+    error = function(e) {
+      message(paste("Error generating volcano plot for", comp_name, ":", e$message))
+      ggplot2::ggplot() +
+        ggplot2::annotate("text", x = 0.5, y = 0.5, label = paste("Error or no data for Volcano Plot:", comp_name)) +
+        ggplot2::theme_void()
+    }
   )
   save_plot_formats(
     plot_object = p_volcano,
@@ -169,9 +179,43 @@ generate_comparison_plots <- function(res_df,
     message(paste(
       "...Skipping heatmaps for",
       comp_name,
-      "due to < 2 significant genes."
+      "due to < 2 significant genes. Generating placeholder."
     ))
-    return() # Not enough significant genes to plot heatmaps
+    # Placeholder for heatmaps
+    p_heatmap_placeholder <- ggplot2::ggplot() +
+      ggplot2::annotate("text", x = 0.5, y = 0.5, label = paste("No significant genes for heatmaps:", comp_name)) +
+      ggplot2::theme_void()
+
+    save_plot_formats(
+      plot_object = p_heatmap_placeholder,
+      dir_png = cfg$dir_graphs_png,
+      dir_pdf = cfg$dir_graphs_pdf,
+      filename_base = paste0(cfg$date, "_", comp_name, "_DEG_heatmap_top50"), # Use top50 filename for placeholder
+      width = 8,
+      height = 12
+    )
+    save_plot_formats(
+      plot_object = p_heatmap_placeholder,
+      dir_png = cfg$dir_graphs_png,
+      dir_pdf = cfg$dir_graphs_pdf,
+      filename_base = paste0(cfg$date, "_", comp_name, "_DEG_heatmap_top250"), # Use top250 filename for placeholder
+      width = 8,
+      height = 18
+    )
+    # Also save for gene set heatmaps if they would have been generated
+    if (length(gene_sets) > 0) {
+      for (gs_name in names(gene_sets)) {
+        save_plot_formats(
+          plot_object = p_heatmap_placeholder,
+          dir_png = cfg$dir_graphs_png,
+          dir_pdf = cfg$dir_graphs_pdf,
+          filename_base = paste0(cfg$date, "_", comp_name, "_", gs_name, "_DEG_heatmap"),
+          width = 8,
+          height = 10
+        )
+      }
+    }
+    return() # Return after generating placeholders
   }
 
   # Use variance-stabilized counts for heatmaps

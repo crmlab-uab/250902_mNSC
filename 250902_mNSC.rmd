@@ -17,7 +17,6 @@ knitr::opts_chunk$set(echo = TRUE, message = TRUE, warning = TRUE)
 ```
 
 # Project 250902_mNSC
-
 This document is the central hub for a modular DESeq2 RNA-seq analysis pipeline.
 
 ---
@@ -46,7 +45,7 @@ cfg <- list(
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   date = format(Sys.Date(), "%y%m%d"),
   project_name = "250902_mNSC",
-  use_cache = TRUE, # Set to FALSE to re-run all analyses from scratch
+  use_cache = FALSE, # Set to FALSE to re-run all analyses from scratch
   run_styler = FALSE, # Set to TRUE to format all R and Rmd files
   nc = parallel::detectCores() - 2, # Number of cores for parallel processing
 
@@ -88,7 +87,8 @@ cfg <- list(
     sample_subsets = list(
       Full_Dataset = list(),
       NS1_Model = list(Model = "NS1"),
-      BL6_Host = list(Host = "BL6")
+      BL6_Host = list(Host = "BL6"),
+      NSG_Host = list(Host = "NSG")
     ),
     # Define gene filters to apply
     gene_filters = list(
@@ -130,7 +130,7 @@ gene_sets <- load_gene_sets(cfg$dir_genesets)
 
 This section performs the core DESeq2 analysis. The analysis is structured as a series of nested loops that iterate through different sample subsets, gene filters, and statistical models, as defined in the `cfg$analysis_definitions` list.
 
-```{r computational-analysis, echo=FALSE, eval=run_analysis_flag}
+```{r computational-analysis, echo=TRUE, eval=run_analysis_flag}
 # Set a seed for reproducibility of stochastic processes.
 set.seed(42)
 
