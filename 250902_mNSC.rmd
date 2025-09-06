@@ -22,22 +22,19 @@ This document is the central hub for a modular DESeq2 RNA-seq analysis pipeline.
 ---
 
 # 1. Setup
+## 1.1 Load Packages and Functions
+```{r setup-and-source, echo=TRUE, message=TRUE, warning=TRUE}
+# First, load the 'here' package to resolve file paths correctly.
+suppressPackageStartupMessages(library(here))
 
-## 1.1 Child Scripts
-```{r child-script-setup, file='scripts/00_setup.R', echo=TRUE}
-```
-```{r child-script-genes, file='scripts/01_genes_mouse.R', echo=TRUE}
-```
-```{r child-script-qc, file='scripts/02_QC.R', echo=TRUE}
-```
-```{r child-script-deseq, file='scripts/03_DESeq2.R', echo=TRUE}
-```
-```{r child-script-genesets, file='scripts/04_genesets.R', echo=TRUE}
-```
-```{r child-script-plotting-utils, file='scripts/05_plotting_utils.R', echo=TRUE}
+# Now, source all R scripts from the 'scripts' directory.
+# This loads all other necessary packages and custom functions for the analysis.
+# The script '00_setup.R' will load tidyverse, which provides the pipe '%>%' operator.
+list.files(here("scripts"), pattern = "\\.R$", full.names = TRUE) |>
+  purrr::walk(source)
 ```
 
-## 1.2 Project Setup
+## 1.2 Configure Project and Load Data
 ```{r project-setup-and-caching}
 cfg <- list(
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -137,20 +134,24 @@ This section performs the core DESeq2 analysis. The analysis is structured as a 
 set.seed(42)
 
 # This function finds all directory paths in the config list and creates them.
+# It also creates the nested subdirectories for each analysis permutation.
 create_project_dirs <- function(config) {
-  dir_paths <- c()
-  for (name in names(config)) {
-    if (startsWith(name, "dir_")) {
-      dir_paths <- c(dir_paths, config[[name]])
+  # Create all top-level directories defined in the config
+  dir_paths <- unlist(config[startsWith(names(config), "dir_")])
+  sapply(dir_paths, dir.create, recursive = TRUE, showWarnings = FALSE)
+
+  # Create all analysis-specific subdirectories for plots and CSVs
+  for (s_name in names(config$analysis_definitions$sample_subsets)) {
+    for (filt_name in names(config$analysis_definitions$gene_filters)) {
+      for (m_type in config$analysis_definitions$model_types) {
+        analysis_name <- sanitize_analysis_name(paste(s_name, filt_name, m_type, sep = "_"))
+        dir.create(file.path(config$dir_graphs_png, analysis_name), recursive = TRUE, showWarnings = FALSE)
+        dir.create(file.path(config$dir_graphs_pdf, analysis_name), recursive = TRUE, showWarnings = FALSE)
+        dir.create(file.path(config$dir_data_csv, filt_name, analysis_name), recursive = TRUE, showWarnings = FALSE)
+      }
     }
   }
-  # Base CSV dir
-  dir_paths <- c(dir_paths, config$dir_data_csv)
-
-  # Add per gene-filter CSV subdirs
-  csv_subdirs <- file.path(config$dir_data_csv, names(config$analysis_definitions$gene_filters))
-  all_dirs <- unique(c(dir_paths, csv_subdirs))
-  lapply(all_dirs, dir.create, recursive = TRUE, showWarnings = FALSE)
+  message("...Project directories created successfully.")
 }
 
 create_project_dirs(cfg)
@@ -224,13 +225,13 @@ for (s_name in names(cfg$analysis_definitions$sample_subsets)) {
         design_terms <- get_nonconstant_vars(current_samples, design_terms)
         batch_terms <- get_nonconstant_vars(current_samples, batch_terms)
         all_terms <- c(batch_terms, design_terms)
-        if (length(all_terms) == 0) {
+        if (length(all_terms) == 0 || length(design_terms) == 0) {
           message(paste("...SKIPPING analysis for", analysis_name, "because all design variables are constant."))
           next
         }
         design_str <- paste("~", paste(all_terms, collapse = " + "))
       } else {
-        main_terms <- intersect(cfg$main_vars, relevant_vars)
+        main_terms <- intersect(cfg$deg_design_vars, relevant_vars)
         main_terms <- get_nonconstant_vars(current_samples, main_terms)
         batch_terms <- get_nonconstant_vars(current_samples, batch_terms)
         if (all(cfg$interaction_vars %in% main_terms)) {
@@ -278,15 +279,16 @@ for (s_name in names(cfg$analysis_definitions$sample_subsets)) {
         }
       }
 
-      # Extract & save
-      all_results_lists[[analysis_name]] <- extract_comparisons(
-        dds_processed = dds_processed,
-        comparisons_list = comparisons,
-        analysis_name = analysis_name,
-        gene_map = gtf_maps$gene_name_map,
-        cfg = cfg,
+      # Perform differential analysis, which includes extracting comparisons and generating plots
+      all_results_lists[[analysis_name]] <- perform_differential_analysis(
+        dds = dds_processed,
+        comparisons = comparisons,
+        gtf_map = gtf_maps$gene_name_map,
+        p_adj_threshold = cfg$qval_threshold,
+        lfc_threshold = cfg$lfc_threshold,
         gene_sets = gene_sets,
-        filt_name = filt_name
+        analysis_name = analysis_name,
+        cfg = cfg
       )
     }
   }
@@ -343,38 +345,46 @@ emit_labeled_image <- function(label, path) {
   }
 }
 
-emit_gene_set_heatmap <- function(comp_name, gs_name, png_dir, date) {
-  path <- file.path(png_dir, paste0(date, "_", comp_name, "_", gs_name, "_DEG_heatmap.png"))
+emit_gene_set_heatmap <- function(comp_label, gs_name, png_dir, date) {
+  path <- file.path(png_dir, paste0(date, "_", comp_label, "_", gs_name, "_DEG_heatmap.png"))
   cat(paste0("\n##### ", gs_name, " Gene Set Heatmap\n"))
   if (file.exists(path)) {
     cat(paste0("![](", path, ")\n"))
   } else {
-    cat("*No heatmap generated for this gene set.*\n")
+    cat("\n*No significant DEGs for this gene set, heatmap not generated.*\n")
   }
 }
 
-emit_gene_set_boxplots <- function(comp_name, gs_name, png_dir, date) {
+emit_gene_set_boxplots <- function(analysis_name, comp_label, gs_name, png_dir, date) {
+  boxplot_dir <- file.path(png_dir, sanitize_analysis_name(file.path(analysis_name, paste0(comp_label, "_", gs_name, "_boxplots"))))
   cat(paste0("\n##### ", gs_name, " Gene Set Boxplots\n"))
-  prefix <- paste0(date, "_", comp_name, "_", gs_name, "_Boxplot_")
-  esc_prefix <- gsub("([.^$|()*+?{\\[\\]\\\\])", "\\\\\\1", prefix)
-  files <- list.files(png_dir, pattern = paste0("^", esc_prefix, ".+\\.png$"), full.names = TRUE)
+  
+  if (!dir.exists(boxplot_dir)) {
+    cat("\n*No significant DEGs for this gene set, boxplots not generated.*\n")
+    return()
+  }
+  
+  files <- list.files(boxplot_dir, pattern = "\\.png$", full.names = TRUE)
   if (length(files) == 0) {
-    cat("*No boxplots generated for this gene set.*\n")
+    cat("\n*No significant DEGs for this gene set, boxplots not generated.*\n")
   } else {
-    for (f in files) cat(paste0("![](", f, ")\n"))
+    for (f in files) emit_image(f)
   }
 }
 
-emit_standard_comp_plots <- function(comp_name, png_dir, date) {
-  emit_labeled_image("Volcano Plot", file.path(png_dir, paste0(date, "_", comp_name, "_volcano.png")))
-  emit_labeled_image("Top 50 DEG Heatmap", file.path(png_dir, paste0(date, "_", comp_name, "_DEG_heatmap_top50.png")))
-  emit_labeled_image("Top 250 DEG Heatmap", file.path(png_dir, paste0(date, "_", comp_name, "_DEG_heatmap_top250.png")))
+emit_standard_comp_plots <- function(comp_label, png_dir, date) {
+  emit_labeled_image("Volcano Plot", file.path(png_dir, paste0(date, "_", comp_label, "_volcano.png")))
+  emit_labeled_image("Top 50 DEG Heatmap", file.path(png_dir, paste0(date, "_", comp_label, "_DEG_heatmap_top50.png")))
+  # Only show Top 250 if it exists
+  path_250 <- file.path(png_dir, paste0(date, "_", comp_label, "_DEG_heatmap_top250.png"))
+  if (file.exists(path_250)) {
+    emit_labeled_image("Top 250 DEG Heatmap", path_250)
+  }
 }
 
-# NEW: helper to emit significant gene table
 emit_sig_gene_table <- function(sig_df, cfg) {
   if (nrow(sig_df) == 0) {
-    cat("*No significant genes for this comparison.*\n")
+    cat("\n*No significant genes found for this comparison based on current thresholds.*\n")
     return(invisible(NULL))
   }
   tbl <- sig_df %>%
@@ -411,17 +421,17 @@ emit_section_header("PCA Plots", level = 3)
 for (analysis_name in names(all_dds_objects)) {
   safe_name <- sanitize_analysis_name(analysis_name)
   emit_section_header(gsub("_", " ", analysis_name), level = 4)
-  emit_image(file.path(
+  emit_labeled_image("PCA", file.path(
     cfg$dir_graphs_png, safe_name,
     paste0(cfg$date, "_", analysis_name, "_PCA.png")
   ))
 }
 
-emit_section_header("Sample Distance Heatmaps", level = 3)
+emit_section_header("\nSample Distance Heatmaps", level = 3)
 for (analysis_name in names(all_dds_objects)) {
   safe_name <- sanitize_analysis_name(analysis_name)
   emit_section_header(gsub("_", " ", analysis_name), level = 4)
-  emit_image(file.path(
+  emit_labeled_image("Distance Heatmap", file.path(
     cfg$dir_graphs_png, safe_name,
     paste0(cfg$date, "_", analysis_name, "_Heatmap.png")
   ))
@@ -435,6 +445,7 @@ if (!is.null(cfg$qc_plot_settings$project_genes) &&
   for (analysis_name in names(all_dds_objects)) {
     safe_name <- sanitize_analysis_name(analysis_name)
     emit_section_header(paste("GOI:", gsub("_", " ", analysis_name)), level = 4)
+    plot_dir <- file.path(cfg$dir_graphs_png, safe_name)
 
     paths <- vapply(
       cfg$qc_plot_settings$project_genes,
@@ -513,7 +524,9 @@ for (analysis_name in names(all_results_lists)) {
   analysis_results <- all_results_lists[[analysis_name]]
   if (length(analysis_results) == 0) next
 
-  for (comp_name in names(analysis_results)) {
+  for (comp_full_name in names(analysis_results)) {
+    comp_name <- sub(paste0(analysis_name, "_"), "", comp_full_name, fixed = TRUE)
+
     emit_section_header(gsub("_", " ", comp_name), level = 4)
 
     res_df <- analysis_results[[comp_name]]
@@ -528,12 +541,12 @@ for (analysis_name in names(all_results_lists)) {
     emit_sig_gene_table(sig_genes, cfg)
 
     png_dir <- file.path(cfg$dir_graphs_png, safe_analysis_name)
-    emit_standard_comp_plots(comp_name, png_dir, cfg$date)
+    emit_standard_comp_plots(comp_name, png_dir, cfg$date) # Use the shorter name
 
     if (length(gene_sets) > 0) {
       for (gs_name in names(gene_sets)) {
         emit_gene_set_heatmap(comp_name, gs_name, png_dir, cfg$date)
-        emit_gene_set_boxplots(comp_name, gs_name, png_dir, cfg$date)
+        emit_gene_set_boxplots(analysis_name, comp_name, gs_name, png_dir, cfg$date)
       }
     }
   }
@@ -543,9 +556,7 @@ for (analysis_name in names(all_results_lists)) {
 ---
 
 # 4. Session
-
 This section provides information about the R session, including the versions of all loaded packages, to ensure reproducibility.
-
 ```{r session-info}
 sessionInfo()
 ```

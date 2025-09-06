@@ -51,3 +51,7 @@ rsconnect/
 *.sf
 *.rds
 *.RData
+*.html
+*.pdf
+*.png
+/output

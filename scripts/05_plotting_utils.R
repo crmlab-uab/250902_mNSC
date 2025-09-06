@@ -76,15 +76,16 @@ generate_qc_plots <- function(dds, analysis_name, gene_name_map, cfg) {
     returnData = TRUE
   )
   percent_var <- round(100 * attr(pca_df, "percentVar"))
-
-  color_factor <- intersect(cfg$main_vars, colnames(pca_df))
-  color_factor <- if (length(color_factor)) color_factor[1] else NULL
-
+ 
+  # Use the first available main_var for coloring, if it exists in the data
+  color_var <- head(cfg$main_vars[cfg$main_vars %in% colnames(pca_df)], 1)
+  aes_map <- ggplot2::aes(x = PC1, y = PC2, label = name)
+  if (length(color_var) > 0) {
+    aes_map$colour <- as.symbol(color_var)
+  }
   pca_plot <- ggplot2::ggplot(
-    pca_df,
-    ggplot2::aes(x = PC1, y = PC2,
-                 color = if (!is.null(color_factor)) .data[[color_factor]] else NULL,
-                 label = name)
+    data = pca_df,
+    mapping = aes_map
   ) +
     ggplot2::geom_point(size = 3, alpha = 0.85) +
     ggplot2::labs(
@@ -148,8 +149,8 @@ generate_qc_plots <- function(dds, analysis_name, gene_name_map, cfg) {
       tibble::rownames_to_column("gene_id")
 
     if (nrow(goi_map) > 0) {
-      plot_group_var <- intersect(cfg$main_vars, colnames(SummarizedExperiment::colData(dds)))
-      plot_group <- if (length(plot_group_var)) plot_group_var[1] else NULL
+      plot_group_var <- head(cfg$main_vars[cfg$main_vars %in% colnames(SummarizedExperiment::colData(dds))], 1)
+      plot_group <- if (length(plot_group_var) > 0) plot_group_var else "sample_id"
       meta_df <- as.data.frame(SummarizedExperiment::colData(dds)) %>%
         tibble::rownames_to_column("sample_id")
 
@@ -169,18 +170,14 @@ generate_qc_plots <- function(dds, analysis_name, gene_name_map, cfg) {
 
         bp <- ggplot2::ggplot(
           long_df,
-          ggplot2::aes_string(
-            x = ifelse(is.null(plot_group), "sample_id", plot_group),
-            y = "norm_count",
-            fill = ifelse(is.null(plot_group), "sample_id", plot_group)
-          )
+          ggplot2::aes(x = .data[[plot_group]], y = norm_count, fill = .data[[plot_group]])
         ) +
           ggplot2::geom_boxplot(outlier.shape = NA, alpha = 0.7) +
           ggplot2::geom_jitter(width = 0.15, size = 1.6, alpha = 0.8) +
           ggplot2::scale_y_log10() +
           ggplot2::labs(
             title = paste(gene_symbol, "-", gsub("_", " ", analysis_name)),
-            x = ifelse(is.null(plot_group), "Sample", plot_group),
+            x = plot_group,
             y = "Normalized Count (log10)"
           ) +
           ggplot2::theme_minimal(base_size = 11) +

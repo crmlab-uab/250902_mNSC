@@ -33,6 +33,11 @@ run_deseq_core <- function(samples_df,
   )
   dds <- DESeq2::DESeqDataSetFromTximport(txi, colData = samples_df, design = design_formula)
 
+  if (!filter_factor %in% colnames(colData(dds))) {
+    stop(paste("filter_factor '", filter_factor, "' not found in colData.",
+               "Available columns:", paste(colnames(colData(dds)), collapse = ", ")))
+  }
+
   # Pre-filtering based on the smallest group size
   smallest_group_size <- min(table(colData(dds)[[filter_factor]]))
   keep <- rowSums(counts(dds) >= min_count) >= smallest_group_size
@@ -116,7 +121,7 @@ generate_interaction_contrasts <- function(dds,
       for (mv2 in main_var2) {
         out[[length(out) + 1]] <- list(
           type = "simple_effect_var2_given_var1",
-          contrast = list(c(iterm, mv2)),
+          contrast = c(iterm, mv2),
           label = paste0("SIMPLE_EFFECT:", iterm, "_plus_", mv2)
         )
       }
@@ -126,7 +131,7 @@ generate_interaction_contrasts <- function(dds,
       for (mv1 in main_var1) {
         out[[length(out) + 1]] <- list(
           type = "simple_effect_var1_given_var2",
-          contrast = list(c(iterm, mv1)),
+          contrast = c(iterm, mv1),
           label = paste0("SIMPLE_EFFECT:", iterm, "_plus_", mv1)
         )
       }
@@ -148,7 +153,7 @@ generate_interaction_contrasts <- function(dds,
       if (!is.null(cmp$name)) {
         key <- paste0("name:", cmp$name)
       } else if (!is.null(cmp$contrast)) {
-        vec <- cmp$contrast[[1]]
+        vec <- cmp$contrast
         raw_key <- paste(vec, collapse = "|")      # preserve order
         if (requireNamespace("digest", quietly = TRUE)) {
           key <- paste0("contrast:", digest::digest(raw_key, algo = "xxhash64"))
@@ -208,51 +213,35 @@ extract_comparisons <- function(dds_processed,
 
   for (comp in comparisons_list) {
     # Determine retrieval mode
-    mode <- if (!is.null(comp$name)) "name" else if (!is.null(comp$contrast)) "list" else "pair"
-    if (mode == "pair") {
+    res_args <- list(
+      object = dds_processed,
+      alpha = cfg$qval_threshold,
+      cooksCutoff = FALSE,
+      independentFiltering = TRUE
+    )
+    comp_label <- ""
+
+    if (!is.null(comp$name)) { # by name
+      res_args$name <- comp$name
+      comp_label <- comp$name
+      message("...Running comparison (name): ", comp_label)
+    } else if (!is.null(comp$contrast)) { # by list
+      res_args$contrast <- comp$contrast
+      comp_label <- comp$label %||% paste(comp$contrast, collapse = "_")
+      message("...Running comparison (contrast list): ", comp_label)
+    } else { # by pair
       f <- comp$factor; g1 <- comp$group1; g2 <- comp$group2
-      comp_id <- paste(analysis_name, f, g1, "vs", g2, sep = "_")
-      message("...Running comparison (pair): ", comp_id)
-      res_obj <- try(
-        DESeq2::results(
-          dds_processed,
-          contrast = c(f, g1, g2),
-          alpha = cfg$qval_threshold,
-          cooksCutoff = FALSE,
-          independentFiltering = TRUE
-        ),
-        silent = TRUE
-      )
-    } else if (mode == "name") {
-      comp_id <- paste(analysis_name, comp$name, sep = "_")
-      message("...Running comparison (name): ", comp_id)
-      res_obj <- try(
-        DESeq2::results(
-          dds_processed,
-          name = comp$name,
-          alpha = cfg$qval_threshold,
-          cooksCutoff = FALSE,
-          independentFiltering = TRUE
-        ),
-        silent = TRUE
-      )
-    } else { # list contrast
-      comp_id <- paste(analysis_name, comp$label %||% paste(comp$contrast[[1]], collapse = "_"), sep = "_")
-      message("...Running comparison (contrast list): ", comp_id)
-      res_obj <- try(
-        DESeq2::results(
-          dds_processed,
-          contrast = comp$contrast,
-          alpha = cfg$qval_threshold,
-          cooksCutoff = FALSE,
-          independentFiltering = TRUE
-        ),
-        silent = TRUE
-      )
+      res_args$contrast <- c(f, g1, g2)
+      comp_label <- paste(f, g1, "vs", g2, sep = "_")
+      message("...Running comparison (pair): ", comp_label)
     }
 
+    comp_id <- paste(analysis_name, comp_label, sep = "_")
+
+    res_obj <- try(do.call(DESeq2::results, res_args), silent = TRUE)
+
     if (inherits(res_obj, "try-error")) {
-      message("......FAILED contrast (skipping): ", comp_id,
+      warning("......FAILED contrast (skipping): ", comp_id,
               " | Error: ", conditionMessage(attr(res_obj, "condition")))
       next
     }
@@ -261,6 +250,8 @@ extract_comparisons <- function(dds_processed,
       tibble::rownames_to_column("gene_id") %>%
       dplyr::left_join(gene_map, by = "gene_id") %>%
       dplyr::mutate(
+        # Ensure gene_name is never NA; fall back to gene_id.
+        # Ensure human_ortholog is character, not logical NA.
         gene_name = ifelse(is.na(gene_name), gene_id, gene_name),
         gene_name_upper = toupper(gene_name),
         human_ortholog = ifelse(is.na(human_ortholog), "", human_ortholog)

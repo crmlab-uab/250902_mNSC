@@ -11,6 +11,10 @@ create_tx2gene_maps <- function(gtf_path,
   file_cache_rds <- file.path(cache_dir, "gtf_data_cache.rds")
   ortholog_cache_rds <- file.path(cache_dir, "ortholog_map_cache.rds")
 
+  if (!file.exists(gtf_path)) {
+    stop("GTF file not found at: ", gtf_path)
+  }
+
   if (use_cache && file.exists(file_cache_rds)) {
     message("...Loading cached GTF data.")
     gtf_data <- readRDS(file_cache_rds)
@@ -88,12 +92,12 @@ create_tx2gene_maps <- function(gtf_path,
   gene_name_map <- gene_name_map %>%
     dplyr::left_join(ortholog_map, by = c("gene_id" = "ensembl_gene_id"))
 
-  if ("hsapiens_homolog_associated_gene_name" %in% names(gene_name_map)) {
-    gene_name_map <- gene_name_map %>%
-      dplyr::rename(human_ortholog = hsapiens_homolog_associated_gene_name)
-  } else {
+  # Rename ortholog column if it exists, otherwise create an empty one
+  if (!"hsapiens_homolog_associated_gene_name" %in% names(gene_name_map)) {
     warning("Could not retrieve human orthologs. `human_ortholog` column will be empty.")
     gene_name_map$human_ortholog <- NA_character_
+  } else {
+    gene_name_map <- gene_name_map %>% dplyr::rename(human_ortholog = hsapiens_homolog_associated_gene_name)
   }
 
   gene_name_map <- gene_name_map %>%

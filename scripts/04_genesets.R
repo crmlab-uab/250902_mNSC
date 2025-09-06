@@ -16,22 +16,29 @@
 #'   gene set (derived from the file name).
 load_gene_sets <- function(genesets_dir) {
   gene_sets <- list()
+  if (!dir.exists(genesets_dir)) {
+    warning("Genesets directory not found: ", genesets_dir)
+    return(gene_sets)
+  }
+
   files <- list.files(genesets_dir, full.names = TRUE)
 
   for (file in files) {
     geneset_name <- tools::file_path_sans_ext(basename(file))
+    ext <- tolower(tools::file_ext(file))
 
-    if (endsWith(file, ".csv")) {
-      df <- read.csv(file, header = TRUE)
-      gene_sets[[geneset_name]] <- toupper(unique(df[, 1]))
-    } else if (endsWith(file, ".tsv")) {
-      df <- read.delim(file, header = TRUE)
-      gene_sets[[geneset_name]] <- toupper(unique(df[, 1]))
-    } else if (endsWith(file, ".gmt")) {
-      gmt <- GSEABase::getGmt(file)
-      gene_sets[[geneset_name]] <- toupper(unique(GSEABase::geneIds(gmt)))
-    }
+    genes <- tryCatch({
+      dplyr::case_when(
+        ext == "csv" ~ toupper(unique(read.csv(file, header = TRUE)[[1]])),
+        ext %in% c("tsv", "txt") ~ toupper(unique(read.delim(file, header = TRUE)[[1]])),
+        ext == "gmt" ~ toupper(unique(GSEABase::geneIds(GSEABase::getGmt(file)))),
+        TRUE ~ NA_character_
+      )
+    }, error = function(e) {
+      warning("Failed to read geneset file: ", file, "\nError: ", e$message)
+      return(NULL)
+    })
+    if (!is.null(genes) && !all(is.na(genes))) gene_sets[[geneset_name]] <- genes
   }
-
   return(gene_sets)
 }
