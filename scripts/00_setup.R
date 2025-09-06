@@ -28,11 +28,12 @@ packages_to_load <- c(
   "GSEABase"
 )
 
-suppressPackageStartupMessages({
-  for (pkg in packages_to_load) {
-    library(pkg, character.only = TRUE)
+for (pkg in packages_to_load) {
+  if (!requireNamespace(pkg, quietly = TRUE)) {
+    stop(sprintf("Required package '%s' is not installed. Please install it before running.", pkg))
   }
-})
+  suppressPackageStartupMessages(library(pkg, character.only = TRUE))
+}
 
 message("All packages loaded successfully.")
 

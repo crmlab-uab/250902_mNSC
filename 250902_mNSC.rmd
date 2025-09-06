@@ -58,6 +58,7 @@ cfg <- list(
   dir_genesets = here::here("input", "genesets"),
   dir_graphs_png = here::here("graphs", "png"),
   dir_graphs_pdf = here::here("graphs", "pdf"),
+  dir_data_csv = here::here("output", "csv"), # <---- ADDED
   file_samples = here::here("input", "samples.csv"),
   file_gtf = here::here("input", "gencode.vM37.primary_assembly.annotation.gtf.gz"),
 
@@ -72,6 +73,7 @@ cfg <- list(
   deg_design_vars = c("Host", "Model", "Driver"), # Variables for the design formula
   interaction_vars = c("Model", "Driver"), # Variables to test for interaction effects
   filter_by_factor = "Driver", # Factor to determine smallest group size for filtering
+  interaction_simple_effect_direction = "var1", # "var1","var2","none","both"
 
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # PLOTTING SETTINGS
@@ -142,13 +144,13 @@ create_project_dirs <- function(config) {
       dir_paths <- c(dir_paths, config[[name]])
     }
   }
+  # Base CSV dir
+  dir_paths <- c(dir_paths, config$dir_data_csv)
 
-  # Add CSV output directories for each gene filter
-  csv_subdirs <- file.path(config$dir_output, "csv", names(config$analysis_definitions$gene_filters))
-  all_dirs <- c(dir_paths, csv_subdirs)
-
-  # Create all directories
-  lapply(unique(all_dirs), dir.create, recursive = TRUE, showWarnings = FALSE)
+  # Add per gene-filter CSV subdirs
+  csv_subdirs <- file.path(config$dir_data_csv, names(config$analysis_definitions$gene_filters))
+  all_dirs <- unique(c(dir_paths, csv_subdirs))
+  lapply(all_dirs, dir.create, recursive = TRUE, showWarnings = FALSE)
 }
 
 create_project_dirs(cfg)
@@ -208,25 +210,48 @@ for (s_name in names(cfg$analysis_definitions$sample_subsets)) {
 
       current_files_sf <- files_sf[rownames(current_samples)]
 
-      # Dynamically create the design formula based on the selected model type and the variables present in the current data subset.
-      relevant_vars <- names(which(sapply(current_samples, function(col) length(unique(col)) > 1)))
+      # Determine relevant variables present in current subset
+      relevant_vars <- intersect(colnames(current_samples), unique(c(cfg$batch_vars, cfg$main_vars)))
       batch_terms <- intersect(cfg$batch_vars, relevant_vars)
 
+      # (Re)build design string (ensure relevant_vars defined before use)
+      # Remove variables with only one unique value from the design
+      get_nonconstant_vars <- function(df, vars) {
+        vars[sapply(vars, function(v) length(unique(df[[v]])) > 1)]
+      }
       if (m_type == "additive") {
         design_terms <- intersect(cfg$deg_design_vars, relevant_vars)
-        design_str <- paste("~", paste(c(batch_terms, design_terms), collapse = " + "))
+        design_terms <- get_nonconstant_vars(current_samples, design_terms)
+        batch_terms <- get_nonconstant_vars(current_samples, batch_terms)
+        all_terms <- c(batch_terms, design_terms)
+        if (length(all_terms) == 0) {
+          message(paste("...SKIPPING analysis for", analysis_name, "because all design variables are constant."))
+          next
+        }
+        design_str <- paste("~", paste(all_terms, collapse = " + "))
       } else {
         main_terms <- intersect(cfg$main_vars, relevant_vars)
+        main_terms <- get_nonconstant_vars(current_samples, main_terms)
+        batch_terms <- get_nonconstant_vars(current_samples, batch_terms)
         if (all(cfg$interaction_vars %in% main_terms)) {
           other_main_terms <- setdiff(main_terms, cfg$interaction_vars)
-          design_str <- paste("~", paste(c(batch_terms, other_main_terms, paste(cfg$interaction_vars, collapse = " * ")), collapse = " + "))
+          interaction_term <- paste(cfg$interaction_vars, collapse = " * ")
+          all_terms <- c(batch_terms, other_main_terms, interaction_term)
+          if (length(all_terms) == 0) {
+            message(paste("...SKIPPING analysis for", analysis_name, "because all design variables are constant."))
+            next
+          }
+          design_str <- paste("~", paste(all_terms, collapse = " + "))
         } else {
-          design_terms <- intersect(cfg$deg_design_vars, relevant_vars)
-          design_str <- paste("~", paste(c(batch_terms, design_terms), collapse = " + "))
+          message(
+            "...Skipping interaction model for ", analysis_name,
+            " (missing required interaction vars)."
+          )
+          next
         }
       }
 
-      # Run the core DESeq2 analysis.
+      # Run DESeq core with updated design
       dds_processed <- run_deseq_core(
         current_samples, current_files_sf, as.formula(design_str),
         gtf_maps$tx2gene_pcg, cfg$filter_by_factor, cfg$filter_min_count,
@@ -234,20 +259,26 @@ for (s_name in names(cfg$analysis_definitions$sample_subsets)) {
       )
       all_dds_objects[[analysis_name]] <- dds_processed
 
-      # Generate QC plots for the current analysis.
-      generate_qc_plots(dds_processed, analysis_name, gtf_maps$gene_name_map, cfg)
-
-      # Define all possible pairwise comparisons for the main experimental variables.
+      # Build standard pairwise comparisons
       factors_to_compare <- intersect(cfg$main_vars, relevant_vars)
-      comparisons <- unlist(lapply(factors_to_compare, function(f) {
-        if (length(levels(current_samples[[f]])) > 1) {
-          combn(levels(current_samples[[f]]), 2, function(p) {
-            list(list(factor = f, group1 = p[1], group2 = p[2]))
-          }, simplify = FALSE)
-        }
-      }), recursive = FALSE)
+      comparisons <- build_all_comparisons(dds_processed, factors_to_compare)
 
-      # Extract and save the results for each comparison.
+      # If interaction model, append interaction-derived contrasts
+      if (m_type == "interaction") {
+        interaction_contrasts <- generate_interaction_contrasts(
+          dds_processed,
+          cfg$interaction_vars,
+          simple_effect_direction = cfg$interaction_simple_effect_direction
+        )
+        if (length(interaction_contrasts)) {
+          comparisons <- c(comparisons, interaction_contrasts)
+          message("...Added ", length(interaction_contrasts), " interaction contrasts.")
+        } else {
+          message("...No interaction contrasts generated (check resultsNames).")
+        }
+      }
+
+      # Extract & save
       all_results_lists[[analysis_name]] <- extract_comparisons(
         dds_processed = dds_processed,
         comparisons_list = comparisons,
@@ -283,65 +314,190 @@ reactable::reactable(samples, searchable = TRUE, filterable = TRUE, bordered = T
 ```
 
 ## 3.2 Quality Control
+```{r report-helpers, include=FALSE}
+# Reusable helpers for report generation
 
-This section contains QC plots for each analysis performed. The plots include PCA to visualize sample clustering and sample distance heatmaps to show the correlation between samples.
-
-```{r dynamic-qc-plots, results='asis'}
-cat("\n### PCA Plots\n")
-for (analysis_name in names(all_dds_objects)) {
-  cat(paste("\n####", gsub("_", " ", analysis_name), "\n"))
-  cat(paste0("![](", here::here(cfg$dir_graphs_png, paste0(cfg$date, "_", analysis_name, "_PCA.png")), ")"))
+if (!exists("sanitize_analysis_name")) {
+  sanitize_analysis_name <- function(x) gsub("[^A-Za-z0-9_.-]", "_", x)
 }
 
-cat("\n### Sample Distance Heatmaps\n")
+emit_image <- function(path) {
+  if (file.exists(path)) cat(paste0("![](", path, ")\n"))
+}
+
+emit_section_header <- function(txt, level = 3) {
+  cat(paste0("\n", paste(rep("#", level), collapse = ""), " ", txt, "\n"))
+}
+
+list_analysis_objects <- function(obj_list) {
+  stats::setNames(as.list(names(obj_list)), names(obj_list))
+}
+
+# New helpers
+emit_labeled_image <- function(label, path) {
+  cat(paste0("\n##### ", label, "\n"))
+  if (file.exists(path)) {
+    cat(paste0("![](", path, ")\n"))
+  } else {
+    cat("*Missing plot:* ", basename(path), "\n")
+  }
+}
+
+emit_gene_set_heatmap <- function(comp_name, gs_name, png_dir, date) {
+  path <- file.path(png_dir, paste0(date, "_", comp_name, "_", gs_name, "_DEG_heatmap.png"))
+  cat(paste0("\n##### ", gs_name, " Gene Set Heatmap\n"))
+  if (file.exists(path)) {
+    cat(paste0("![](", path, ")\n"))
+  } else {
+    cat("*No heatmap generated for this gene set.*\n")
+  }
+}
+
+emit_gene_set_boxplots <- function(comp_name, gs_name, png_dir, date) {
+  cat(paste0("\n##### ", gs_name, " Gene Set Boxplots\n"))
+  prefix <- paste0(date, "_", comp_name, "_", gs_name, "_Boxplot_")
+  esc_prefix <- gsub("([.^$|()*+?{\\[\\]\\\\])", "\\\\\\1", prefix)
+  files <- list.files(png_dir, pattern = paste0("^", esc_prefix, ".+\\.png$"), full.names = TRUE)
+  if (length(files) == 0) {
+    cat("*No boxplots generated for this gene set.*\n")
+  } else {
+    for (f in files) cat(paste0("![](", f, ")\n"))
+  }
+}
+
+emit_standard_comp_plots <- function(comp_name, png_dir, date) {
+  emit_labeled_image("Volcano Plot", file.path(png_dir, paste0(date, "_", comp_name, "_volcano.png")))
+  emit_labeled_image("Top 50 DEG Heatmap", file.path(png_dir, paste0(date, "_", comp_name, "_DEG_heatmap_top50.png")))
+  emit_labeled_image("Top 250 DEG Heatmap", file.path(png_dir, paste0(date, "_", comp_name, "_DEG_heatmap_top250.png")))
+}
+
+# NEW: helper to emit significant gene table
+emit_sig_gene_table <- function(sig_df, cfg) {
+  if (nrow(sig_df) == 0) {
+    cat("*No significant genes for this comparison.*\n")
+    return(invisible(NULL))
+  }
+  tbl <- sig_df %>%
+    dplyr::select(
+      gene_name,
+      human_ortholog,
+      baseMean,
+      log2FoldChange,
+      padj
+    ) %>%
+    dplyr::arrange(padj)
+
+  print(
+    reactable::reactable(
+      tbl,
+      defaultPageSize = 5,
+      searchable = TRUE,
+      bordered = TRUE,
+      highlight = TRUE,
+      columns = list(
+        gene_name = reactable::colDef(name = "Gene"),
+        human_ortholog = reactable::colDef(name = "Human Ortholog"),
+        baseMean = reactable::colDef(format = reactable::colFormat(digits = 1)),
+        log2FoldChange = reactable::colDef(format = reactable::colFormat(digits = 2)),
+        padj = reactable::colDef(format = reactable::colFormat(digits = 3))
+      )
+    )
+  )
+}
+```
+
+```{r dynamic-qc-plots, results='asis'}
+emit_section_header("PCA Plots", level = 3)
 for (analysis_name in names(all_dds_objects)) {
-  cat(paste("\n####", gsub("_", " ", analysis_name), "\n"))
-  cat(paste0("![](", here::here(cfg$dir_graphs_png, paste0(cfg$date, "_", analysis_name, "_Heatmap.png")), ")"))
+  safe_name <- sanitize_analysis_name(analysis_name)
+  emit_section_header(gsub("_", " ", analysis_name), level = 4)
+  emit_image(file.path(
+    cfg$dir_graphs_png, safe_name,
+    paste0(cfg$date, "_", analysis_name, "_PCA.png")
+  ))
+}
+
+emit_section_header("Sample Distance Heatmaps", level = 3)
+for (analysis_name in names(all_dds_objects)) {
+  safe_name <- sanitize_analysis_name(analysis_name)
+  emit_section_header(gsub("_", " ", analysis_name), level = 4)
+  emit_image(file.path(
+    cfg$dir_graphs_png, safe_name,
+    paste0(cfg$date, "_", analysis_name, "_Heatmap.png")
+  ))
 }
 ```
 
 ## 3.3 Gene of Interest Expression
-
-This section displays boxplots of normalized counts for a set of pre-defined genes of interest, allowing for a quick check of their expression across different conditions.
-
 ```{r goi-plots, results='asis'}
-for (analysis_name in names(all_dds_objects)) {
-  cat(paste("\n### GOI Expression for", gsub("_", " ", analysis_name), "\n"))
-  for (gene_name in cfg$qc_plot_settings$project_genes) {
-    plot_path <- here::here(cfg$dir_graphs_png, paste0(cfg$date, "_", analysis_name, "_GenePlot_", gene_name, ".png"))
-    if (file.exists(plot_path)) cat(paste0("\n![](", plot_path, ")"))
+if (!is.null(cfg$qc_plot_settings$project_genes) &&
+  length(cfg$qc_plot_settings$project_genes) > 0) {
+  for (analysis_name in names(all_dds_objects)) {
+    safe_name <- sanitize_analysis_name(analysis_name)
+    emit_section_header(paste("GOI:", gsub("_", " ", analysis_name)), level = 4)
+
+    paths <- vapply(
+      cfg$qc_plot_settings$project_genes,
+      function(g) {
+        file.path(
+          cfg$dir_graphs_png, safe_name,
+          paste0(cfg$date, "_", analysis_name, "_GenePlot_", g, ".png")
+        )
+      },
+      character(1)
+    )
+
+    existing <- paths[file.exists(paths)]
+    if (length(existing) == 0) {
+      cat("*No GOI plots generated for this analysis.*\n")
+    } else {
+      for (p in existing) emit_image(p)
+    }
   }
+} else {
+  cat("*No project genes configured in cfg$qc_plot_settings$project_genes.*\n")
 }
 ```
 
 ## 3.4 Differential Expression Summary
-
-This table summarizes the number of differentially expressed genes (DEGs) for each comparison, providing a high-level overview of the results.
-
 ```{r results-summary-table}
 summary_list <- lapply(names(all_results_lists), function(analysis_name) {
   analysis_results <- all_results_lists[[analysis_name]]
-  if (length(analysis_results) == 0) {
+  if (!length(analysis_results)) {
     return(NULL)
   }
 
   lapply(names(analysis_results), function(comp_name) {
     res_df <- analysis_results[[comp_name]]
-    sig_df <- res_df %>% dplyr::filter(padj < cfg$qval_threshold & abs(log2FoldChange) > cfg$lfc_threshold)
+    sig_df <- dplyr::filter(
+      res_df,
+      !is.na(padj),
+      padj < cfg$qval_threshold,
+      abs(log2FoldChange) > cfg$lfc_threshold
+    )
     data.frame(
-      Comparison = comp_name, `Total Genes` = nrow(res_df), DEGs = nrow(sig_df),
-      Up = sum(sig_df$log2FoldChange > 0), Down = sum(sig_df$log2FoldChange < 0),
+      Comparison = comp_name,
+      Total.Genes = nrow(res_df),
+      DEGs = nrow(sig_df),
+      Up = sum(sig_df$log2FoldChange > 0),
+      Down = sum(sig_df$log2FoldChange < 0),
+      stringsAsFactors = FALSE,
       check.names = FALSE
     )
   })
 })
 
 summary_df <- dplyr::bind_rows(unlist(summary_list, recursive = FALSE))
-
-if (!is.null(summary_df) && nrow(summary_df) > 0) {
-  reactable::reactable(summary_df, searchable = TRUE, bordered = TRUE, highlight = TRUE, columns = list(Comparison = colDef(minWidth = 400)))
+if (nrow(summary_df)) {
+  reactable::reactable(
+    summary_df,
+    searchable = TRUE,
+    bordered = TRUE,
+    highlight = TRUE,
+    columns = list(Comparison = colDef(minWidth = 380))
+  )
 } else {
-  cat("\n*No valid comparisons were found to summarize.*\n")
+  cat("*No valid comparisons were found to summarize.*\n")
 }
 ```
 
@@ -351,47 +507,33 @@ This section provides detailed results for each comparison, including interactiv
 
 ```{r dynamic-results-report, results='asis'}
 for (analysis_name in names(all_results_lists)) {
-  cat(paste("\n### DEG Results for", gsub("_", " ", analysis_name), "\n"))
+  safe_analysis_name <- sanitize_analysis_name(analysis_name)
+  emit_section_header(paste("DEG Results for", gsub("_", " ", analysis_name)), level = 3)
+
   analysis_results <- all_results_lists[[analysis_name]]
   if (length(analysis_results) == 0) next
-  for (comp_name in names(analysis_results)) {
-    cat(paste("\n####", gsub("_", " ", comp_name), "\n"))
-    res_df <- analysis_results[[comp_name]]
-    sig_genes <- res_df %>% dplyr::filter(padj < cfg$qval_threshold & abs(log2FoldChange) > cfg$lfc_threshold & !is.na(padj))
-    if (nrow(sig_genes) > 0) {
-      print(reactable::reactable(
-        sig_genes %>%
-          dplyr::select(gene_name, human_ortholog, baseMean, log2FoldChange, padj) %>%
-          dplyr::arrange(padj),
-        defaultPageSize = 5, searchable = TRUE, bordered = TRUE
-      ))
-    }
 
-    cat("\n\n##### Volcano Plot\n")
-    cat(paste0("![](", here::here(cfg$dir_graphs_png, paste0(cfg$date, "_", comp_name, "_volcano.png")), ")"))
-    cat("\n\n##### Top 50 DEG Heatmap\n")
-    cat(paste0("![](", here::here(cfg$dir_graphs_png, paste0(cfg$date, "_", comp_name, "_DEG_heatmap_top50.png")), ")"))
-    cat("\n\n##### Top 250 DEG Heatmap\n")
-    path_250 <- here::here(cfg$dir_graphs_png, paste0(cfg$date, "_", comp_name, "_DEG_heatmap_top250.png"))
-    if (file.exists(path_250)) cat(paste0("![](", path_250, ")"))
+  for (comp_name in names(analysis_results)) {
+    emit_section_header(gsub("_", " ", comp_name), level = 4)
+
+    res_df <- analysis_results[[comp_name]]
+    sig_genes <- res_df %>%
+      dplyr::filter(
+        !is.na(padj),
+        padj < cfg$qval_threshold,
+        abs(log2FoldChange) > cfg$lfc_threshold
+      )
+
+    # Use helper
+    emit_sig_gene_table(sig_genes, cfg)
+
+    png_dir <- file.path(cfg$dir_graphs_png, safe_analysis_name)
+    emit_standard_comp_plots(comp_name, png_dir, cfg$date)
 
     if (length(gene_sets) > 0) {
       for (gs_name in names(gene_sets)) {
-        cat(paste("\n\n##### Top", gs_name, "DEG Heatmap\n"))
-        path_gs_heatmap <- here::here(cfg$dir_graphs_png, paste0(cfg$date, "_", comp_name, "_", gs_name, "_DEG_heatmap.png"))
-        if (file.exists(path_gs_heatmap)) cat(paste0("![](", path_gs_heatmap, ")"))
-
-        cat(paste("\n\n##### DE", gs_name, "Box Plots\n"))
-        gs_genes <- gene_sets[[gs_name]]
-        sig_gs <- sig_genes %>% dplyr::filter(gene_name_upper %in% gs_genes | toupper(human_ortholog) %in% gs_genes)
-        if (nrow(sig_gs) > 0) {
-          for (gs_gene_name in sig_gs$gene_name) {
-            plot_path <- here::here(cfg$dir_graphs_png, paste0(cfg$date, "_", comp_name, "_Boxplot_", gs_gene_name, ".png"))
-            if (file.exists(plot_path)) cat(paste0("![](", plot_path, ")"))
-          }
-        } else {
-          cat(paste0("\n*No DE ", gs_name, "s found.*\n"))
-        }
+        emit_gene_set_heatmap(comp_name, gs_name, png_dir, cfg$date)
+        emit_gene_set_boxplots(comp_name, gs_name, png_dir, cfg$date)
       }
     }
   }
